@@ -2,47 +2,89 @@
 
 import { useState } from "react";
 import { asset } from "@/lib/asset";
-import { occasions, wearColors } from "@/lib/site";
+import { occasions, wearColors, type Fit } from "@/lib/site";
 
-function Garment({ src, caption }: { src: string; caption: string }) {
+function Collage({ fit }: { fit: Fit }) {
   return (
-    <figure className="flex w-24 shrink-0 flex-col items-center gap-1 sm:w-28">
-      <div
-        className="aspect-[3/4] w-full overflow-hidden rounded-[6px]"
-        style={{ background: "#150303" }}
-      >
+    <div className="relative mx-auto aspect-[4/5] w-full max-w-[460px]">
+      {fit.pieces.map((p, i) => (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={asset(src)}
-          alt={caption}
-          className="size-full object-contain"
-          loading="lazy"
+          key={p.src + i}
+          src={asset(p.src)}
+          alt=""
+          aria-hidden
+          className="absolute"
+          style={{
+            left: `${p.x}%`,
+            top: `${p.y}%`,
+            width: `${p.w}%`,
+            transform: p.rotate ? `rotate(${p.rotate}deg)` : undefined,
+            mixBlendMode: i === 0 ? "multiply" : undefined,
+            opacity: i === 0 ? 0.95 : 1,
+          }}
         />
-      </div>
-      <figcaption className="text-center font-label text-[11px] leading-tight text-coral-soft">
-        {caption}
-      </figcaption>
-    </figure>
+      ))}
+
+      {fit.notes.map((n, i) => (
+        <p
+          key={i}
+          className="absolute font-hand text-[12px] leading-tight text-cream-light sm:text-sm"
+          style={{
+            left: `${n.x}%`,
+            top: `${n.y}%`,
+            width: `${n.w}%`,
+            textAlign: n.align ?? "left",
+          }}
+        >
+          {n.text}
+        </p>
+      ))}
+
+      {fit.notes.map(
+        (n, i) =>
+          n.arrow && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={`a${i}`}
+              src={asset(n.arrow.src)}
+              alt=""
+              aria-hidden
+              className="absolute"
+              style={{
+                left: `${n.arrow.x}%`,
+                top: `${n.arrow.y}%`,
+                width: `${n.arrow.w}%`,
+                transform: n.arrow.rotate
+                  ? `rotate(${n.arrow.rotate}deg)`
+                  : undefined,
+              }}
+            />
+          ),
+      )}
+    </div>
   );
 }
 
 export default function WhatToWear() {
   const [activeId, setActiveId] = useState(occasions[0].id);
-  const [variant, setVariant] = useState(0);
+  const [fitIndex, setFitIndex] = useState(0);
   const active = occasions.find((o) => o.id === activeId) ?? occasions[0];
+  const fit = active.fits[fitIndex % active.fits.length];
 
-  const him = active.him[variant % active.him.length];
-  const her = active.her[variant % active.her.length];
+  const select = (id: string) => {
+    setActiveId(id);
+    setFitIndex(0);
+  };
 
   return (
     <section id="what-to-wear" className="px-6 py-16 sm:py-24">
-      <div className="mx-auto grid w-full max-w-5xl gap-10 lg:grid-cols-[minmax(0,340px)_1fr]">
+      <div className="mx-auto grid w-full max-w-5xl gap-10 lg:grid-cols-[minmax(0,320px)_1fr]">
         {/* left: occasion picker */}
         <div className="text-coral">
           <h2 className="font-serif text-4xl italic sm:text-5xl">What to wear?</h2>
 
-          <p className="mt-2 font-label text-sm uppercase tracking-widest text-coral-soft">
-            Occasion
-          </p>
+          <p className="mt-3 font-serif text-2xl not-italic">Occasion</p>
           <div className="mt-3 flex flex-col gap-4">
             {occasions.map((o) => {
               const on = o.id === activeId;
@@ -54,11 +96,8 @@ export default function WhatToWear() {
                       <button
                         key={label}
                         type="button"
-                        onClick={() => {
-                          setActiveId(o.id);
-                          setVariant(0);
-                        }}
                         aria-pressed={on}
+                        onClick={() => select(o.id)}
                         className="rounded-[4px] px-4 py-2 font-serif text-base italic transition-colors"
                         style={{
                           background: on ? "var(--orange)" : "var(--red)",
@@ -74,72 +113,64 @@ export default function WhatToWear() {
             })}
           </div>
 
-          <p className="mt-8 font-label text-sm uppercase tracking-widest text-coral-soft">
-            Colours
-          </p>
-          <div className="mt-3 grid max-w-[220px] grid-cols-6 gap-2">
+          <p className="mt-8 font-serif text-2xl not-italic">Colours</p>
+          <div className="mt-3 grid max-w-[224px] grid-cols-6 gap-2">
             {wearColors.map((c) => (
               <span
                 key={c}
-                className="size-7 rounded-full ring-1 ring-white/30"
+                className="size-7 rounded-full ring-1 ring-white/25"
                 style={{ background: c }}
               />
             ))}
           </div>
         </div>
 
-        {/* right: outfit board */}
-        <div className="text-coral">
+        {/* right: styling stage */}
+        <div>
           <p className="font-serif text-xl italic text-coral-soft">{active.blurb}</p>
 
-          <div className="mt-6 flex flex-wrap items-start gap-x-8 gap-y-6">
-            <div className="flex shrink-0 flex-col items-center gap-2">
-              <div className="overflow-hidden rounded-[8px] bg-cream-light p-2">
-                <img
-                  src={asset("/figma/outfit-couple-illustration.jpg")}
-                  alt="Bride & groom"
-                  className="h-52 w-auto sm:h-60"
-                />
-              </div>
-              <span className="font-label text-[11px] uppercase tracking-widest text-coral-soft">
-                {active.labels.join(" · ")}
-              </span>
+          <div className="mt-6 flex flex-col items-center">
+            <span
+              className="rounded-full px-5 py-2 font-serif text-lg italic text-coral"
+              style={{ background: "rgba(75,1,3,0.5)" }}
+            >
+              {active.labels.join(" · ")}
+            </span>
+
+            <div className="mt-4 w-full">
+              <Collage fit={fit} />
             </div>
 
-            <div className="flex flex-1 flex-col gap-5">
-              <div className="flex flex-wrap gap-4">
-                <Garment src={him.src} caption={him.caption} />
-                <Garment src={her.src} caption={her.caption} />
-                {active.extras.map((e) => (
-                  <Garment key={e.src + e.caption} src={e.src} caption={e.caption} />
-                ))}
-              </div>
-
-              <ul className="flex flex-col gap-2">
-                {active.notes.map((n) => (
-                  <li
-                    key={n}
-                    className="font-hand text-base leading-snug text-cream-light"
-                  >
-                    ✎ {n}
-                  </li>
-                ))}
-              </ul>
-
-              {(active.him.length > 1 || active.her.length > 1) && (
-                <button
-                  type="button"
-                  onClick={() => setVariant((v) => v + 1)}
-                  className="w-fit rounded-[4px] border px-5 py-2.5 font-serif text-base italic shadow-[-9px_-3px_10px_rgba(0,0,0,0.21)]"
-                  style={{
-                    background: "var(--btn)",
-                    borderColor: "var(--red-deep)",
-                    color: "var(--yellow)",
-                  }}
-                >
-                  ✨ Next outfit
-                </button>
+            <div className="mt-2 flex items-center justify-center gap-4">
+              {active.fits.length > 1 && (
+                <div className="flex gap-1.5">
+                  {active.fits.map((_, i) => (
+                    <span
+                      key={i}
+                      className="size-1.5 rounded-full"
+                      style={{
+                        background:
+                          i === fitIndex % active.fits.length
+                            ? "var(--coral)"
+                            : "rgba(255,149,149,0.35)",
+                      }}
+                    />
+                  ))}
+                </div>
               )}
+              <button
+                type="button"
+                onClick={() => setFitIndex((v) => v + 1)}
+                disabled={active.fits.length < 2}
+                className="rounded-[4px] border px-5 py-2.5 font-serif text-base italic shadow-[-9px_-3px_10px_rgba(0,0,0,0.21)] disabled:opacity-40"
+                style={{
+                  background: "var(--btn)",
+                  borderColor: "var(--red-deep)",
+                  color: "var(--yellow)",
+                }}
+              >
+                ✨ Next outfit
+              </button>
             </div>
           </div>
         </div>

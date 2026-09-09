@@ -176,18 +176,51 @@ export const TIMELINE_START = 6;
 export const TIMELINE_END = 24;
 export const timelineTicks = ["6am", "noon", "6pm", "midnight"];
 
-/* ---------- What to wear ---------- */
+/* ---------- What to wear — the styling collage ----------
+   Rebuilt from the Figma "Outfit widget" (node 3400:7495) + its FitGrid
+   component: each occasion is a small carousel of "fits", and each fit is
+   a paper-doll collage — garment cut-outs positioned over the watercolour
+   bodies, with handwritten notes and hand-drawn arrows.
+   All coords are % of the collage stage (portrait, ~5:6). */
+
+export type Piece = {
+  src: string;
+  /** left / top of the piece box, and width — all % of the stage */
+  x: number;
+  y: number;
+  w: number;
+  rotate?: number;
+};
+
+export type Note = {
+  text: string;
+  x: number;
+  y: number;
+  w: number;
+  align?: "left" | "right";
+  /** hand-drawn arrow from the note toward a piece */
+  arrow?: { src: string; x: number; y: number; w: number; rotate?: number };
+};
+
+export type Fit = {
+  name: string;
+  pieces: Piece[];
+  notes: Note[];
+};
 
 export type Occasion = {
   id: string;
   day: string;
   labels: string[];
   blurb: string;
-  him: { src: string; caption: string }[];
-  her: { src: string; caption: string }[];
-  extras: { src: string; caption: string }[];
-  notes: string[];
+  fits: Fit[];
 };
+
+const bodies: Piece = { src: "/figma/outfit/bodies.png", x: 6, y: 6, w: 88 };
+const A = "/figma/cover/arrow154.svg";
+const A2 = "/figma/cover/arrow155.svg";
+const A3 = "/figma/cover/arrow156.svg";
+// him: torso/legs live around x 8-44; her: x 48-82; feet ~ y 74
 
 export const occasions: Occasion[] = [
   {
@@ -195,21 +228,54 @@ export const occasions: Occasion[] = [
     day: "Day 1",
     labels: ["Casual"],
     blurb: "Travel days & downtime. Comfortable, breathable, nothing precious.",
-    him: [
-      { src: "/figma/outfit-casual-him2.jpg", caption: "Shirt + jeans" },
-      { src: "/figma/outfit-casual-him.jpg", caption: "Kurta + linen trousers" },
-    ],
-    her: [
-      { src: "/figma/outfit-skirt.jpg", caption: "Tiered cotton skirt" },
-      { src: "/figma/outfit-shirt.jpg", caption: "Oversized shirt" },
-    ],
-    extras: [
-      { src: "/figma/outfit-flipflops.jpg", caption: "Flip flops" },
-      { src: "/figma/outfit-sandals-woven.jpg", caption: "Woven mules" },
-    ],
-    notes: [
-      "Impractical but that’s what all Indian men are wearing. FYI.",
-      "No bling bling, less elegant — totally fine.",
+    fits: [
+      {
+        name: "Relaxed",
+        pieces: [
+          bodies,
+          { src: "/figma/outfit/him-shirt-jeans.png", x: 6, y: 15, w: 38 },
+          { src: "/figma/outfit/her-white-shirt.png", x: 46, y: 13, w: 36 },
+          { src: "/figma/outfit/her-cream-skirt.png", x: 49, y: 40, w: 31 },
+          { src: "/figma/outfit/sandals-woven.png", x: 54, y: 74, w: 22 },
+          { src: "/figma/outfit/bangles.png", x: 82, y: 34, w: 15 },
+        ],
+        notes: [
+          {
+            text: "Impractical, but that’s what all Indian men are wearing. FYI.",
+            x: 0,
+            y: 4,
+            w: 26,
+            align: "right",
+            arrow: { src: A, x: 20, y: 22, w: 12 },
+          },
+          {
+            text: "Decorative elements & jewellery are always in fashion in India.",
+            x: 74,
+            y: 3,
+            w: 26,
+            arrow: { src: A, x: 80, y: 22, w: 11, rotate: 55 },
+          },
+        ],
+      },
+      {
+        name: "Kurta",
+        pieces: [
+          bodies,
+          { src: "/figma/outfit/him-blue-kurta.png", x: 7, y: 14, w: 36 },
+          { src: "/figma/outfit/her-teal-set.png", x: 47, y: 13, w: 36 },
+          { src: "/figma/outfit/sandals-pink.png", x: 42, y: 78, w: 20 },
+        ],
+        notes: [
+          {
+            text: "No bling bling, less elegant — totally fine.",
+            x: 0,
+            y: 6,
+            w: 24,
+            align: "right",
+            arrow: { src: A2, x: 18, y: 24, w: 12 },
+          },
+        ],
+      },
     ],
   },
   {
@@ -217,43 +283,110 @@ export const occasions: Occasion[] = [
     day: "Day 2",
     labels: ["Mehendi & Sangeet"],
     blurb: "Colour, pattern and movement. Dress for dancing.",
-    him: [{ src: "/figma/outfit-casual-him.jpg", caption: "Light kurta" }],
-    her: [{ src: "/figma/outfit-mehendi-her.jpg", caption: "Kurta + palazzo" }],
-    extras: [
-      { src: "/figma/outfit-bangles.jpg", caption: "Bangles" },
-      { src: "/figma/outfit-potli.jpg", caption: "Potli bag" },
-      { src: "/figma/outfit-sandals-pink.jpg", caption: "Block heels" },
+    fits: [
+      {
+        name: "Festive",
+        pieces: [
+          bodies,
+          { src: "/figma/outfit/him-white-shirt.png", x: 7, y: 14, w: 36 },
+          { src: "/figma/outfit/her-green-kurta.png", x: 46, y: 13, w: 37 },
+          { src: "/figma/outfit/bangles.png", x: 82, y: 30, w: 15 },
+          { src: "/figma/outfit/potli.png", x: 76, y: 50, w: 16 },
+          { src: "/figma/outfit/sandals-pink.png", x: 44, y: 78, w: 19 },
+        ],
+        notes: [
+          {
+            text: "Cute bags are great — considered fashionable.",
+            x: 72,
+            y: 62,
+            w: 28,
+            arrow: { src: A3, x: 72, y: 55, w: 11, rotate: 20 },
+          },
+          {
+            text: "Decorative elements & jewellery are always in fashion in India.",
+            x: 74,
+            y: 3,
+            w: 26,
+            arrow: { src: A, x: 80, y: 22, w: 11, rotate: 55 },
+          },
+        ],
+      },
     ],
-    notes: ["Decorative elements & jewellery are always in fashion in India."],
   },
   {
     id: "haldi",
     day: "Day 3",
     labels: ["Haldi", "Wedding & Reception"],
     blurb:
-      "Haldi = turmeric everywhere, wear something you can throw away. Wedding & Reception = your best.",
-    him: [
-      { src: "/figma/outfit-shirt2.jpg", caption: "Haldi: old white shirt" },
-      { src: "/figma/outfit-pants.jpg", caption: "Wedding: tailored set" },
+      "Haldi turns everything turmeric-yellow — wear what you can stain. Wedding & Reception: your best.",
+    fits: [
+      {
+        name: "Haldi",
+        pieces: [
+          bodies,
+          { src: "/figma/outfit/him-white-shirt.png", x: 7, y: 14, w: 36 },
+          { src: "/figma/outfit/her-white-shirt.png", x: 46, y: 13, w: 36 },
+          { src: "/figma/outfit/flipflops.png", x: 52, y: 76, w: 22 },
+        ],
+        notes: [
+          {
+            text: "Yellow or white you don’t mind ruining.",
+            x: 0,
+            y: 6,
+            w: 24,
+            align: "right",
+            arrow: { src: A2, x: 18, y: 24, w: 12 },
+          },
+        ],
+      },
+      {
+        name: "Ceremony",
+        pieces: [
+          bodies,
+          { src: "/figma/outfit/him-white-pants.png", x: 6, y: 13, w: 38 },
+          { src: "/figma/outfit/her-teal-set.png", x: 47, y: 13, w: 37 },
+          { src: "/figma/outfit/bangles.png", x: 82, y: 32, w: 15 },
+          { src: "/figma/outfit/sandals-pink.png", x: 44, y: 78, w: 19 },
+        ],
+        notes: [
+          {
+            text: "Bold colour for the ceremony — never white-on-white.",
+            x: 74,
+            y: 3,
+            w: 26,
+            arrow: { src: A, x: 80, y: 22, w: 11, rotate: 55 },
+          },
+        ],
+      },
     ],
-    her: [
-      { src: "/figma/outfit-wedding-her.jpg", caption: "Wedding: shirt + palazzo" },
-    ],
-    extras: [
-      { src: "/figma/outfit-bangles.jpg", caption: "Bangles" },
-      { src: "/figma/outfit-sandals-pink.jpg", caption: "Block heels" },
-    ],
-    notes: ["Yellow / white for Haldi. Bold colour for the ceremony — never white-on-white."],
   },
   {
     id: "casual-2",
     day: "Day 4",
     labels: ["Casual"],
-    blurb: "Departure. Back to comfortable.",
-    him: [{ src: "/figma/outfit-casual-him2.jpg", caption: "Shirt + jeans" }],
-    her: [{ src: "/figma/outfit-skirt.jpg", caption: "Skirt + shirt" }],
-    extras: [{ src: "/figma/outfit-flipflops.jpg", caption: "Flip flops" }],
-    notes: ["Travel clothes. Layers for the flight."],
+    blurb: "Departure. Back to comfortable — layers for the flight.",
+    fits: [
+      {
+        name: "Travel",
+        pieces: [
+          bodies,
+          { src: "/figma/outfit/him-shirt-jeans.png", x: 6, y: 15, w: 38 },
+          { src: "/figma/outfit/her-white-shirt.png", x: 46, y: 13, w: 36 },
+          { src: "/figma/outfit/her-cream-skirt.png", x: 49, y: 40, w: 31 },
+          { src: "/figma/outfit/flipflops.png", x: 54, y: 76, w: 22 },
+        ],
+        notes: [
+          {
+            text: "Whatever’s comfortable on a plane.",
+            x: 0,
+            y: 6,
+            w: 24,
+            align: "right",
+            arrow: { src: A2, x: 18, y: 24, w: 12 },
+          },
+        ],
+      },
+    ],
   },
 ];
 

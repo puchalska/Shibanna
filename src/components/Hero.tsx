@@ -1,9 +1,8 @@
 import { asset } from "@/lib/asset";
 import { couple } from "@/lib/site";
 
-/* Hero rebuilt from the Figma "Cover" component (node 3485:2177):
-   the coral doily, the "Anna & Shib" lettering, four corner motifs,
-   the two vertical captions and the silver gems — all real assets. */
+/* Hero = the Figma "Cover" component (node 3485:2177), 1195 x 765.
+   Every element is placed with the exact % offsets from that frame. */
 
 const Img = ({
   src,
@@ -26,18 +25,22 @@ const Img = ({
   />
 );
 
-function Gems({ side }: { side: "left" | "right" }) {
+function GemColumn({ side }: { side: "left" | "right" }) {
+  // three gems stacked, centred on ~54% height, just inside the frame edge
   return (
     <div
-      className="absolute top-1/2 flex -translate-y-1/2 flex-col gap-4 sm:gap-7"
-      style={{ [side]: "0.5%" } as React.CSSProperties}
+      className="absolute flex flex-col gap-[3%]"
+      style={{
+        [side]: "2.5%",
+        top: "40%",
+      }}
       aria-hidden
     >
       {["gem1", "gem2", "gem3"].map((g) => (
         <Img
           key={g}
           src={`/figma/cover/${g}.png`}
-          className="w-3.5 sm:w-6 md:w-8"
+          className="w-[12px] sm:w-[18px] md:w-[24px]"
         />
       ))}
     </div>
@@ -46,41 +49,41 @@ function Gems({ side }: { side: "left" | "right" }) {
 
 export default function Hero() {
   return (
-    <header className="flex min-h-[100svh] items-center justify-center overflow-hidden px-4 py-16 sm:px-8">
-      <div className="relative aspect-[1195/765] w-full max-w-[1040px]">
-        {/* corner motifs */}
-        <Img src="/figma/cover/corner-tl.svg" className="absolute left-0 top-0 w-[20%] sm:w-[21%]" />
-        <Img src="/figma/cover/corner-tr.svg" className="absolute right-0 top-0 w-[20%] sm:w-[21%]" />
-        <Img src="/figma/cover/corner-bl.svg" className="absolute bottom-0 left-0 w-[20%] sm:w-[21%]" />
-        <Img src="/figma/cover/corner-br.svg" className="absolute bottom-0 right-0 w-[20%] sm:w-[21%]" />
+    <header className="flex min-h-[100svh] items-center justify-center overflow-hidden px-3 py-12 sm:px-8">
+      <div className="relative aspect-[1195/765] w-full max-w-[1080px]">
+        {/* corner motifs — flush to the frame corners */}
+        <Img src="/figma/cover/corner-tl.svg" className="absolute left-0 top-0 w-[21%]" />
+        <Img src="/figma/cover/corner-tr.svg" className="absolute right-0 top-0 w-[21%]" />
+        <Img src="/figma/cover/corner-bl.svg" className="absolute bottom-0 left-0 w-[21%]" />
+        <Img src="/figma/cover/corner-br.svg" className="absolute bottom-0 right-0 w-[21%]" />
 
-        {/* doily frame — its inner oval holds the names */}
+        {/* doily frame */}
         <Img
           src="/figma/cover/doily.svg"
-          className="absolute left-1/2 top-1/2 w-[90%] -translate-x-1/2 -translate-y-1/2"
+          className="absolute left-[4.8%] top-[2.4%] w-[90.2%]"
         />
 
         {/* vertical captions, along the inner oval */}
         <Img
           src="/figma/cover/text-sambalpur.svg"
           alt={couple.place}
-          className="absolute left-[21%] top-1/2 h-[31%] -translate-y-1/2"
+          className="absolute left-[19.4%] top-[35.7%] h-[29.5%]"
         />
         <Img
           src="/figma/cover/text-dates.svg"
           alt={couple.dates}
-          className="absolute right-[21%] top-1/2 h-[30%] -translate-y-1/2"
+          className="absolute left-[74%] top-[37.1%] h-[28.3%]"
         />
 
-        {/* names — centered in the oval */}
+        {/* names — centred in the oval */}
         <Img
           src="/figma/cover/annashib.svg"
           alt={`${couple.names} — getting married`}
-          className="absolute left-1/2 top-1/2 w-[36%] -translate-x-1/2 -translate-y-1/2"
+          className="absolute left-[29.4%] top-[31.6%] w-[36.6%]"
         />
 
-        <Gems side="left" />
-        <Gems side="right" />
+        <GemColumn side="left" />
+        <GemColumn side="right" />
 
         <h1 className="sr-only">
           {couple.names} — {couple.place}, {couple.dates}
