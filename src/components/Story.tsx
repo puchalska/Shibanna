@@ -4,16 +4,11 @@ export default function Story() {
   return (
     <section className="mx-auto w-full max-w-3xl px-6 pb-16 sm:pb-24">
       <p className="font-serif text-2xl italic leading-[1.5] text-coral sm:text-[2rem] sm:leading-[1.55]">
-        <span className="text-red">{story}</span>
+        {story}
       </p>
 
       {/* aurora line + heart, echoing the Figma illustration */}
-      <svg
-        viewBox="0 0 600 90"
-        className="mt-8 w-full"
-        fill="none"
-        aria-hidden
-      >
+      <svg viewBox="0 0 600 90" className="mt-8 w-full" fill="none" aria-hidden>
         <path
           d="M4 78 C 60 74 78 40 96 44 C 108 47 112 24 122 40 C 130 52 138 30 150 46 C 160 60 176 42 196 52 C 260 78 300 30 330 40 C 360 50 372 22 386 40 C 398 55 410 34 430 46 C 470 68 520 44 596 40"
           stroke="var(--coral)"

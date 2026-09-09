@@ -34,18 +34,7 @@ export default function WhatToWear() {
   const her = active.her[variant % active.her.length];
 
   return (
-    <section
-      id="what-to-wear"
-      className="relative overflow-hidden px-6 py-16 sm:py-24"
-      style={{
-        backgroundColor: "var(--red)",
-        backgroundImage: `linear-gradient(rgba(143,10,13,0.55), rgba(143,10,13,0.7)), url(${asset(
-          "/figma/tex-red-silk.jpg",
-        )})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
+    <section id="what-to-wear" className="px-6 py-16 sm:py-24">
       <div className="mx-auto grid w-full max-w-5xl gap-10 lg:grid-cols-[minmax(0,340px)_1fr]">
         {/* left: occasion picker */}
         <div className="text-coral">
@@ -69,9 +58,10 @@ export default function WhatToWear() {
                           setActiveId(o.id);
                           setVariant(0);
                         }}
+                        aria-pressed={on}
                         className="rounded-[4px] px-4 py-2 font-serif text-base italic transition-colors"
                         style={{
-                          background: on ? "var(--orange)" : "var(--red-deep)",
+                          background: on ? "var(--orange)" : "var(--red)",
                           color: on ? "var(--red-deep)" : "var(--coral)",
                         }}
                       >
@@ -140,8 +130,12 @@ export default function WhatToWear() {
                 <button
                   type="button"
                   onClick={() => setVariant((v) => v + 1)}
-                  className="w-fit rounded-[6px] px-5 py-2.5 font-serif text-base italic"
-                  style={{ background: "var(--red-deep)", color: "var(--yellow)" }}
+                  className="w-fit rounded-[4px] border px-5 py-2.5 font-serif text-base italic shadow-[-9px_-3px_10px_rgba(0,0,0,0.21)]"
+                  style={{
+                    background: "var(--btn)",
+                    borderColor: "var(--red-deep)",
+                    color: "var(--yellow)",
+                  }}
                 >
                   ✨ Next outfit
                 </button>

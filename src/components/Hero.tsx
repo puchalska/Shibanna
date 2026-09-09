@@ -1,13 +1,43 @@
 import { asset } from "@/lib/asset";
 import { couple } from "@/lib/site";
 
-function Diamonds({ className }: { className?: string }) {
+/* Hero rebuilt from the Figma "Cover" component (node 3485:2177):
+   the coral doily, the "Anna & Shib" lettering, four corner motifs,
+   the two vertical captions and the silver gems — all real assets. */
+
+const Img = ({
+  src,
+  alt = "",
+  className,
+  style,
+}: {
+  src: string;
+  alt?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}) => (
+  // eslint-disable-next-line @next/next/no-img-element
+  <img
+    src={asset(src)}
+    alt={alt}
+    className={className}
+    style={style}
+    aria-hidden={alt === "" || undefined}
+  />
+);
+
+function Gems({ side }: { side: "left" | "right" }) {
   return (
-    <div className={`flex flex-col gap-3 ${className ?? ""}`} aria-hidden>
-      {[0, 1, 2].map((i) => (
-        <span
-          key={i}
-          className="size-2.5 rotate-45 bg-gradient-to-br from-white to-zinc-400 shadow-[0_1px_3px_rgba(0,0,0,0.35)]"
+    <div
+      className="absolute top-1/2 flex -translate-y-1/2 flex-col gap-2.5 sm:gap-5"
+      style={{ [side]: "1.5%" } as React.CSSProperties}
+      aria-hidden
+    >
+      {["gem1", "gem2", "gem3"].map((g) => (
+        <Img
+          key={g}
+          src={`/figma/cover/${g}.png`}
+          className="w-2.5 sm:w-4 md:w-[22px]"
         />
       ))}
     </div>
@@ -16,84 +46,45 @@ function Diamonds({ className }: { className?: string }) {
 
 export default function Hero() {
   return (
-    <header
-      className="relative flex min-h-[100svh] items-center justify-center overflow-hidden px-6 text-coral"
-      style={{
-        backgroundColor: "var(--red-mid)",
-        backgroundImage: `linear-gradient(rgba(82,1,0,0.35), rgba(82,1,0,0.55)), url(${asset(
-          "/figma/tex-red-felt.jpg",
-        )})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="relative flex w-full max-w-4xl items-center justify-center py-16">
-        {/* vertical captions */}
-        <span className="absolute left-0 hidden text-base tracking-wide [writing-mode:vertical-rl] rotate-180 sm:block md:text-lg">
-          {couple.place}
-        </span>
-        <span className="absolute right-0 hidden text-base tracking-wide [writing-mode:vertical-rl] sm:block md:text-lg">
-          {couple.dates}
-        </span>
-
-        <Diamonds className="absolute left-8 hidden md:flex" />
-        <Diamonds className="absolute right-8 hidden md:flex" />
+    <header className="flex min-h-[100svh] items-center justify-center overflow-hidden px-4 py-16 sm:px-8">
+      <div className="relative aspect-[1195/765] w-full max-w-[1040px]">
+        {/* corner motifs */}
+        <Img src="/figma/cover/corner-tl.svg" className="absolute left-0 top-0 w-[19%] sm:w-[21%]" />
+        <Img src="/figma/cover/corner-tr.svg" className="absolute right-0 top-0 w-[19%] sm:w-[21%]" />
+        <Img src="/figma/cover/corner-bl.svg" className="absolute bottom-0 left-0 w-[19%] sm:w-[21%]" />
+        <Img src="/figma/cover/corner-br.svg" className="absolute bottom-0 right-0 w-[19%] sm:w-[21%]" />
 
         {/* doily frame */}
-        <div className="relative aspect-[4/3] w-full max-w-2xl">
-          <svg
-            viewBox="0 0 400 300"
-            className="absolute inset-0 size-full"
-            fill="none"
-            aria-hidden
-          >
-            <ellipse
-              cx="200"
-              cy="150"
-              rx="180"
-              ry="128"
-              stroke="var(--coral)"
-              strokeWidth="1.4"
-              strokeDasharray="1 7"
-              strokeLinecap="round"
-            />
-            <ellipse
-              cx="200"
-              cy="150"
-              rx="168"
-              ry="118"
-              stroke="var(--coral)"
-              strokeWidth="1"
-              strokeDasharray="0.5 5"
-              strokeLinecap="round"
-              opacity="0.8"
-            />
-            <ellipse
-              cx="200"
-              cy="150"
-              rx="150"
-              ry="103"
-              stroke="var(--coral)"
-              strokeWidth="2.5"
-              strokeDasharray="9 11"
-              strokeLinecap="round"
-            />
-          </svg>
+        <Img
+          src="/figma/cover/doily.svg"
+          className="absolute left-1/2 top-1/2 w-[88%] -translate-x-1/2 -translate-y-1/2 sm:w-[90%]"
+        />
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <h1 className="text-center font-serif text-6xl italic leading-[0.95] tracking-tight sm:text-7xl md:text-8xl">
-              Anna
-              <br />
-              <span className="text-coral-soft">&amp; Shib</span>
-            </h1>
-          </div>
-        </div>
-      </div>
+        {/* vertical captions */}
+        <Img
+          src="/figma/cover/text-sambalpur.svg"
+          alt={couple.place}
+          className="absolute left-[17%] top-1/2 h-[30%] -translate-y-1/2"
+        />
+        <Img
+          src="/figma/cover/text-dates.svg"
+          alt={couple.dates}
+          className="absolute right-[17%] top-1/2 h-[29%] -translate-y-1/2"
+        />
 
-      {/* mobile-only caption row */}
-      <div className="absolute bottom-6 left-0 right-0 flex justify-between px-6 text-sm sm:hidden">
-        <span>{couple.place}</span>
-        <span>{couple.dates}</span>
+        {/* names */}
+        <Img
+          src="/figma/cover/annashib.svg"
+          alt={`${couple.names} — getting married`}
+          className="absolute left-1/2 top-[51%] w-[37%] -translate-x-1/2 -translate-y-1/2"
+        />
+
+        <Gems side="left" />
+        <Gems side="right" />
+
+        <h1 className="sr-only">
+          {couple.names} — {couple.place}, {couple.dates}
+        </h1>
       </div>
     </header>
   );

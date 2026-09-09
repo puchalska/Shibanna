@@ -5,23 +5,22 @@
   Palette + type lifted from the Figma "Wedding" file.
 */
 :root {
-  --paper: #e9e6e0;
-  --red: #8f0a0d; /* card / panel crimson */
+  --red: #8f0a0d; /* event-card crimson */
   --red-deep: #520100; /* darkest red */
-  --red-mid: #a5201a; /* hero felt red */
-  --coral: #ff9595; /* primary accent + text on red */
+  --red-mid: #a5201a; /* mid red */
+  --coral: #ff9595; /* primary text + line art on the red ground */
   --coral-soft: #f7b3ad;
-  --orange: #ed8235; /* timeline highlight + accordion */
+  --orange: #ed8235; /* timeline highlight + accordion header */
   --orange-bright: #ff7b00;
-  --cream: #efe4ce; /* invitation card + accordion */
+  --cream: #efe4ce; /* accordion header (light days) */
   --cream-light: #fdffd9;
   --yellow: #ffed92;
   --ink: #494949; /* timeline label text */
   --stone: #3b3733; /* timeline base bar */
+  --btn: #732e2e; /* "next outfit" button */
 }
 
 @theme inline {
-  --color-paper: var(--paper);
   --color-red: var(--red);
   --color-red-deep: var(--red-deep);
   --color-red-mid: var(--red-mid);
@@ -34,6 +33,7 @@
   --color-yellow: var(--yellow);
   --color-ink: var(--ink);
   --color-stone: var(--stone);
+  --color-btn: var(--btn);
 
   --font-serif: var(--font-serif), "Iowan Old Style", Palatino, serif;
   --font-hand: "Briem Hand", "Bradley Hand", "Segoe Print", cursive;
@@ -45,11 +45,30 @@ html {
 }
 
 body {
-  background: var(--paper);
-  color: var(--red);
+  /* red paper ground runs behind the whole page (Figma "proto" bg layer);
+     the image itself is painted by <div id="bg"> in layout so it can carry
+     the GitHub Pages base path. */
+  background-color: var(--red-mid);
+  color: var(--coral);
   font-family: var(--font-serif);
   font-synthesis-weight: none;
   -webkit-font-smoothing: antialiased;
+}
+
+#bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+/* gently deepen the paper so coral text keeps its contrast */
+#bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(60, 2, 2, 0.22), rgba(60, 2, 2, 0.28));
 }
 
 ::selection {

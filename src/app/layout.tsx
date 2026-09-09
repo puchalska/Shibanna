@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Tiro_Devanagari_Hindi, Arimo } from "next/font/google";
+import { asset } from "@/lib/asset";
 import "./globals.css";
 
 const serif = Tiro_Devanagari_Hindi({
@@ -41,7 +42,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <div
+          id="bg"
+          style={{ backgroundImage: `url(${asset("/figma/bg-red.jpg")})` }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

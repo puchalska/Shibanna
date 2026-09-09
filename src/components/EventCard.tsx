@@ -4,7 +4,7 @@ import type { EventCard as EventCardType } from "@/lib/site";
 export default function EventCard({ card }: { card: EventCardType }) {
   return (
     <article
-      className="grid overflow-hidden rounded-[10px] sm:grid-cols-[1fr_0.9fr]"
+      className="grid overflow-hidden rounded-[10px] shadow-[0_2px_20px_rgba(50,0,0,0.35)] sm:grid-cols-[1fr_0.9fr]"
       style={{ background: "var(--red)" }}
     >
       <div className="flex flex-col justify-center gap-3 p-6 sm:p-9">
