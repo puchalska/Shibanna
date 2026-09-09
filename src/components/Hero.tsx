@@ -57,26 +57,26 @@ export default function Hero() {
         {/* doily frame — its inner oval holds the names */}
         <Img
           src="/figma/cover/doily.svg"
-          className="absolute left-1/2 top-1/2 w-[94%] -translate-x-1/2 -translate-y-1/2"
+          className="absolute left-1/2 top-1/2 w-[90%] -translate-x-1/2 -translate-y-1/2"
         />
 
         {/* vertical captions, along the inner oval */}
         <Img
           src="/figma/cover/text-sambalpur.svg"
           alt={couple.place}
-          className="absolute left-[19%] top-1/2 h-[30%] -translate-y-1/2"
+          className="absolute left-[21%] top-1/2 h-[31%] -translate-y-1/2"
         />
         <Img
           src="/figma/cover/text-dates.svg"
           alt={couple.dates}
-          className="absolute right-[19%] top-1/2 h-[29%] -translate-y-1/2"
+          className="absolute right-[21%] top-1/2 h-[30%] -translate-y-1/2"
         />
 
         {/* names — centered in the oval */}
         <Img
           src="/figma/cover/annashib.svg"
           alt={`${couple.names} — getting married`}
-          className="absolute left-1/2 top-1/2 w-[32%] -translate-x-1/2 -translate-y-1/2"
+          className="absolute left-1/2 top-1/2 w-[36%] -translate-x-1/2 -translate-y-1/2"
         />
 
         <Gems side="left" />
