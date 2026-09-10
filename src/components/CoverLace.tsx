@@ -6,88 +6,48 @@ import {
   useMotionValue,
   useMotionTemplate,
   useSpring,
-  animate,
 } from "motion/react";
 import { asset } from "@/lib/asset";
+import { couple } from "@/lib/site";
 
-/* The lace (doily + 4 corner motifs) rendered twice:
-   - a faint "ghost" layer always visible
-   - a full-strength layer revealed only under a cursor-following spotlight,
-     with spring physics on the position and the reveal radius, plus a
-     slower, wider "comet" halo trailing behind.
-   Falls back to a static full-strength lace when the device can't hover
-   or the viewer prefers reduced motion. */
+/* Cover (Figma node 3485:2177):
+   - lace.svg — the coral vector lace (doily + corner motifs + gems), always visible
+   - tablecloth.jpg — the photographic lace, hidden, blooming in under a
+     spring-driven cursor spotlight (sharp reveal + slower wide "comet" halo)
+   - names + captions ride on top, always crisp
+   No-hover / reduced-motion devices just get lace.svg. */
 
-function LaceSet({ revealed = false }: { revealed?: boolean }) {
-  const img = (src: string, cls: string) => (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={asset(src)}
-      alt=""
-      aria-hidden
-      className={`absolute ${cls}`}
-      draggable={false}
-    />
-  );
-  return (
-    <div
-      className="absolute inset-0"
-      style={
-        revealed
-          ? { filter: "drop-shadow(0 0 7px rgba(255,149,149,0.55)) brightness(1.06)" }
-          : undefined
-      }
-    >
-      {img("/figma/cover/corner-tl.svg", "left-0 top-0 w-[21%]")}
-      {img("/figma/cover/corner-tl.svg", "right-0 top-0 w-[21%] -scale-x-100")}
-      {img("/figma/cover/corner-tl.svg", "bottom-0 left-0 w-[21%] -scale-y-100")}
-      {img("/figma/cover/corner-tl.svg", "bottom-0 right-0 w-[21%] -scale-100")}
-      {img("/figma/cover/doily.svg", "left-[4.8%] top-[2.4%] w-[90.2%]")}
-    </div>
-  );
-}
+const LACE = "/figma/cover/lace.svg";
+const CLOTH = "/figma/cover/tablecloth.jpg";
 
 export default function CoverLace() {
   const box = useRef<HTMLDivElement>(null);
   const [interactive, setInteractive] = useState(false);
 
-  // cursor position in % of the box
   const px = useMotionValue(50);
   const py = useMotionValue(50);
-  // reveal radii (px)
   const r = useMotionValue(0);
   const rHalo = useMotionValue(0);
 
-  // sharp spotlight — snappy
   const sx = useSpring(px, { stiffness: 220, damping: 26, mass: 0.7 });
   const sy = useSpring(py, { stiffness: 220, damping: 26, mass: 0.7 });
   const sr = useSpring(r, { stiffness: 90, damping: 18 });
-  // comet halo — wide, laggy
   const hx = useSpring(px, { stiffness: 45, damping: 22 });
   const hy = useSpring(py, { stiffness: 45, damping: 22 });
   const hr = useSpring(rHalo, { stiffness: 55, damping: 20 });
 
-  const maskImage = useMotionTemplate`radial-gradient(circle ${sr}px at ${sx}% ${sy}%, #000 0%, #000 42%, rgba(0,0,0,0.28) 74%, transparent 100%), radial-gradient(circle ${hr}px at ${hx}% ${hy}%, rgba(0,0,0,0.55) 0%, transparent 78%)`;
+  const maskImage = useMotionTemplate`radial-gradient(circle ${sr}px at ${sx}% ${sy}%, #000 0%, #000 38%, rgba(0,0,0,0.28) 72%, transparent 100%), radial-gradient(circle ${hr}px at ${hx}% ${hy}%, rgba(0,0,0,0.5) 0%, transparent 78%)`;
 
   useEffect(() => {
-    const canHover =
-      window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const canHover = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
     const reduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
     if (!canHover || reduced) return;
-
     setInteractive(true);
-
-    // intro: the lace is fully drawn, then recedes — an invitation to hover
-    r.set(2600);
-    rHalo.set(2600);
-    const t = setTimeout(() => {
-      animate(r, 0, { duration: 1.1, ease: [0.4, 0, 0.2, 1] });
-      animate(rHalo, 0, { duration: 1.3, ease: [0.4, 0, 0.2, 1] });
-    }, 850);
-    return () => clearTimeout(t);
-  }, [r, rHalo]);
+  }, []);
 
   const onMove = (e: React.PointerEvent) => {
     const el = box.current;
@@ -95,39 +55,77 @@ export default function CoverLace() {
     const b = el.getBoundingClientRect();
     px.set(((e.clientX - b.left) / b.width) * 100);
     py.set(((e.clientY - b.top) / b.height) * 100);
-    r.set(190);
-    rHalo.set(300);
+    r.set(210);
+    rHalo.set(330);
   };
   const onLeave = () => {
     r.set(0);
     rHalo.set(0);
   };
 
+  const CImg = ({
+    src,
+    alt = "",
+    className,
+  }: {
+    src: string;
+    alt?: string;
+    className?: string;
+  }) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={asset(src)}
+      alt={alt}
+      className={`pointer-events-none ${className ?? ""}`}
+      aria-hidden={alt === "" || undefined}
+      draggable={false}
+    />
+  );
+
   return (
     <div
       ref={box}
-      className="absolute inset-0"
+      className="absolute inset-0 overflow-hidden"
       onPointerMove={interactive ? onMove : undefined}
       onPointerLeave={interactive ? onLeave : undefined}
     >
-      {/* ghost */}
-      <div className="absolute inset-0" style={{ opacity: interactive ? 0.14 : 1 }}>
-        <LaceSet />
-      </div>
-      {/* spotlight reveal */}
+      {/* the coral vector lace — always visible */}
+      <CImg src={LACE} className="absolute inset-0 size-full object-cover" />
+
+      {/* the photographic tablecloth, revealed under the cursor */}
       {interactive && (
-        <motion.div
-          className="absolute inset-0"
+        <motion.img
+          src={asset(CLOTH)}
+          alt=""
+          aria-hidden
+          draggable={false}
+          className="pointer-events-none absolute inset-0 size-full object-cover"
           style={{
+            filter: "drop-shadow(0 0 14px rgba(255,149,149,0.45))",
             maskImage,
             WebkitMaskImage: maskImage,
             maskComposite: "add",
             WebkitMaskComposite: "source-over",
           }}
-        >
-          <LaceSet revealed />
-        </motion.div>
+        />
       )}
+
+      {/* names + captions on top, always crisp */}
+      <CImg
+        src="/figma/cover/text-sambalpur.svg"
+        alt={couple.place}
+        className="absolute left-[19.4%] top-[35.7%] h-[29.5%]"
+      />
+      <CImg
+        src="/figma/cover/text-dates.svg"
+        alt={couple.dates}
+        className="absolute left-[74%] top-[37.1%] h-[28.3%]"
+      />
+      <CImg
+        src="/figma/cover/annashib.svg"
+        alt={`${couple.names} — getting married`}
+        className="absolute left-[29.4%] top-[31.6%] w-[36.6%]"
+      />
     </div>
   );
 }
