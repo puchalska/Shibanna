@@ -1,5 +1,6 @@
 import { asset } from "@/lib/asset";
 import { couple } from "@/lib/site";
+import CoverLace from "./CoverLace";
 
 /* Hero = the Figma "Cover" component (node 3485:2177), 1195 x 765.
    Every element is placed with the exact % offsets from that frame. */
@@ -26,13 +27,13 @@ const Img = ({
 );
 
 function GemColumn({ side }: { side: "left" | "right" }) {
-  // three gems stacked, centred on ~54% height, just inside the frame edge
+  // three diamond gems, spaced, centred on ~46% height, at the frame edge
   return (
     <div
-      className="absolute flex flex-col gap-[3%]"
+      className="absolute flex flex-col items-center gap-3 sm:gap-5 md:gap-7"
       style={{
-        [side]: "2.5%",
-        top: "40%",
+        [side]: "1.5%",
+        top: "33%",
       }}
       aria-hidden
     >
@@ -40,7 +41,7 @@ function GemColumn({ side }: { side: "left" | "right" }) {
         <Img
           key={g}
           src={`/figma/cover/${g}.png`}
-          className="w-[12px] sm:w-[18px] md:w-[24px]"
+          className="w-[9px] rotate-45 sm:w-[12px] md:w-[16px]"
         />
       ))}
     </div>
@@ -51,17 +52,8 @@ export default function Hero() {
   return (
     <header className="flex min-h-[100svh] items-center justify-center overflow-hidden px-3 py-12 sm:px-8">
       <div className="relative aspect-[1195/765] w-full max-w-[1080px]">
-        {/* corner motifs — flush to the frame corners */}
-        <Img src="/figma/cover/corner-tl.svg" className="absolute left-0 top-0 w-[21%]" />
-        <Img src="/figma/cover/corner-tr.svg" className="absolute right-0 top-0 w-[21%]" />
-        <Img src="/figma/cover/corner-bl.svg" className="absolute bottom-0 left-0 w-[21%]" />
-        <Img src="/figma/cover/corner-br.svg" className="absolute bottom-0 right-0 w-[21%]" />
-
-        {/* doily frame */}
-        <Img
-          src="/figma/cover/doily.svg"
-          className="absolute left-[4.8%] top-[2.4%] w-[90.2%]"
-        />
+        {/* doily + corner motifs, with the cursor-following reveal */}
+        <CoverLace />
 
         {/* vertical captions, along the inner oval */}
         <Img
