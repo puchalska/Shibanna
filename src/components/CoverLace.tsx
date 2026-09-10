@@ -34,7 +34,10 @@ export default function CoverLace() {
   const sy = useSpring(y, { stiffness: 260, damping: 30, mass: 0.6 });
   const sr = useSpring(r, { stiffness: 120, damping: 20 });
 
-  const clipPath = useMotionTemplate`circle(${sr}px at ${sx}px ${sy}px)`;
+  // single soft-edged radial gradient — solid core, feathered falloff.
+  // (the tablecloth is transparent-except-lace, so even if a browser drops
+  //  the mask the worst case is "lace detail everywhere" — never a patch.)
+  const maskImage = useMotionTemplate`radial-gradient(circle ${sr}px at ${sx}px ${sy}px, #000 0%, #000 45%, rgba(0,0,0,0.35) 72%, transparent 100%)`;
 
   useEffect(() => {
     const canHover = window.matchMedia(
@@ -52,7 +55,7 @@ export default function CoverLace() {
     const b = el.getBoundingClientRect();
     x.set(e.clientX - b.left);
     y.set(e.clientY - b.top);
-    r.set(180);
+    r.set(200);
   };
   const onLeave = () => r.set(0);
 
@@ -93,7 +96,7 @@ export default function CoverLace() {
           aria-hidden
           draggable={false}
           className="pointer-events-none absolute inset-0 size-full object-cover"
-          style={{ clipPath, WebkitClipPath: clipPath }}
+          style={{ maskImage, WebkitMaskImage: maskImage }}
         />
       )}
 
