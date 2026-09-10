@@ -21,12 +21,15 @@ export default function EventCard({ card }: { card: EventCardType }) {
         </div>
       </div>
 
-      <div className="relative min-h-[220px] sm:min-h-[360px]">
+      <div
+        className="relative min-h-[220px] sm:min-h-[360px]"
+        style={{ backgroundColor: "#b64a12" }}
+      >
         <img
           src={asset(card.image)}
           alt=""
           className="absolute inset-0 size-full object-cover"
-          loading="lazy"
+          style={{ filter: "grayscale(0.55) contrast(1.35) brightness(0.82)" }}
         />
         <img
           src={asset("/figma/schedule/overlay-orange.jpg")}

@@ -29,12 +29,25 @@ export type EventCard = {
   image: string;
 };
 
+/* the "Block" header variants, taken from the Figma component:
+   Arrival / Departure  → transparent fill, coral #ff9595 dashed border, coral text
+   Prewedding / Wedding  → orange #ed8235 fill+border, dark #642526 text
+   Recovery              → cream #efe4ce fill+border, dark #642526 text
+   (a thick dashed border in the fill colour lets the red page show through
+   the gaps — the "perforated" edge) */
+export type DayHeader = { fill: string; border: string; text: string };
+
+const HEADER = {
+  coral: { fill: "transparent", border: "#ff9595", text: "#ff9595" },
+  orange: { fill: "#ed8235", border: "#ed8235", text: "#642526" },
+  cream: { fill: "#efe4ce", border: "#efe4ce", text: "#642526" },
+} satisfies Record<string, DayHeader>;
+
 export type Day = {
   id: string;
   date: string;
   name: string;
-  /** header tint */
-  tone: "cream" | "orange";
+  header: DayHeader;
   /** short avatar-style note shown above the schedule */
   note?: string;
   blocks: TimelineBlock[];
@@ -46,7 +59,7 @@ export const days: Day[] = [
     id: "arrival",
     date: "17th December",
     name: "Arrival",
-    tone: "cream",
+    header: HEADER.coral,
     note: "Remember to set up your e-sim & e-visa before your arrival in India.",
     blocks: [{ label: "(Optional) Shopping", start: 15, end: 19, optional: true }],
     cards: [
@@ -71,7 +84,7 @@ export const days: Day[] = [
     id: "prewedding",
     date: "18th December",
     name: "Prewedding",
-    tone: "orange",
+    header: HEADER.orange,
     blocks: [
       { label: "Engagement", start: 12, end: 15 },
       { label: "Mehendi / Henna & Sangeet", start: 16, end: 23 },
@@ -98,7 +111,7 @@ export const days: Day[] = [
     id: "recovery",
     date: "19th December",
     name: "Recovery",
-    tone: "cream",
+    header: HEADER.cream,
     blocks: [
       { label: "(Optional) Safari or / and Shopping", start: 10, end: 18, optional: true },
     ],
@@ -119,7 +132,7 @@ export const days: Day[] = [
     id: "wedding",
     date: "20th December",
     name: "Wedding",
-    tone: "orange",
+    header: HEADER.orange,
     blocks: [
       { label: "Haldi", start: 8, end: 11 },
       { label: "Barat & Wedding", start: 15, end: 22 },
@@ -152,7 +165,7 @@ export const days: Day[] = [
     id: "departure",
     date: "21st December",
     name: "Departure",
-    tone: "cream",
+    header: HEADER.coral,
     blocks: [
       { label: "Breakfast", start: 8, end: 11 },
       { label: "Flight to Delhi", start: 14, end: 18 },

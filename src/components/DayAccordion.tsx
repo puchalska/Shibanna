@@ -55,7 +55,12 @@ export default function DayAccordion({
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full flex-wrap items-center justify-between gap-y-2 rounded-[3px] border-4 border-dashed border-coral py-5 pl-6 pr-4 text-left text-coral sm:pl-10 sm:pr-6"
+        className="flex w-full flex-wrap items-center justify-between gap-y-2 rounded-[3px] border-4 border-dashed py-5 pl-6 pr-4 text-left sm:pl-10 sm:pr-6"
+        style={{
+          background: day.header.fill,
+          borderColor: day.header.border,
+          color: day.header.text,
+        }}
       >
         <span className="font-serif text-[24px] italic sm:text-[32px]">
           {day.date}
@@ -67,15 +72,15 @@ export default function DayAccordion({
           <svg
             width="30"
             height="30"
-            viewBox="0 0 24 24"
+            viewBox="0 0 48 48"
             fill="none"
-            className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+            className={`transition-transform duration-300 ${open ? "" : "rotate-180"}`}
             aria-hidden
           >
             <path
-              d="M6 9l6 6 6-6"
+              d="M30 27L24 21L18 27"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="5"
               strokeLinecap="round"
               strokeLinejoin="round"
             />

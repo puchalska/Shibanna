@@ -84,13 +84,17 @@ export default function WhatToWear() {
         <div className="text-coral">
           <h2 className="font-serif text-4xl italic sm:text-5xl">What to wear?</h2>
 
-          <p className="mt-3 font-serif text-2xl not-italic">Occasion</p>
+          <p className="mt-3 font-serif text-[26px] not-italic sm:text-[30px]">
+            Occasion
+          </p>
           <div className="mt-3 flex flex-col gap-4">
             {occasions.map((o) => {
               const on = o.id === activeId;
               return (
                 <div key={o.id}>
-                  <p className="mb-1 font-serif text-lg">{o.day}</p>
+                  <p className="mb-1.5 font-label text-[18px] font-bold text-coral">
+                    {o.day}
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     {o.labels.map((label) => (
                       <button
@@ -98,10 +102,12 @@ export default function WhatToWear() {
                         type="button"
                         aria-pressed={on}
                         onClick={() => select(o.id)}
-                        className="rounded-[4px] px-4 py-2 font-serif text-base italic transition-colors"
+                        className="rounded-[4px] px-5 font-serif text-[20px] italic transition-colors"
                         style={{
                           background: on ? "var(--orange)" : "var(--red)",
-                          color: on ? "var(--red-deep)" : "var(--coral)",
+                          color: on ? "#642526" : "var(--coral)",
+                          paddingTop: on ? 10 : 10,
+                          paddingBottom: on ? 8 : 10,
                         }}
                       >
                         {label}
@@ -113,7 +119,9 @@ export default function WhatToWear() {
             })}
           </div>
 
-          <p className="mt-8 font-serif text-2xl not-italic">Colours</p>
+          <p className="mt-8 font-serif text-[26px] not-italic sm:text-[30px]">
+            Colours
+          </p>
           <div className="mt-3 grid max-w-[224px] grid-cols-6 gap-2">
             {wearColors.map((c) => (
               <span
@@ -162,11 +170,11 @@ export default function WhatToWear() {
                 type="button"
                 onClick={() => setFitIndex((v) => v + 1)}
                 disabled={active.fits.length < 2}
-                className="rounded-[4px] border px-5 py-2.5 font-serif text-base italic shadow-[-9px_-3px_10px_rgba(0,0,0,0.21)] disabled:opacity-40"
+                className="rounded-[4px] border px-[21px] py-3.5 font-serif text-[22px] not-italic shadow-[-9px_-3px_10px_rgba(0,0,0,0.21)] disabled:opacity-40"
                 style={{
                   background: "var(--btn)",
                   borderColor: "var(--red-deep)",
-                  color: "var(--yellow)",
+                  color: "var(--coral)",
                 }}
               >
                 ✨ Next outfit

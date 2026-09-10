@@ -8,29 +8,60 @@ import {
 
 /* Timeline from Figma node 3209:11494 — a stone-textured bar (6am → midnight),
    orange-textured segments for scheduled blocks, dashed coral tick lines, and
-   an orange label box connected to each segment. */
+   an orange label box (Arimo bold, right-aligned) above each segment with a
+   thin connector down to it. */
 
 const span = TIMELINE_END - TIMELINE_START;
-const pct = (h: number) => ((h - TIMELINE_START) / span) * 100;
-const clamp = (n: number) => Math.max(0, Math.min(100, n));
+const pct = (h: number) => Math.max(0, Math.min(100, ((h - TIMELINE_START) / span) * 100));
+
+/* give overlapping blocks their own stacked label row */
+function withRows(blocks: TimelineBlock[]) {
+  const rows: number[] = []; // row -> latest end%
+  return blocks.map((b) => {
+    const s = pct(b.start);
+    let row = rows.findIndex((end) => s >= end - 0.01);
+    if (row === -1) {
+      row = rows.length;
+      rows.push(0);
+    }
+    rows[row] = pct(b.end);
+    return { b, row };
+  });
+}
 
 export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
+  const placed = withRows(blocks);
+  const rowCount = placed.reduce((m, p) => Math.max(m, p.row + 1), 1);
+  const rowH = 34; // px per label row
+
   return (
-    <div className="relative w-full py-10 sm:py-14">
+    <div className="w-full">
       {/* label boxes + connectors (sm+) */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 hidden h-14 sm:block">
-        {blocks.map((b) => {
-          const mid = clamp((pct(b.start) + pct(b.end)) / 2);
+      <div
+        className="relative hidden sm:block"
+        style={{ height: rowCount * rowH + 14 }}
+      >
+        {placed.map(({ b, row }) => {
+          const l = pct(b.start);
+          const w = pct(b.end) - l;
           return (
             <div
               key={b.label}
-              className="absolute flex -translate-x-1/2 flex-col items-center"
-              style={{ left: `${mid}%`, top: 0 }}
+              className="absolute"
+              style={{ left: `${l}%`, width: `${w}%`, bottom: 0 }}
             >
-              <span className="whitespace-nowrap rounded-[3px] bg-orange px-3 py-1.5 font-label text-[12px] font-bold text-ink md:text-[13px]">
-                {b.label}
-              </span>
-              <span className="h-6 w-[3px] bg-orange" />
+              <div
+                className="flex items-center justify-end bg-orange px-2 py-1"
+                style={{ marginBottom: row * rowH }}
+              >
+                <span className="truncate font-label text-[12px] font-bold text-ink md:text-[13px]">
+                  {b.label}
+                </span>
+              </div>
+              <span
+                className="absolute left-1/2 w-[3px] -translate-x-1/2 bg-orange"
+                style={{ top: `calc(100% - ${row * rowH}px)`, height: row * rowH + 8 }}
+              />
             </div>
           );
         })}
@@ -38,7 +69,7 @@ export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
 
       {/* bar */}
       <div
-        className="relative h-3.5 w-full sm:h-4"
+        className="relative mt-2 h-4 w-full"
         style={{
           backgroundColor: "var(--stone)",
           backgroundImage: `url(${asset("/figma/schedule/stone.jpg")})`,
@@ -51,32 +82,30 @@ export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
             key={b.label}
             className="absolute inset-y-0"
             style={{
-              left: `${clamp(pct(b.start))}%`,
-              width: `${clamp(pct(b.end)) - clamp(pct(b.start))}%`,
+              left: `${pct(b.start)}%`,
+              width: `${pct(b.end) - pct(b.start)}%`,
               backgroundColor: "var(--orange)",
               backgroundImage: `url(${asset("/figma/schedule/overlay-orange.jpg")})`,
               backgroundSize: "cover",
-              backgroundPosition: "center",
             }}
           />
         ))}
 
-        {/* dashed tick lines through the bar */}
+        {/* dashed coral tick lines */}
         {[0, 33.333, 66.667, 100].map((x, i) => (
           <span
             key={i}
-            className="absolute top-1/2 -translate-y-1/2 border-l-[3px] border-dashed border-coral"
+            className="absolute top-1/2 h-[46px] border-l-[3px] border-dashed border-coral"
             style={{
               left: `${x}%`,
-              height: "60px",
-              transform: `translate(${i === 0 ? "0" : i === 3 ? "-3px" : "-50%"}, -50%)`,
+              transform: `translate(${i === 3 ? "-3px" : i === 0 ? "0" : "-1.5px"}, -50%)`,
             }}
           />
         ))}
       </div>
 
       {/* tick labels */}
-      <div className="mt-9 flex justify-between font-serif text-sm text-coral sm:text-base">
+      <div className="mt-7 flex justify-between font-serif text-[15px] text-coral sm:text-base">
         {timelineTicks.map((t) => (
           <span key={t}>{t}</span>
         ))}
@@ -87,7 +116,7 @@ export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
         {blocks.map((b) => (
           <li
             key={b.label}
-            className="rounded-[3px] bg-orange px-2.5 py-1 font-label text-xs font-bold text-ink"
+            className="bg-orange px-2.5 py-1 font-label text-xs font-bold text-ink"
           >
             {b.label}
           </li>
