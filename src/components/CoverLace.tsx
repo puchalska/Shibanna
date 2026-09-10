@@ -12,15 +12,14 @@ import { couple } from "@/lib/site";
 
 /* Cover (Figma node 3485:2177):
    - lace.svg — coral vector lace (doily + corners + gems), always visible
-   - tablecloth.png — the photographic lace with its felt background KNOCKED
-     OUT (transparent), so it only ever adds lace detail — never a red patch.
-     Revealed inside a circle that springs along with the cursor: clip-path,
-     no mask, no filter, no opacity — so there is no light or colour change,
-     just more detail where you hover.
+   - lace-full.webp — the full pressed-lace pattern, felt background removed
+     and flattened to a single coral so it can only ever add lace linework —
+     never a patch, a tone shift, or a light change. Revealed inside a soft
+     feathered circle that springs along with the cursor.
    No-hover / reduced-motion devices get lace.svg alone. */
 
 const LACE = "/figma/cover/lace.svg";
-const CLOTH = "/figma/cover/tablecloth.png";
+const DETAIL = "/figma/cover/lace-full.webp";
 
 export default function CoverLace() {
   const box = useRef<HTMLDivElement>(null);
@@ -35,7 +34,7 @@ export default function CoverLace() {
   const sr = useSpring(r, { stiffness: 120, damping: 20 });
 
   // single soft-edged radial gradient — solid core, feathered falloff.
-  // (the tablecloth is transparent-except-lace, so even if a browser drops
+  // (the detail layer is flat-coral on transparent, so even if a browser drops
   //  the mask the worst case is "lace detail everywhere" — never a patch.)
   const maskImage = useMotionTemplate`radial-gradient(circle ${sr}px at ${sx}px ${sy}px, #000 0%, #000 45%, rgba(0,0,0,0.35) 72%, transparent 100%)`;
 
@@ -91,7 +90,7 @@ export default function CoverLace() {
       {/* photographic lace detail, revealed in a circle under the cursor */}
       {interactive && (
         <motion.img
-          src={asset(CLOTH)}
+          src={asset(DETAIL)}
           alt=""
           aria-hidden
           draggable={false}
