@@ -38,6 +38,7 @@
   --font-serif: var(--font-serif), "Iowan Old Style", Palatino, serif;
   --font-hand: "Briem Hand", "Bradley Hand", "Segoe Print", cursive;
   --font-label: var(--font-label), "Helvetica Neue", Arial, sans-serif;
+  --font-sans2: var(--font-sans2), "Helvetica Neue", Arial, sans-serif;
 }
 
 html {

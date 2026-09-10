@@ -53,17 +53,17 @@ export const days: Day[] = [
       {
         title: "Taxi pickup",
         body: "We will pick you up when you reach the airport so let us know the day & time of your arrival.",
-        image: "/figma/taxi-map.jpg",
+        image: "/figma/schedule/card-taxi.jpg",
       },
       {
         title: "Grand Siba Hotel",
         body: "Taxi will drive you to the hotel in Sambalpur. We will spend there 2 nights.",
-        image: "/figma/hotel.jpg",
+        image: "/figma/schedule/card-hotel.jpg",
       },
       {
         title: "Shopping is optional",
         body: "Another chance of obtaining clothes for ceremony is 19th of December.",
-        image: "/figma/shop-anandworld.jpg",
+        image: "/figma/schedule/card-shop.jpg",
       },
     ],
   },

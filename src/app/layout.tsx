@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Tiro_Devanagari_Hindi, Arimo } from "next/font/google";
+import { Tiro_Devanagari_Hindi, Arimo, Alan_Sans } from "next/font/google";
 import { asset } from "@/lib/asset";
 import "./globals.css";
 
@@ -18,6 +18,13 @@ const label = Arimo({
   display: "swap",
 });
 
+const sans = Alan_Sans({
+  variable: "--font-sans2",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Anna & Shib — 17–20 December 2026, Sambalpur",
   description:
@@ -28,7 +35,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${serif.variable} ${label.variable} antialiased`}
+      className={`${serif.variable} ${label.variable} ${sans.variable} antialiased`}
     >
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />

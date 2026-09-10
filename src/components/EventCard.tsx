@@ -1,26 +1,38 @@
 import { asset } from "@/lib/asset";
 import type { EventCard as EventCardType } from "@/lib/site";
 
+/* Section from Figma node 3390:3157 — crimson card, 3fr text / 2fr photo,
+   the photo carried under an orange texture in hard-light (the "duotone"). */
+
 export default function EventCard({ card }: { card: EventCardType }) {
   return (
     <article
-      className="grid overflow-hidden rounded-[10px] shadow-[0_2px_20px_rgba(50,0,0,0.35)] sm:grid-cols-[1fr_0.9fr]"
+      className="grid overflow-hidden rounded-[6px] sm:grid-cols-[3fr_2fr]"
       style={{ background: "var(--red)" }}
     >
-      <div className="flex flex-col justify-center gap-3 p-6 sm:p-9">
-        <h3 className="font-serif text-2xl italic text-coral sm:text-3xl">
-          {card.title}
-        </h3>
-        <p className="font-serif text-lg italic leading-[1.5] text-coral-soft sm:text-xl">
-          {card.body}
-        </p>
+      <div className="flex items-center px-8 py-8 sm:px-12 sm:py-6 lg:px-16">
+        <div className="font-serif italic text-coral">
+          <p className="text-[26px] leading-[1.35] sm:text-[32px] lg:text-[40px]">
+            {card.title}
+          </p>
+          <p className="mt-2 text-lg leading-[1.45] sm:text-xl lg:text-[26px]">
+            {card.body}
+          </p>
+        </div>
       </div>
-      <div className="duotone-wrap relative min-h-[180px] sm:min-h-full">
+
+      <div className="relative min-h-[220px] sm:min-h-[360px]">
         <img
           src={asset(card.image)}
           alt=""
-          className="duotone absolute inset-0 size-full object-cover"
+          className="absolute inset-0 size-full object-cover"
           loading="lazy"
+        />
+        <img
+          src={asset("/figma/schedule/overlay-orange.jpg")}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 size-full object-cover mix-blend-hard-light"
         />
       </div>
     </article>
