@@ -20,7 +20,7 @@ export default function Schedule() {
       id="schedule"
       className="mx-auto w-full max-w-[1180px] px-6 py-8 sm:px-10"
     >
-      <WeekOverview days={days} activeId={activeId} onSelect={select} />
+      <WeekOverview days={days} />
       <WeekStrip days={days} activeId={activeId} onSelect={select} />
       <div id="day-detail" className="scroll-mt-24 pt-8">
         <DayDetail key={active.id} day={active} />

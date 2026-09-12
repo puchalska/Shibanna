@@ -9,25 +9,19 @@ import { pct, formatHour, segmentStyle, baseBarStyle } from "./Timeline";
    commit to reading any single day. Colour is just dark (free) vs orange
    (something's on), same code as the detail Timeline; the row label itself
    (in that day's own accent) is what tells you which day you're looking
-   at. Hovering a block surfaces its time + name; clicking anywhere on a
-   row selects that day (same selection the sticky WeekStrip drives, so
-   the two stay in sync).
+   at. Hovering a block surfaces its time + name.
+
+   Purely a picture, not a control — every day stays fully visible and
+   nothing here is clickable. WeekStrip, right below, is the actual nav
+   for picking a day.
 
    Deliberately simpler than the per-day Timeline: overlapping blocks are
    not stacked into separate lanes here — at this zoomed-out level that
    would make every row a different height. The colour just deepens where
    two blocks overlap. Full detail (exact overlap, exact minutes) is one
-   click away. */
+   click away, via WeekStrip. */
 
-export default function WeekOverview({
-  days,
-  activeId,
-  onSelect,
-}: {
-  days: Day[];
-  activeId: string;
-  onSelect: (id: string) => void;
-}) {
+export default function WeekOverview({ days }: { days: Day[] }) {
   const [hover, setHover] = useState<{ dayId: string; block: TimelineBlock } | null>(null);
 
   return (
@@ -38,14 +32,10 @@ export default function WeekOverview({
 
       <div className="flex flex-col">
         {days.map((day) => {
-          const active = day.id === activeId;
           return (
-            <button
+            <div
               key={day.id}
-              type="button"
-              onClick={() => onSelect(day.id)}
-              className="grid grid-cols-[84px_1fr] items-center gap-3 border-b border-coral/10 py-2.5 text-left transition-opacity duration-200 last:border-0 sm:grid-cols-[150px_1fr] sm:gap-5"
-              style={{ opacity: active ? 1 : 0.6 }}
+              className="grid grid-cols-[84px_1fr] items-center gap-3 border-b border-coral/10 py-2.5 text-left last:border-0 sm:grid-cols-[150px_1fr] sm:gap-5"
             >
               <span className="flex flex-col">
                 <span
@@ -95,7 +85,7 @@ export default function WeekOverview({
                   </span>
                 )}
               </span>
-            </button>
+            </div>
           );
         })}
       </div>
