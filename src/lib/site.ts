@@ -18,6 +18,43 @@ export const story =
 export const anniversaryNote =
   "If you can’t make it this year, save the date — 30.12.2027 — for our 1st anniversary in Sri Lanka.";
 
+/* "What you need to prepare" — pulled from the guest-info doc. Practical,
+   pre-trip logistics (visa, flights, insurance, gift, hotels), distinct
+   from What to Wear's per-occasion styling. */
+export const preparation = {
+  visa: {
+    body: "Most guests will need an Indian e-tourist visa. Apply once you’ve booked your flights — approval usually takes about a week, but apply a month ahead just in case. We’ll send detailed instructions closer to the date.",
+    cost: "$35",
+    link: "https://indianvisaonline.gov.in/evisa/Registration",
+    linkLabel: "Apply for the e-visa",
+  },
+  insurance:
+    "Travel insurance is recommended — check whether your credit card already covers it.",
+  vaccine: "No vaccination is mandatory for European travellers.",
+  flights: {
+    body: "Flights from Europe typically run 7,000–9,000 NOK. LOT is cheapest; Lufthansa or Finnair have better service — we recommend Lufthansa. Book international to Delhi or Mumbai, then a short domestic hop to Jharsuguda.",
+    example: "e.g. Lufthansa Frankfurt–Delhi, then IndiGo Delhi–Jharsuguda.",
+  },
+  packing:
+    "Light, breathable fabrics — expect around 30°C. See What to Wear for outfit details per event.",
+  gift: "Only your blessings and letters.",
+};
+
+export type Hotel = { name: string; dates: string; link: string };
+
+export const hotels: Hotel[] = [
+  {
+    name: "Grand Siba Hotel",
+    dates: "17–19 December",
+    link: "https://www.tripadvisor.in/Hotel_Review-g1213781-d12335313-Reviews-Hotel_The_Grand_Siba-Sambalpur_Sambalpur_District_Odisha.html",
+  },
+  {
+    name: "The Royal Retreat",
+    dates: "20 December · wedding venue",
+    link: "https://royalretreathotel.com",
+  },
+];
+
 export type TimelineBlock = {
   label: string;
   /** 24h decimal, e.g. 15.5 = 15:30. Timeline runs 6:00 → 24:00. */
@@ -116,7 +153,12 @@ export const days: Day[] = [
     name: "Recovery",
     header: HEADER.cream,
     blocks: [
-      { label: "(Optional) Safari or / and Shopping", start: 10, end: 18, optional: true },
+      {
+        label: "(Optional) Safari or / and Shopping",
+        start: 10,
+        end: 18,
+        optional: true,
+      },
     ],
     cards: [
       {
