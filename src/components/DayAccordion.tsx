@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId } from "react";
 import { asset } from "@/lib/asset";
 import type { Day } from "@/lib/site";
 import Timeline from "./Timeline";
@@ -40,21 +40,22 @@ function NoteBubble({ text }: { text: string }) {
 
 export default function DayAccordion({
   day,
-  defaultOpen = false,
+  open,
+  onToggle,
 }: {
   day: Day;
-  defaultOpen?: boolean;
+  open: boolean;
+  onToggle: () => void;
 }) {
-  const [open, setOpen] = useState(defaultOpen);
   const panelId = useId();
 
   return (
-    <div className="scroll-mt-6" id={day.id}>
+    <div className="scroll-mt-24" id={day.id}>
       <button
         type="button"
         aria-expanded={open}
         aria-controls={panelId}
-        onClick={() => setOpen((v) => !v)}
+        onClick={onToggle}
         className="flex w-full flex-wrap items-center justify-between gap-y-2 rounded-[3px] border-4 border-dashed py-5 pl-6 pr-4 text-left sm:pl-10 sm:pr-6"
         style={{
           background: day.header.fill,
