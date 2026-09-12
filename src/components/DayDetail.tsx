@@ -1,16 +1,17 @@
-"use client";
-
-import { useId } from "react";
 import { asset } from "@/lib/asset";
 import type { Day } from "@/lib/site";
 import Timeline from "./Timeline";
 import EventCard from "./EventCard";
 
-/* Arrival / day section from Figma node 3209:11481:
-   - "Block" header: coral 4px dashed border, transparent, Tiro italic 32px
+/* Day section from Figma node 3209:11481:
+   - "Block" header: dashed border in that day's own colour, Tiro italic 32px
    - Timeline
    - Note bubble: layered avatar + orange bubble (Alan Sans, pale yellow)
-   - Section cards */
+   - Section cards
+
+   One day at a time — WeekOverview/WeekStrip are the nav, this just
+   renders whichever day is currently selected. No expand/collapse of its
+   own; picking a different day up top swaps what's rendered here. */
 
 function NoteBubble({ text }: { text: string }) {
   return (
@@ -38,25 +39,11 @@ function NoteBubble({ text }: { text: string }) {
   );
 }
 
-export default function DayAccordion({
-  day,
-  open,
-  onToggle,
-}: {
-  day: Day;
-  open: boolean;
-  onToggle: () => void;
-}) {
-  const panelId = useId();
-
+export default function DayDetail({ day }: { day: Day }) {
   return (
-    <div className="scroll-mt-24" id={day.id}>
-      <button
-        type="button"
-        aria-expanded={open}
-        aria-controls={panelId}
-        onClick={onToggle}
-        className="flex w-full flex-wrap items-center justify-between gap-y-2 rounded-[3px] border-4 border-dashed py-5 pl-6 pr-4 text-left sm:pl-10 sm:pr-6"
+    <div>
+      <div
+        className="flex w-full flex-wrap items-center justify-between gap-y-2 rounded-[3px] border-4 border-dashed py-5 pl-6 pr-4 sm:pl-10 sm:pr-6"
         style={{
           background: day.header.fill,
           borderColor: day.header.border,
@@ -66,31 +53,13 @@ export default function DayAccordion({
         <span className="font-serif text-[24px] italic sm:text-[32px]">
           {day.date}
         </span>
-        <span className="flex items-center gap-2.5">
-          <span className="font-serif text-[24px] italic sm:text-[32px]">
-            {day.name}
-          </span>
-          <svg
-            width="30"
-            height="30"
-            viewBox="0 0 48 48"
-            fill="none"
-            className={`transition-transform duration-300 ${open ? "" : "rotate-180"}`}
-            aria-hidden
-          >
-            <path
-              d="M30 27L24 21L18 27"
-              stroke="currentColor"
-              strokeWidth="5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+        <span className="font-serif text-[24px] italic sm:text-[32px]">
+          {day.name}
         </span>
-      </button>
+      </div>
 
-      <div id={panelId} hidden={!open} className="flex flex-col gap-6 py-8 sm:py-14">
-        <Timeline blocks={day.blocks} accent={day.header.border} />
+      <div className="flex flex-col gap-6 py-8 sm:py-14">
+        <Timeline blocks={day.blocks} />
 
         {day.note && <NoteBubble text={day.note} />}
 

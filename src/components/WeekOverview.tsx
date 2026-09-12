@@ -6,11 +6,13 @@ import { timelineTicks, type Day, type TimelineBlock } from "@/lib/site";
 import { pct, formatHour, segmentStyle } from "./Timeline";
 
 /* The first thing you see entering Schedule: all five days on one shared
-   6am-midnight axis, each tinted by its own header colour — the "zoomed
-   out" dose of the week's shape before you commit to reading any single
-   day. Hovering a block surfaces its time + name; clicking anywhere on a
-   row opens that day's full detail below (same selection the sticky
-   WeekStrip drives, so the two stay in sync).
+   6am-midnight axis — the "zoomed out" dose of the week's shape before you
+   commit to reading any single day. Colour is just dark (free) vs orange
+   (something's on), same code as the detail Timeline; the row label itself
+   (in that day's own accent) is what tells you which day you're looking
+   at. Hovering a block surfaces its time + name; clicking anywhere on a
+   row selects that day (same selection the sticky WeekStrip drives, so
+   the two stay in sync).
 
    Deliberately simpler than the per-day Timeline: overlapping blocks are
    not stacked into separate lanes here — at this zoomed-out level that
@@ -85,7 +87,7 @@ export default function WeekOverview({
                           setHover((h) => (h?.dayId === day.id && h.block === b ? null : h))
                         }
                         className="absolute inset-y-0"
-                        style={{ left: `${l}%`, width: `${w}%`, ...segmentStyle(day.header.border, b.optional) }}
+                        style={{ left: `${l}%`, width: `${w}%`, ...segmentStyle(b.optional) }}
                       />
                     );
                   })}

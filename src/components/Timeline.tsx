@@ -7,16 +7,21 @@ import {
 } from "@/lib/site";
 
 /* Timeline from Figma node 3209:11494 — a stone-textured bar (6am → midnight),
-   tinted segments for scheduled blocks (tinted by that day's own accent —
-   see `accent`, shared with WeekOverview/WeekStrip so a day reads the same
-   colour everywhere), dashed coral tick lines, and a label box above each
-   segment with a thin connector down to it.
+   dashed coral tick lines, and a label box above each segment with a thin
+   connector down to it.
+
+   Colour code is deliberately just two colours, cohesive across this,
+   WeekOverview and the mobile list: dark stone = free time, orange = an
+   event (a lighter dashed orange for optional ones). Which day it belongs
+   to is already carried by the row/section it sits in — colour is spent
+   entirely on busy-vs-free, not spent again on day identity.
 
    Segments use a resolution-independent CSS hatch + inset shadow for grain
    instead of a photographic texture stretched to fit — a raster image
    `cover`-fit into a narrow box either blurs or shows the same static crop
-   regardless of segment width; the CSS pattern stays crisp at any size and
-   tints correctly with the day's accent instead of always reading orange. */
+   regardless of segment width; the CSS pattern stays crisp at any size. */
+
+const ORANGE = "var(--orange)";
 
 const span = TIMELINE_END - TIMELINE_START;
 export const pct = (h: number) =>
@@ -32,16 +37,16 @@ export function formatHour(h: number) {
   return mins ? `${hour}:${String(mins).padStart(2, "0")}${period}` : `${hour}${period}`;
 }
 
-/** shared "grain" for every busy block, tinted to the day's own accent */
-export function segmentStyle(accent: string, optional?: boolean): React.CSSProperties {
+/** shared "grain" for every busy block — orange means "something's on" */
+export function segmentStyle(optional?: boolean): React.CSSProperties {
   return {
-    backgroundColor: `color-mix(in srgb, ${accent} ${optional ? 22 : 82}%, transparent)`,
+    backgroundColor: `color-mix(in srgb, ${ORANGE} ${optional ? 22 : 82}%, transparent)`,
     backgroundImage:
       "repeating-linear-gradient(127deg, rgba(255,255,255,0.16) 0px, rgba(255,255,255,0.16) 1.5px, transparent 1.5px, transparent 7px)",
     boxShadow: optional
       ? undefined
       : "inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -2px 3px rgba(0,0,0,0.32)",
-    border: optional ? `1.5px dashed ${accent}` : undefined,
+    border: optional ? `1.5px dashed ${ORANGE}` : undefined,
   };
 }
 
@@ -63,13 +68,7 @@ function withRows(blocks: TimelineBlock[]) {
   });
 }
 
-export default function Timeline({
-  blocks,
-  accent = "var(--orange)",
-}: {
-  blocks: TimelineBlock[];
-  accent?: string;
-}) {
+export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
   const placed = withRows(blocks);
   const rowCount = placed.reduce((m, p) => Math.max(m, p.row + 1), 1);
   const rowH = 44; // px per label row
@@ -98,9 +97,9 @@ export default function Timeline({
                 style={{
                   marginBottom: row * rowH,
                   background: b.optional
-                    ? `color-mix(in srgb, ${accent} 30%, transparent)`
-                    : accent,
-                  border: b.optional ? `1.5px dashed ${accent}` : undefined,
+                    ? `color-mix(in srgb, ${ORANGE} 30%, transparent)`
+                    : ORANGE,
+                  border: b.optional ? `1.5px dashed ${ORANGE}` : undefined,
                 }}
               >
                 <span className="whitespace-nowrap font-label text-[10px] font-bold uppercase tracking-[0.06em] text-ink/70">
@@ -115,7 +114,7 @@ export default function Timeline({
                 style={{
                   top: `calc(100% - ${row * rowH}px)`,
                   height: row * rowH + 8,
-                  background: accent,
+                  background: ORANGE,
                 }}
               />
             </div>
@@ -144,7 +143,7 @@ export default function Timeline({
               width: `${pct(b.end) - pct(b.start)}%`,
               top: row * (laneH + laneGap),
               height: laneH,
-              ...segmentStyle(accent, b.optional),
+              ...segmentStyle(b.optional),
             }}
           />
         ))}
@@ -188,9 +187,9 @@ export default function Timeline({
             className="flex items-baseline gap-2 px-2.5 py-1.5 font-label text-xs font-bold text-ink"
             style={{
               background: b.optional
-                ? `color-mix(in srgb, ${accent} 30%, transparent)`
-                : accent,
-              border: b.optional ? `1.5px dashed ${accent}` : undefined,
+                ? `color-mix(in srgb, ${ORANGE} 30%, transparent)`
+                : ORANGE,
+              border: b.optional ? `1.5px dashed ${ORANGE}` : undefined,
             }}
           >
             <span className="shrink-0 tracking-[0.04em] text-ink/70">
