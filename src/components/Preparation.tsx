@@ -30,6 +30,12 @@ const cards = [
     title: "Gift",
     body: preparation.gift,
   },
+  {
+    title: "Mental preparedness",
+    body: preparation.mentalPrep,
+    link: "https://www.google.com/maps/place/Sambalpur,+Odisha,+India",
+    linkLabel: "See Sambalpur on Google Maps",
+  },
 ];
 
 export default function Preparation() {

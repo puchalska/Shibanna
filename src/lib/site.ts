@@ -38,6 +38,8 @@ export const preparation = {
   packing:
     "Light, breathable fabrics — expect around 30°C. See What to Wear for outfit details per event.",
   gift: "Only your blessings and letters.",
+  mentalPrep:
+    "Sambalpur isn’t a tourist destination — it’s a real, local, working city, not a polished one. Before you go, pull it up on Google Maps and have a walk through Street View. Seeing the streets, the traffic, the pace ahead of time makes it feel like part of the adventure instead of a surprise.",
 };
 
 export type Hotel = { name: string; dates: string; link: string };
