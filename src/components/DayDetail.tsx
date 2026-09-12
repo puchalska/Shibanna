@@ -63,7 +63,7 @@ export default function DayDetail({ day }: { day: Day }) {
 
         {day.note && <NoteBubble text={day.note} />}
 
-        <div className="flex flex-col gap-1.5">
+        <div className="grid gap-3 sm:grid-cols-2">
           {day.cards.map((card) => (
             <EventCard key={card.title} card={card} />
           ))}
