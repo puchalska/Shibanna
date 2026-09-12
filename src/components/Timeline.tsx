@@ -115,10 +115,16 @@ export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
                   boxShadow: b.optional ? undefined : "0 2px 6px rgba(0,0,0,0.4)",
                 }}
               >
-                <span className="whitespace-nowrap font-label text-[10px] font-bold uppercase tracking-[0.06em] text-ink/70">
+                <span
+                  className="whitespace-nowrap font-label text-[10px] font-bold uppercase tracking-[0.06em]"
+                  style={{ color: b.optional ? "var(--coral)" : "rgba(73,73,73,0.7)" }}
+                >
                   {formatHour(b.start)}–{formatHour(b.end)}
                 </span>
-                <span className="truncate font-label text-[12px] font-bold text-ink md:text-[13px]">
+                <span
+                  className="truncate font-label text-[12px] font-bold md:text-[13px]"
+                  style={{ color: b.optional ? "var(--coral)" : "var(--ink)" }}
+                >
                   {b.label}
                 </span>
               </div>
@@ -190,15 +196,19 @@ export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
         {blocks.map((b) => (
           <li
             key={b.label}
-            className="flex items-baseline gap-2 px-2.5 py-1.5 font-label text-xs font-bold text-ink"
+            className="flex items-baseline gap-2 px-2.5 py-1.5 font-label text-xs font-bold"
             style={{
               background: b.optional
                 ? `color-mix(in srgb, ${ORANGE} 30%, transparent)`
                 : ORANGE,
               border: b.optional ? `1.5px dashed ${ORANGE}` : undefined,
+              color: b.optional ? "var(--coral)" : "var(--ink)",
             }}
           >
-            <span className="shrink-0 tracking-[0.04em] text-ink/70">
+            <span
+              className="shrink-0 tracking-[0.04em]"
+              style={{ color: b.optional ? "var(--coral)" : "rgba(73,73,73,0.7)" }}
+            >
               {formatHour(b.start)}–{formatHour(b.end)}
             </span>
             <span>{b.label}</span>

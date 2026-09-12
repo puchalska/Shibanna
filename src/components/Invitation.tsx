@@ -3,7 +3,7 @@ import { invitation } from "@/lib/site";
 
 export default function Invitation() {
   return (
-    <section className="mx-auto w-full max-w-4xl px-6 pb-16 pt-20 sm:pb-24 sm:pt-28">
+    <section className="w-full pb-16 pt-20 sm:pb-24 sm:pt-28">
       <div className="relative">
         {/* scalloped coral border straight from Figma (node 3408:12041) */}
         {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -27,7 +27,7 @@ export default function WeekStrip({
               type="button"
               onClick={() => onSelect(day.id)}
               aria-current={active || undefined}
-              className="flex shrink-0 snap-start flex-col items-start gap-0.5 whitespace-nowrap rounded-[3px] border-2 border-dashed px-3.5 py-2.5 text-left transition-all duration-200 sm:shrink sm:whitespace-normal"
+              className="flex shrink-0 snap-start flex-col items-start gap-0.5 whitespace-nowrap rounded-[3px] border-2 px-3.5 py-2.5 text-left transition-all duration-200 sm:shrink sm:whitespace-normal"
               style={{
                 background: active
                   ? tinted

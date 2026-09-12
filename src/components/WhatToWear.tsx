@@ -4,66 +4,24 @@ import { useState } from "react";
 import { asset } from "@/lib/asset";
 import { occasions, wearColors, type Fit } from "@/lib/site";
 
-function Collage({ fit }: { fit: Fit }) {
+function Collage({ fit, alt }: { fit: Fit; alt: string }) {
   return (
-    <div className="relative mx-auto aspect-[4/5] w-full max-w-[460px]">
-      {fit.pieces.map((p, i) => (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          key={p.src + i}
-          src={asset(p.src)}
-          alt=""
-          aria-hidden
-          className="absolute"
-          style={{
-            left: `${p.x}%`,
-            top: `${p.y}%`,
-            width: `${p.w}%`,
-            transform: p.rotate ? `rotate(${p.rotate}deg)` : undefined,
-            mixBlendMode: i === 0 ? "multiply" : undefined,
-            opacity: i === 0 ? 0.95 : 1,
-          }}
-        />
-      ))}
-
-      {fit.notes.map((n, i) => (
-        <p
-          key={i}
-          className="absolute font-hand text-[12px] leading-tight text-cream-light sm:text-sm"
-          style={{
-            left: `${n.x}%`,
-            top: `${n.y}%`,
-            width: `${n.w}%`,
-            textAlign: n.align ?? "left",
-          }}
-        >
-          {n.text}
-        </p>
-      ))}
-
-      {fit.notes.map(
-        (n, i) =>
-          n.arrow && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={`a${i}`}
-              src={asset(n.arrow.src)}
-              alt=""
-              aria-hidden
-              className="absolute"
-              style={{
-                left: `${n.arrow.x}%`,
-                top: `${n.arrow.y}%`,
-                width: `${n.arrow.w}%`,
-                transform: n.arrow.rotate
-                  ? `rotate(${n.arrow.rotate}deg)`
-                  : undefined,
-              }}
-            />
-          ),
-      )}
+    <div className="mx-auto w-full max-w-2xl">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={asset(fit.image)} alt={alt} width={1000} height={580} className="w-full" />
     </div>
   );
+}
+
+/** group consecutive same-day occasions under one "Day N" header — Haldi
+ *  and Wedding & Reception are both Day 3, each independently selectable */
+function groupByDay(list: typeof occasions) {
+  return list.reduce<{ day: string; occasions: typeof occasions }[]>((groups, o) => {
+    const last = groups[groups.length - 1];
+    if (last?.day === o.day) last.occasions.push(o);
+    else groups.push({ day: o.day, occasions: [o] });
+    return groups;
+  }, []);
 }
 
 export default function WhatToWear() {
@@ -71,6 +29,7 @@ export default function WhatToWear() {
   const [fitIndex, setFitIndex] = useState(0);
   const active = occasions.find((o) => o.id === activeId) ?? occasions[0];
   const fit = active.fits[fitIndex % active.fits.length];
+  const dayGroups = groupByDay(occasions);
 
   const select = (id: string) => {
     setActiveId(id);
@@ -88,35 +47,37 @@ export default function WhatToWear() {
             Occasion
           </p>
           <div className="mt-3 flex flex-col gap-4">
-            {occasions.map((o) => {
-              const on = o.id === activeId;
-              return (
-                <div key={o.id}>
-                  <p className="mb-1.5 font-label text-[18px] font-bold text-coral">
-                    {o.day}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {o.labels.map((label) => (
-                      <button
-                        key={label}
-                        type="button"
-                        aria-pressed={on}
-                        onClick={() => select(o.id)}
-                        className="rounded-[4px] px-5 font-serif text-[20px] italic transition-colors"
-                        style={{
-                          background: on ? "var(--orange)" : "var(--red)",
-                          color: on ? "#642526" : "var(--coral)",
-                          paddingTop: on ? 10 : 10,
-                          paddingBottom: on ? 8 : 10,
-                        }}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
+            {dayGroups.map((group) => (
+              <div key={group.day}>
+                <p className="mb-1.5 font-label text-[18px] font-bold text-coral">
+                  {group.day}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {group.occasions.map((o) =>
+                    o.labels.map((label) => {
+                      const on = o.id === activeId;
+                      return (
+                        <button
+                          key={label}
+                          type="button"
+                          aria-pressed={on}
+                          onClick={() => select(o.id)}
+                          className="rounded-[4px] px-5 font-serif text-[20px] italic transition-colors"
+                          style={{
+                            background: on ? "var(--orange)" : "var(--red)",
+                            color: on ? "#642526" : "var(--coral)",
+                            paddingTop: on ? 10 : 10,
+                            paddingBottom: on ? 8 : 10,
+                          }}
+                        >
+                          {label}
+                        </button>
+                      );
+                    }),
+                  )}
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
 
           <p className="mt-8 font-serif text-[26px] not-italic sm:text-[30px]">
@@ -146,7 +107,7 @@ export default function WhatToWear() {
             </span>
 
             <div className="mt-4 w-full">
-              <Collage fit={fit} />
+              <Collage fit={fit} alt={`${active.labels.join(" / ")} outfit — ${fit.name}`} />
             </div>
 
             <div className="mt-2 flex items-center justify-center gap-4">
