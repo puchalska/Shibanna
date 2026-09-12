@@ -10,12 +10,12 @@ export default function EventCard({ card }: { card: EventCardType }) {
       className="grid overflow-hidden rounded-[6px] sm:grid-cols-[3fr_2fr]"
       style={{ background: "var(--red)" }}
     >
-      <div className="flex items-center px-8 py-8 sm:px-12 sm:py-6 lg:px-16">
+      <div className="flex items-center px-7 py-6 sm:px-10 sm:py-6 lg:px-14">
         <div className="font-serif italic text-coral">
-          <p className="text-[26px] leading-[1.35] sm:text-[32px] lg:text-[40px]">
+          <p className="text-[20px] leading-[1.3] sm:text-[24px] lg:text-[30px]">
             {card.title}
           </p>
-          <p className="mt-2 text-lg leading-[1.45] sm:text-xl lg:text-[26px]">
+          <p className="mt-2 text-sm leading-[1.5] sm:text-base lg:text-lg">
             {card.body}
           </p>
         </div>

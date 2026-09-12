@@ -90,7 +90,7 @@ export default function DayAccordion({
       </button>
 
       <div id={panelId} hidden={!open} className="flex flex-col gap-6 py-8 sm:py-14">
-        <Timeline blocks={day.blocks} />
+        <Timeline blocks={day.blocks} accent={day.header.border} />
 
         {day.note && <NoteBubble text={day.note} />}
 

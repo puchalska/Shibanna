@@ -7,20 +7,22 @@ import {
 } from "@/lib/site";
 
 /* Timeline from Figma node 3209:11494 — a stone-textured bar (6am → midnight),
-   orange-textured segments for scheduled blocks, dashed coral tick lines, and
-   an orange label box (Arimo bold, right-aligned) above each segment with a
-   thin connector down to it.
+   tinted segments for scheduled blocks (tinted by that day's own accent —
+   see `accent`, shared with WeekOverview/WeekStrip so a day reads the same
+   colour everywhere), dashed coral tick lines, and a label box above each
+   segment with a thin connector down to it.
 
-   Extended for glanceability: segments carry their own start–end time (no
-   more eyeballing position against 4 sparse ticks), overlapping blocks get
-   their own stacked lane in the bar itself instead of painting over each
-   other, optional blocks read as dashed/lighter rather than identical to
-   firm plans, and the mobile list keeps the same time info. */
+   Segments use a resolution-independent CSS hatch + inset shadow for grain
+   instead of a photographic texture stretched to fit — a raster image
+   `cover`-fit into a narrow box either blurs or shows the same static crop
+   regardless of segment width; the CSS pattern stays crisp at any size and
+   tints correctly with the day's accent instead of always reading orange. */
 
 const span = TIMELINE_END - TIMELINE_START;
-const pct = (h: number) => Math.max(0, Math.min(100, ((h - TIMELINE_START) / span) * 100));
+export const pct = (h: number) =>
+  Math.max(0, Math.min(100, ((h - TIMELINE_START) / span) * 100));
 
-function formatHour(h: number) {
+export function formatHour(h: number) {
   if (h === 12) return "noon";
   if (h === 24 || h === 0) return "midnight";
   const period = h < 12 ? "am" : "pm";
@@ -28,6 +30,19 @@ function formatHour(h: number) {
   if (hour === 0) hour = 12;
   const mins = Math.round((h % 1) * 60);
   return mins ? `${hour}:${String(mins).padStart(2, "0")}${period}` : `${hour}${period}`;
+}
+
+/** shared "grain" for every busy block, tinted to the day's own accent */
+export function segmentStyle(accent: string, optional?: boolean): React.CSSProperties {
+  return {
+    backgroundColor: `color-mix(in srgb, ${accent} ${optional ? 22 : 82}%, transparent)`,
+    backgroundImage:
+      "repeating-linear-gradient(127deg, rgba(255,255,255,0.16) 0px, rgba(255,255,255,0.16) 1.5px, transparent 1.5px, transparent 7px)",
+    boxShadow: optional
+      ? undefined
+      : "inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -2px 3px rgba(0,0,0,0.32)",
+    border: optional ? `1.5px dashed ${accent}` : undefined,
+  };
 }
 
 const MINOR_TICKS = [9, 15, 21];
@@ -48,7 +63,13 @@ function withRows(blocks: TimelineBlock[]) {
   });
 }
 
-export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
+export default function Timeline({
+  blocks,
+  accent = "var(--orange)",
+}: {
+  blocks: TimelineBlock[];
+  accent?: string;
+}) {
   const placed = withRows(blocks);
   const rowCount = placed.reduce((m, p) => Math.max(m, p.row + 1), 1);
   const rowH = 44; // px per label row
@@ -76,8 +97,10 @@ export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
                 className="flex flex-col items-end gap-0.5 px-2 py-1"
                 style={{
                   marginBottom: row * rowH,
-                  background: b.optional ? "rgba(237,130,53,0.4)" : "var(--orange)",
-                  border: b.optional ? "1.5px dashed var(--orange)" : undefined,
+                  background: b.optional
+                    ? `color-mix(in srgb, ${accent} 30%, transparent)`
+                    : accent,
+                  border: b.optional ? `1.5px dashed ${accent}` : undefined,
                 }}
               >
                 <span className="whitespace-nowrap font-label text-[10px] font-bold uppercase tracking-[0.06em] text-ink/70">
@@ -88,8 +111,12 @@ export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
                 </span>
               </div>
               <span
-                className="absolute left-1/2 w-[3px] -translate-x-1/2 bg-orange"
-                style={{ top: `calc(100% - ${row * rowH}px)`, height: row * rowH + 8 }}
+                className="absolute left-1/2 w-[3px] -translate-x-1/2"
+                style={{
+                  top: `calc(100% - ${row * rowH}px)`,
+                  height: row * rowH + 8,
+                  background: accent,
+                }}
               />
             </div>
           );
@@ -98,13 +125,14 @@ export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
 
       {/* bar */}
       <div
-        className="relative mt-2 w-full"
+        className="relative mt-2 w-full overflow-hidden rounded-[2px]"
         style={{
           height: barHeight,
           backgroundColor: "var(--stone)",
           backgroundImage: `url(${asset("/figma/schedule/stone.jpg")})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
+          boxShadow: "inset 0 2px 5px rgba(0,0,0,0.45)",
         }}
       >
         {placed.map(({ b, row }) => (
@@ -116,16 +144,7 @@ export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
               width: `${pct(b.end) - pct(b.start)}%`,
               top: row * (laneH + laneGap),
               height: laneH,
-              ...(b.optional
-                ? {
-                    backgroundColor: "rgba(237,130,53,0.28)",
-                    border: "1.5px dashed var(--orange)",
-                  }
-                : {
-                    backgroundColor: "var(--orange)",
-                    backgroundImage: `url(${asset("/figma/schedule/overlay-orange.jpg")})`,
-                    backgroundSize: "cover",
-                  }),
+              ...segmentStyle(accent, b.optional),
             }}
           />
         ))}
@@ -168,8 +187,10 @@ export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
             key={b.label}
             className="flex items-baseline gap-2 px-2.5 py-1.5 font-label text-xs font-bold text-ink"
             style={{
-              background: b.optional ? "rgba(237,130,53,0.28)" : "var(--orange)",
-              border: b.optional ? "1.5px dashed var(--orange)" : undefined,
+              background: b.optional
+                ? `color-mix(in srgb, ${accent} 30%, transparent)`
+                : accent,
+              border: b.optional ? `1.5px dashed ${accent}` : undefined,
             }}
           >
             <span className="shrink-0 tracking-[0.04em] text-ink/70">

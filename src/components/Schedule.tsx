@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { days } from "@/lib/site";
 import DayAccordion from "./DayAccordion";
+import WeekOverview from "./WeekOverview";
 import WeekStrip from "./WeekStrip";
 
 export default function Schedule() {
@@ -18,6 +19,7 @@ export default function Schedule() {
       id="schedule"
       className="mx-auto w-full max-w-[1180px] px-6 py-8 sm:px-10"
     >
+      <WeekOverview days={days} activeId={openId} onSelect={select} />
       <WeekStrip days={days} activeId={openId} onSelect={select} />
       <div className="mt-8 flex flex-col gap-12">
         {days.map((day) => (
