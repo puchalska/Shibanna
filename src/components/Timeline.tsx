@@ -81,7 +81,7 @@ function withRows(blocks: TimelineBlock[]) {
 export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
   const placed = withRows(blocks);
   const rowCount = placed.reduce((m, p) => Math.max(m, p.row + 1), 1);
-  const rowH = 44; // px per label row
+  const rowH = 56; // px per label row — clearance for two stacked, overlapping labels
   const laneH = 14; // px per bar lane
   const laneGap = 4;
   const barHeight = rowCount * laneH + (rowCount - 1) * laneGap;
@@ -103,13 +103,16 @@ export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
               style={{ left: `${l}%`, width: `${w}%`, bottom: 0 }}
             >
               <div
-                className="flex flex-col items-end gap-0.5 px-2 py-1"
+                className="flex flex-col items-end gap-0.5 rounded-[2px] px-2 py-1"
                 style={{
                   marginBottom: row * rowH,
                   background: b.optional
                     ? `color-mix(in srgb, ${ORANGE} 30%, transparent)`
                     : ORANGE,
-                  border: b.optional ? `1.5px dashed ${ORANGE}` : undefined,
+                  border: b.optional
+                    ? `1.5px dashed ${ORANGE}`
+                    : "1px solid rgba(0,0,0,0.3)",
+                  boxShadow: b.optional ? undefined : "0 2px 6px rgba(0,0,0,0.4)",
                 }}
               >
                 <span className="whitespace-nowrap font-label text-[10px] font-bold uppercase tracking-[0.06em] text-ink/70">
