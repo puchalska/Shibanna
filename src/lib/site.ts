@@ -15,6 +15,9 @@ export const invitation =
 export const story =
   "We met in Umeå & fell in love in the night of the biggest aurora we’ve ever seen. 7 years later, 3 countries and 2 cultures — Polish & Oriya — are merging for the first time in an official ceremony.";
 
+export const anniversaryNote =
+  "If you can’t make it this year, save the date — 30.12.2027 — for our 1st anniversary in Sri Lanka.";
+
 export type TimelineBlock = {
   label: string;
   /** 24h decimal, e.g. 15.5 = 15:30. Timeline runs 6:00 → 24:00. */

@@ -1,4 +1,3 @@
-import { asset } from "@/lib/asset";
 import {
   TIMELINE_START,
   TIMELINE_END,
@@ -6,22 +5,33 @@ import {
   type TimelineBlock,
 } from "@/lib/site";
 
-/* Timeline from Figma node 3209:11494 — a stone-textured bar (6am → midnight),
-   dashed coral tick lines, and a label box above each segment with a thin
-   connector down to it.
+/* Timeline from Figma node 3209:11494 — a dark woven-look bar (6am →
+   midnight), dashed coral tick lines, and a label box above each segment
+   with a thin connector down to it.
 
    Colour code is deliberately just two colours, cohesive across this,
-   WeekOverview and the mobile list: dark stone = free time, orange = an
-   event (a lighter dashed orange for optional ones). Which day it belongs
-   to is already carried by the row/section it sits in — colour is spent
+   WeekOverview and the mobile list: dark = free time, orange = an event
+   (a lighter dashed orange for optional ones). Which day it belongs to is
+   already carried by the row/section it sits in — colour is spent
    entirely on busy-vs-free, not spent again on day identity.
 
-   Segments use a resolution-independent CSS hatch + inset shadow for grain
-   instead of a photographic texture stretched to fit — a raster image
-   `cover`-fit into a narrow box either blurs or shows the same static crop
-   regardless of segment width; the CSS pattern stays crisp at any size. */
+   Both the base bar and the event segments use the same resolution-
+   independent CSS hatch + inset shadow for grain, rather than a
+   photographic texture stretched to fit — a raster image `cover`-fit into
+   a narrow, short box either turns to visible noise or shows the same
+   static crop regardless of size; the CSS pattern stays crisp and calm at
+   any dimension and reads as one consistent woven material. */
 
 const ORANGE = "var(--orange)";
+
+/** the "free time" base of every bar — dark, quiet, same weave as the
+ *  orange segments so busy/free reads as one material, not two */
+export const baseBarStyle: React.CSSProperties = {
+  backgroundColor: "var(--stone)",
+  backgroundImage:
+    "repeating-linear-gradient(127deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1.5px, transparent 1.5px, transparent 7px)",
+  boxShadow: "inset 0 2px 5px rgba(0,0,0,0.45)",
+};
 
 const span = TIMELINE_END - TIMELINE_START;
 export const pct = (h: number) =>
@@ -125,14 +135,7 @@ export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
       {/* bar */}
       <div
         className="relative mt-2 w-full overflow-hidden rounded-[2px]"
-        style={{
-          height: barHeight,
-          backgroundColor: "var(--stone)",
-          backgroundImage: `url(${asset("/figma/schedule/stone.jpg")})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          boxShadow: "inset 0 2px 5px rgba(0,0,0,0.45)",
-        }}
+        style={{ height: barHeight, ...baseBarStyle }}
       >
         {placed.map(({ b, row }) => (
           <div

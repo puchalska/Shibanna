@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { asset } from "@/lib/asset";
 import { timelineTicks, type Day, type TimelineBlock } from "@/lib/site";
-import { pct, formatHour, segmentStyle } from "./Timeline";
+import { pct, formatHour, segmentStyle, baseBarStyle } from "./Timeline";
 
 /* The first thing you see entering Schedule: all five days on one shared
    6am-midnight axis — the "zoomed out" dose of the week's shape before you
@@ -68,13 +67,7 @@ export default function WeekOverview({
               <span className="relative h-[20px] w-full sm:h-[24px]">
                 <span
                   className="absolute inset-0 overflow-hidden rounded-[2px]"
-                  style={{
-                    backgroundColor: "var(--stone)",
-                    backgroundImage: `url(${asset("/figma/schedule/stone.jpg")})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    boxShadow: "inset 0 2px 4px rgba(0,0,0,0.4)",
-                  }}
+                  style={baseBarStyle}
                 >
                   {day.blocks.map((b) => {
                     const l = pct(b.start);

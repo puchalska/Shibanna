@@ -1,5 +1,5 @@
 import { asset } from "@/lib/asset";
-import { couple } from "@/lib/site";
+import { anniversaryNote, couple } from "@/lib/site";
 
 export default function Footer() {
   return (
@@ -15,6 +15,9 @@ export default function Footer() {
       </p>
       <p className="mt-8 font-label text-xs uppercase tracking-[0.25em] text-coral-soft">
         See you there
+      </p>
+      <p className="mx-auto mt-6 max-w-sm font-serif text-base italic leading-snug text-coral-soft">
+        {anniversaryNote}
       </p>
     </footer>
   );
