@@ -138,7 +138,7 @@ export const days: Day[] = [
     header: HEADER.orange,
     blocks: [
       { label: "Haldi", start: 8, end: 11 },
-      { label: "Barat & Wedding", start: 15, end: 22 },
+      { label: "Barat & Wedding", start: 15, end: 20 },
       { label: "Reception", start: 20, end: 24 },
     ],
     cards: [
