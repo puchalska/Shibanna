@@ -58,16 +58,23 @@ const cards = [
   },
 ];
 
-export default function Preparation() {
-  const [open, setOpen] = useState<Set<string>>(new Set());
+// row groups for the toggle behaviour below — matches the lg:grid-cols-3
+// layout, so "expand" always means "expand this whole row together"
+const ROW_SIZE = 3;
+const rows = Array.from({ length: Math.ceil(cards.length / ROW_SIZE) }, (_, i) =>
+  cards.slice(i * ROW_SIZE, i * ROW_SIZE + ROW_SIZE),
+);
 
-  const toggle = (title: string) => {
-    setOpen((prev) => {
+export default function Preparation() {
+  const [openRows, setOpenRows] = useState<Set<number>>(new Set());
+
+  const toggleRow = (rowIndex: number) => {
+    setOpenRows((prev) => {
       const next = new Set(prev);
-      if (next.has(title)) {
-        next.delete(title);
+      if (next.has(rowIndex)) {
+        next.delete(rowIndex);
       } else {
-        next.add(title);
+        next.add(rowIndex);
       }
       return next;
     });
@@ -86,16 +93,16 @@ export default function Preparation() {
       </h2>
 
       <div className="mt-10 grid items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map((c) => {
-          const isOpen = open.has(c.title);
-          return (
+        {rows.map((row, rowIndex) => {
+          const isOpen = openRows.has(rowIndex);
+          return row.map((c) => (
             <div
               key={c.title}
               className="flex h-full flex-col rounded-[3px] border-2 border-dashed border-coral/35"
             >
               <button
                 type="button"
-                onClick={() => toggle(c.title)}
+                onClick={() => toggleRow(rowIndex)}
                 aria-expanded={isOpen}
                 className="flex w-full cursor-pointer items-center justify-between gap-3 px-5 py-4 text-left outline-none ring-inset ring-coral focus-visible:ring-2"
               >
@@ -139,7 +146,7 @@ export default function Preparation() {
                 </div>
               </div>
             </div>
-          );
+          ));
         })}
       </div>
 
