@@ -29,12 +29,17 @@ export const preparation = {
     linkLabel: "Apply for the e-visa",
   },
   insurance:
-    "Travel insurance is recommended — check whether your credit card already covers it.",
-  vaccine: "No vaccination is mandatory for European travellers.",
+    "Travel insurance is recommended — check whether your credit card already covers it. We'd highly recommend getting a credit card and topping it up to a higher bracket just in case. Check your benefits for access to airport lounges — might come in handy.",
+  vaccine:
+    "No vaccination is mandatory for European travellers, however you will be entering a malaria threat zone. Some vaccines take a couple of doses, so it's nice to get prepared in advance.",
   flights: {
     body: "Flights from Europe typically run 7,000–9,000 NOK. LOT is cheapest; Lufthansa or Finnair have better service — we recommend Lufthansa. Book international to Delhi or Mumbai, then a short domestic hop to Jharsuguda.",
     example: "e.g. Lufthansa Frankfurt–Delhi, then IndiGo Delhi–Jharsuguda.",
   },
+  payments:
+    "Cards are widely accepted in hotels, restaurants and shops in cities, but carry some cash for small vendors, markets and tips — Sambalpur isn’t as card-friendly as Delhi or Mumbai. UPI (India’s dominant payment app) needs an Indian bank account, so it’s not usable by most guests. Tell your bank you’re travelling so your card doesn’t get blocked, and expect a foreign-transaction fee unless your card waives it.",
+  esim:
+    "Get an e-SIM before you fly — apps like Airalo or Holafly let you buy an India data plan and activate it as soon as you land, no physical SIM swap needed. Keep your home SIM active (even just for incoming texts) so you can still receive OTP codes for banking and 2FA. A local physical SIM is an alternative, but needs ID and can take longer to set up.",
   packing:
     "Light, breathable fabrics — expect around 30°C. See What to Wear for outfit details per event.",
   gift: "Only your blessings and letters.",

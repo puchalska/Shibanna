@@ -14,13 +14,25 @@ const cards = [
     linkLabel: preparation.visa.linkLabel,
   },
   {
-    title: "Insurance & vaccine",
-    body: `${preparation.insurance} ${preparation.vaccine}`,
+    title: "Insurance",
+    body: preparation.insurance,
+  },
+  {
+    title: "Vaccination",
+    body: preparation.vaccine,
   },
   {
     title: "Flights",
     body: preparation.flights.body,
     note: preparation.flights.example,
+  },
+  {
+    title: "Payments",
+    body: preparation.payments,
+  },
+  {
+    title: "Get an e-SIM",
+    body: preparation.esim,
   },
   {
     title: "Packing",
