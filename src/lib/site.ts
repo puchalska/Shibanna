@@ -251,7 +251,6 @@ export type Occasion = {
   id: string;
   day: string;
   labels: string[];
-  blurb: string;
   fits: Fit[];
   colors: string[];
 };
@@ -334,7 +333,6 @@ export const occasions: Occasion[] = [
     id: "casual",
     day: "Day 1",
     labels: ["Casual"],
-    blurb: "Travel days & downtime. Comfortable, breathable, nothing precious.",
     fits: casualFits,
     colors: casualColors,
   },
@@ -342,7 +340,6 @@ export const occasions: Occasion[] = [
     id: "mehendi",
     day: "Day 2",
     labels: ["Mehendi & Sangeet"],
-    blurb: "Colour, pattern and movement. Dress for dancing.",
     fits: [
       {
         name: "Look 1",
@@ -375,7 +372,6 @@ export const occasions: Occasion[] = [
     id: "haldi",
     day: "Day 3",
     labels: ["Haldi"],
-    blurb: "Turmeric-yellow — wear what you don’t mind staining.",
     fits: [
       {
         name: "Look 1",
@@ -408,7 +404,6 @@ export const occasions: Occasion[] = [
     id: "wedding",
     day: "Day 3",
     labels: ["Wedding & Reception"],
-    blurb: "The main event — festive, shiny, as dressed-up as you like.",
     fits: [
       {
         name: "Look 1",
@@ -441,7 +436,6 @@ export const occasions: Occasion[] = [
     id: "casual-2",
     day: "Day 4",
     labels: ["Casual"],
-    blurb: "Departure. Back to comfortable — layers for the flight.",
     fits: casualFits,
     colors: casualColors,
   },

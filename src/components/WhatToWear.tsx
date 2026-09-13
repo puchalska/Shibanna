@@ -172,10 +172,6 @@ export default function WhatToWear() {
                 ✨ Next outfit
               </button>
             </div>
-
-            <p className="mt-5 max-w-xs font-serif text-sm italic text-coral-soft lg:text-right">
-              {active.blurb}
-            </p>
           </div>
         </div>
       </div>
