@@ -6,7 +6,7 @@ import { occasions, wearColors, type Fit } from "@/lib/site";
 
 function Collage({ fit, alt }: { fit: Fit; alt: string }) {
   return (
-    <div className="mx-auto w-full max-w-[300px] sm:max-w-[340px]">
+    <div className="mx-auto w-full max-w-[400px] sm:max-w-[460px]">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={asset(fit.image)} alt={alt} width={820} height={1000} className="w-full" />
       <div className="mt-3 flex justify-between gap-3 px-1">
