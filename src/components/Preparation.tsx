@@ -85,13 +85,13 @@ export default function Preparation() {
         Preparation
       </h2>
 
-      <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-10 grid items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((c) => {
           const isOpen = open.has(c.title);
           return (
             <div
               key={c.title}
-              className="rounded-[3px] border-2 border-dashed border-coral/35"
+              className="flex h-full flex-col rounded-[3px] border-2 border-dashed border-coral/35"
             >
               <button
                 type="button"
@@ -112,7 +112,7 @@ export default function Preparation() {
               </button>
 
               <div
-                className="grid transition-[grid-template-rows] duration-300 ease-out"
+                className="grid flex-1 transition-[grid-template-rows] duration-300 ease-out"
                 style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
               >
                 <div className="overflow-hidden">
