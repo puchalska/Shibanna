@@ -32,6 +32,8 @@ export const preparation = {
     "Travel insurance is recommended — check whether your credit card already covers it. We'd highly recommend getting a credit card and topping it up to a higher bracket just in case. Check your benefits for access to airport lounges — might come in handy.",
   vaccine:
     "No vaccination is mandatory for European travellers, however you will be entering a malaria threat zone. Some vaccines take a couple of doses, so it's nice to get prepared in advance.",
+  medication:
+    "Bring enough of any prescription medication for the whole trip plus a few spare days, kept in its original labeled packaging in your carry-on. Ask your doctor about malaria prophylaxis before you go. A small travel kit — something for an upset stomach, painkillers, and rehydration salts — covers most of what actually comes up.",
   flights: {
     body: "Flights from Europe typically run 7,000–9,000 NOK. LOT is cheapest; Lufthansa or Finnair have better service — we recommend Lufthansa. Book international to Delhi or Mumbai, then a short domestic hop to Jharsuguda.",
     example: "e.g. Lufthansa Frankfurt–Delhi, then IndiGo Delhi–Jharsuguda.",

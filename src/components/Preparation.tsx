@@ -22,6 +22,10 @@ const cards = [
     body: preparation.vaccine,
   },
   {
+    title: "Medication",
+    body: preparation.medication,
+  },
+  {
     title: "Flights",
     body: preparation.flights.body,
     note: preparation.flights.example,
