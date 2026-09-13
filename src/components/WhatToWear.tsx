@@ -125,17 +125,9 @@ export default function WhatToWear() {
             </div>
           </div>
 
-          {/* stage: current-occasion badge, photo with arrow-callout notes,
-              look picker + next outfit */}
+          {/* stage: photo with arrow-callout notes, look picker + next outfit */}
           <div className="flex flex-col items-center text-center lg:items-end lg:text-right">
-            <span
-              className="rounded-full border px-6 py-2 font-serif text-lg italic"
-              style={{ borderColor: "rgba(255,149,149,0.3)", background: "rgba(0,0,0,0.18)", color: "var(--coral)" }}
-            >
-              {active.labels.join(" / ")}
-            </span>
-
-            <div className="mt-6 w-full">
+            <div className="w-full">
               <Collage fit={fit} alt={`${active.labels.join(" / ")} outfit — ${fit.name}`} />
             </div>
 
