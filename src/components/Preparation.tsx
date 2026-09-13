@@ -1,10 +1,14 @@
+"use client";
+
+import { useState } from "react";
 import { hotels, preparation } from "@/lib/site";
 
 /* "What you need to prepare" (guest-info doc) — practical pre-trip
    logistics: visa, insurance/vaccine, flights, packing, gift, hotels. Cards
    echo the dashed-border "Block" language already used for the day
    headers, so this reads as part of the same system rather than a
-   bolted-on FAQ. */
+   bolted-on FAQ. Collapsed to just a title by default — ten cards of body
+   text at once was a wall; tap one open at a time (or several). */
 
 const cards = [
   {
@@ -55,6 +59,20 @@ const cards = [
 ];
 
 export default function Preparation() {
+  const [open, setOpen] = useState<Set<string>>(new Set());
+
+  const toggle = (title: string) => {
+    setOpen((prev) => {
+      const next = new Set(prev);
+      if (next.has(title)) {
+        next.delete(title);
+      } else {
+        next.add(title);
+      }
+      return next;
+    });
+  };
+
   return (
     <section
       id="prepare"
@@ -68,32 +86,61 @@ export default function Preparation() {
       </h2>
 
       <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map((c) => (
-          <div
-            key={c.title}
-            className="rounded-[3px] border-2 border-dashed border-coral/35 px-5 py-4"
-          >
-            <p className="font-serif text-xl italic text-coral">{c.title}</p>
-            <p className="mt-1.5 text-sm leading-[1.5] text-coral-soft">
-              {c.body}
-            </p>
-            {c.note && (
-              <p className="mt-1.5 text-xs italic text-coral-soft/70">
-                {c.note}
-              </p>
-            )}
-            {c.link && (
-              <a
-                href={c.link}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-3 inline-block font-label text-xs font-bold uppercase tracking-[0.1em] text-orange underline underline-offset-4"
+        {cards.map((c) => {
+          const isOpen = open.has(c.title);
+          return (
+            <div
+              key={c.title}
+              className="rounded-[3px] border-2 border-dashed border-coral/35"
+            >
+              <button
+                type="button"
+                onClick={() => toggle(c.title)}
+                aria-expanded={isOpen}
+                className="flex w-full cursor-pointer items-center justify-between gap-3 px-5 py-4 text-left outline-none ring-inset ring-coral focus-visible:ring-2"
               >
-                {c.linkLabel}
-              </a>
-            )}
-          </div>
-        ))}
+                <span className="font-serif text-xl italic text-coral">
+                  {c.title}
+                </span>
+                <span
+                  aria-hidden
+                  className="shrink-0 font-serif text-2xl leading-none text-coral-soft transition-transform duration-200"
+                  style={{ transform: isOpen ? "rotate(45deg)" : "none" }}
+                >
+                  +
+                </span>
+              </button>
+
+              <div
+                className="grid transition-[grid-template-rows] duration-300 ease-out"
+                style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
+              >
+                <div className="overflow-hidden">
+                  <div className="px-5 pb-4">
+                    <p className="text-sm leading-[1.5] text-coral-soft">
+                      {c.body}
+                    </p>
+                    {c.note && (
+                      <p className="mt-1.5 text-xs italic text-coral-soft/70">
+                        {c.note}
+                      </p>
+                    )}
+                    {c.link && (
+                      <a
+                        href={c.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-3 inline-block font-label text-xs font-bold uppercase tracking-[0.1em] text-orange underline underline-offset-4"
+                      >
+                        {c.linkLabel}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       <p className="mt-12 font-serif text-xl italic text-coral">
