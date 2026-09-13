@@ -1,17 +1,18 @@
 import { asset } from "@/lib/asset";
 import { invitation } from "@/lib/site";
 
-const LACE = asset("/figma/cover/lace-part.svg");
-const LACE_V = asset("/figma/cover/lace-part-vertical.svg");
+const LACE = asset("/figma/cover/invite-lace-tile.svg");
+const LACE_V = asset("/figma/cover/invite-lace-tile-vertical.svg");
 
 export default function Invitation() {
   return (
     <section className="w-full pb-16 pt-20 sm:pb-24 sm:pt-28">
       <div className="relative px-[9%] py-[11%] sm:px-[10%] sm:py-[12%]">
-        {/* scalloped coral lace border as a real CSS "stroke": the exact
-            lace-part.svg repeat unit the design supplied, tiled edge to
-            edge via background-repeat — never stretched, more copies of
-            the same dot-and-scallop unit simply appear as the card grows */}
+        {/* scalloped coral lace border as a real CSS "stroke": one repeat
+            unit windowed out of the original Figma wave-and-dot artwork
+            (invite-lace-tile.svg / its 90°-rotated twin for the sides),
+            tiled edge to edge via background-repeat — never stretched,
+            more copies of the same unit simply appear as the card grows */}
         <span
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 h-8 sm:h-11"
