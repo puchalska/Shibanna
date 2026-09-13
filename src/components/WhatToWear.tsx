@@ -134,9 +134,6 @@ export default function WhatToWear() {
             >
               {active.labels.join(" / ")}
             </span>
-            <p className="mt-2 max-w-xs font-serif text-sm italic text-coral-soft lg:text-right">
-              {active.blurb}
-            </p>
 
             <div className="mt-6 w-full">
               <Collage fit={fit} alt={`${active.labels.join(" / ")} outfit — ${fit.name}`} />
@@ -183,6 +180,10 @@ export default function WhatToWear() {
                 ✨ Next outfit
               </button>
             </div>
+
+            <p className="mt-5 max-w-xs font-serif text-sm italic text-coral-soft lg:text-right">
+              {active.blurb}
+            </p>
           </div>
         </div>
       </div>
