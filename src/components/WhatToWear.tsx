@@ -42,7 +42,7 @@ export default function WhatToWear() {
         {/* filters, e-commerce style: one horizontal bar up top, not a sidebar */}
         <div className="mt-8 flex flex-wrap justify-center gap-2">
           {occasions.map((o) => {
-            const on = o.id === activeId;
+            const on = o.id === activeId || o.fits === active.fits;
             return (
               <button
                 key={o.id}
