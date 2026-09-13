@@ -42,22 +42,6 @@ function NoteBubble({ text }: { text: string }) {
 export default function DayDetail({ day }: { day: Day }) {
   return (
     <div>
-      <div
-        className="flex w-full flex-wrap items-center justify-between gap-y-2 rounded-[3px] border-4 border-dashed py-5 pl-6 pr-4 sm:pl-10 sm:pr-6"
-        style={{
-          background: day.header.fill,
-          borderColor: day.header.border,
-          color: day.header.text,
-        }}
-      >
-        <span className="font-serif text-[24px] italic sm:text-[32px]">
-          {day.date}
-        </span>
-        <span className="font-serif text-[24px] italic sm:text-[32px]">
-          {day.name}
-        </span>
-      </div>
-
       <div className="flex flex-col gap-6 py-8 sm:py-14">
         <Timeline blocks={day.blocks} />
 
