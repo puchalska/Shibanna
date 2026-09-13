@@ -2,20 +2,40 @@
 
 import { useState } from "react";
 import { asset } from "@/lib/asset";
-import { occasions, wearColors, type Fit } from "@/lib/site";
+import { occasions, type Fit, type Occasion } from "@/lib/site";
+
+const ARROW = asset("/figma/outfit/note-arrow.svg");
 
 function Collage({ fit, alt }: { fit: Fit; alt: string }) {
   return (
-    <div key={fit.image} className="fit-fade mx-auto w-full max-w-[400px] sm:max-w-[460px]">
+    <div
+      key={fit.image}
+      className="fit-fade relative mx-auto w-full max-w-[420px] sm:max-w-[480px]"
+    >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={asset(fit.image)} alt={alt} width={820} height={1000} className="w-full" />
-      <div className="mt-3 flex justify-between gap-3 px-1">
-        <p className="max-w-[46%] font-hand text-xs leading-snug text-cream-light sm:text-sm">
+      <img src={asset(fit.image)} alt={alt} width={820} height={834} className="w-full" />
+
+      {/* him note — hand-drawn arrow curves down-right toward his collar */}
+      <div className="absolute left-[1%] top-[9%] w-[34%] text-left">
+        <p className="font-hand text-[11px] leading-snug text-cream-light sm:text-sm">
           {fit.notes.him}
         </p>
-        <p className="max-w-[46%] text-right font-hand text-xs leading-snug text-cream-light sm:text-sm">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={ARROW} alt="" aria-hidden className="mt-1 h-9 w-11 sm:h-10 sm:w-12" />
+      </div>
+
+      {/* her note — mirrored, curves down-left toward her collar */}
+      <div className="absolute right-[1%] top-[9%] w-[34%] text-right">
+        <p className="font-hand text-[11px] leading-snug text-cream-light sm:text-sm">
           {fit.notes.her}
         </p>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={ARROW}
+          alt=""
+          aria-hidden
+          className="ml-auto mt-1 h-9 w-11 -scale-x-100 sm:h-10 sm:w-12"
+        />
       </div>
     </div>
   );
@@ -32,110 +52,137 @@ export default function WhatToWear() {
     setFitIndex(0);
   };
 
+  // group occasions by day for the sidebar nav — Day 3 (Haldi + Wedding &
+  // Reception) collapses onto one row, matching how the schedule already
+  // treats them as one calendar day with two events
+  const days: { day: string; items: Occasion[] }[] = [];
+  for (const o of occasions) {
+    let bucket = days.find((d) => d.day === o.day);
+    if (!bucket) {
+      bucket = { day: o.day, items: [] };
+      days.push(bucket);
+    }
+    bucket.items.push(o);
+  }
+
   return (
     <section id="what-to-wear" className="px-6 py-16 sm:py-24">
-      <div className="mx-auto w-full max-w-4xl">
-        <h2 className="text-center font-serif text-4xl italic text-coral sm:text-5xl">
-          What to wear?
-        </h2>
+      <div className="mx-auto w-full max-w-5xl">
+        <div className="grid gap-10 lg:grid-cols-[260px_1fr] lg:gap-14">
+          {/* sidebar: title, day-grouped occasion nav, colour palette */}
+          <div>
+            <h2 className="font-serif text-4xl italic text-coral sm:text-5xl">
+              What to wear?
+            </h2>
 
-        {/* filters, e-commerce style: one horizontal bar up top, not a sidebar */}
-        <div className="mt-8 flex flex-wrap justify-center gap-2">
-          {occasions.map((o) => {
-            const on = o.id === activeId || o.fits === active.fits;
-            return (
+            <p className="mt-9 font-label text-xs font-bold uppercase tracking-[0.15em] text-coral-soft">
+              Occasion
+            </p>
+            <div className="mt-3 flex flex-col gap-3.5">
+              {days.map(({ day, items }) => (
+                <div key={day}>
+                  <p className="font-label text-[10px] font-bold uppercase tracking-[0.12em] text-coral-soft/75">
+                    {day}
+                  </p>
+                  <div className="mt-1.5 flex flex-wrap gap-2">
+                    {items.map((o) => {
+                      const on = o.id === activeId || o.fits === active.fits;
+                      return (
+                        <button
+                          key={o.id}
+                          type="button"
+                          aria-pressed={on}
+                          onClick={() => select(o.id)}
+                          className="cursor-pointer rounded-[4px] border-2 px-4 py-2 text-left font-serif text-base italic outline-none ring-coral transition-all duration-150 hover:brightness-110 focus-visible:ring-2 active:scale-95"
+                          style={{
+                            background: on ? "var(--orange)" : "transparent",
+                            borderColor: on ? "var(--orange)" : "var(--coral)",
+                            color: on ? "#642526" : "var(--coral)",
+                            opacity: on ? 1 : 0.65,
+                            boxShadow: on ? "0 3px 8px rgba(0,0,0,0.35)" : undefined,
+                          }}
+                        >
+                          {o.labels.join(" / ")}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <p className="mt-9 font-label text-xs font-bold uppercase tracking-[0.15em] text-coral-soft">
+              Colours
+            </p>
+            <div className="mt-3 flex max-w-[230px] flex-wrap gap-1.5">
+              {active.colors.map((c, i) => (
+                <span
+                  key={`${c}-${i}`}
+                  className="size-5 rounded-full ring-1 ring-white/25"
+                  style={{ background: c }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* stage: current-occasion badge, photo with arrow-callout notes,
+              look picker + next outfit */}
+          <div className="flex flex-col items-center text-center lg:items-end lg:text-right">
+            <span
+              className="rounded-full border px-6 py-2 font-serif text-lg italic"
+              style={{ borderColor: "rgba(255,149,149,0.3)", background: "rgba(0,0,0,0.18)", color: "var(--coral)" }}
+            >
+              {active.labels.join(" / ")}
+            </span>
+            <p className="mt-2 max-w-xs font-serif text-sm italic text-coral-soft lg:text-right">
+              {active.blurb}
+            </p>
+
+            <div className="mt-6 w-full">
+              <Collage fit={fit} alt={`${active.labels.join(" / ")} outfit — ${fit.name}`} />
+            </div>
+
+            <div className="mt-4 flex items-center justify-center gap-4 self-center">
+              {active.fits.length > 1 && (
+                <div className="flex gap-2">
+                  {active.fits.map((f, i) => {
+                    const on = i === fitIndex % active.fits.length;
+                    return (
+                      <button
+                        key={i}
+                        type="button"
+                        aria-label={f.name}
+                        aria-pressed={on}
+                        onClick={() => setFitIndex(i)}
+                        className="flex size-11 cursor-pointer items-center justify-center rounded-full border-2 font-serif text-base italic outline-none ring-coral transition-all duration-150 hover:brightness-110 focus-visible:ring-2 active:scale-95"
+                        style={{
+                          background: on ? "var(--orange)" : "transparent",
+                          borderColor: on ? "var(--orange)" : "var(--coral)",
+                          color: on ? "#642526" : "var(--coral)",
+                          opacity: on ? 1 : 0.65,
+                          boxShadow: on ? "0 3px 8px rgba(0,0,0,0.35)" : undefined,
+                        }}
+                      >
+                        {i + 1}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
               <button
-                key={o.id}
                 type="button"
-                aria-pressed={on}
-                onClick={() => select(o.id)}
-                className="flex cursor-pointer flex-col items-center gap-0.5 rounded-[4px] border-2 px-4 py-2 text-center outline-none ring-coral transition-all duration-150 hover:brightness-110 focus-visible:ring-2 active:scale-95"
+                onClick={() => setFitIndex((v) => v + 1)}
+                disabled={active.fits.length < 2}
+                className="cursor-pointer rounded-[4px] border px-4 py-2.5 font-serif text-base not-italic shadow-[-6px_-2px_8px_rgba(0,0,0,0.21)] transition-all duration-150 hover:brightness-110 active:scale-95 disabled:cursor-default disabled:opacity-40 disabled:active:scale-100"
                 style={{
-                  background: on ? "var(--orange)" : "transparent",
-                  borderColor: on ? "var(--orange)" : "var(--coral)",
-                  color: on ? "#642526" : "var(--coral)",
-                  opacity: on ? 1 : 0.65,
-                  boxShadow: on ? "0 3px 8px rgba(0,0,0,0.35)" : undefined,
+                  background: "var(--btn)",
+                  borderColor: "var(--red-deep)",
+                  color: "var(--coral)",
                 }}
               >
-                <span className="font-label text-[9px] font-bold uppercase tracking-[0.12em]">
-                  {o.day}
-                </span>
-                <span className="font-serif text-base italic leading-tight">
-                  {o.labels.join(" / ")}
-                </span>
+                ✨ Next outfit
               </button>
-            );
-          })}
-        </div>
-
-        {/* stage: blurb, photo, look picker — centred and modestly sized so
-            the filters + text carry as much weight as the photo does */}
-        <div className="mt-10 flex flex-col items-center text-center">
-          <p className="max-w-md font-serif text-lg italic text-coral-soft">
-            {active.blurb}
-          </p>
-
-          <div className="mt-5 w-full">
-            <Collage fit={fit} alt={`${active.labels.join(" / ")} outfit — ${fit.name}`} />
-          </div>
-
-          <div className="mt-4 flex items-center justify-center gap-4">
-            {active.fits.length > 1 && (
-              <div className="flex gap-2">
-                {active.fits.map((f, i) => {
-                  const on = i === fitIndex % active.fits.length;
-                  return (
-                    <button
-                      key={i}
-                      type="button"
-                      aria-label={f.name}
-                      aria-pressed={on}
-                      onClick={() => setFitIndex(i)}
-                      className="flex size-11 cursor-pointer items-center justify-center rounded-full border-2 font-serif text-base italic outline-none ring-coral transition-all duration-150 hover:brightness-110 focus-visible:ring-2 active:scale-95"
-                      style={{
-                        background: on ? "var(--orange)" : "transparent",
-                        borderColor: on ? "var(--orange)" : "var(--coral)",
-                        color: on ? "#642526" : "var(--coral)",
-                        opacity: on ? 1 : 0.65,
-                        boxShadow: on ? "0 3px 8px rgba(0,0,0,0.35)" : undefined,
-                      }}
-                    >
-                      {i + 1}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-            <button
-              type="button"
-              onClick={() => setFitIndex((v) => v + 1)}
-              disabled={active.fits.length < 2}
-              className="cursor-pointer rounded-[4px] border px-4 py-2.5 font-serif text-base not-italic shadow-[-6px_-2px_8px_rgba(0,0,0,0.21)] transition-all duration-150 hover:brightness-110 active:scale-95 disabled:cursor-default disabled:opacity-40 disabled:active:scale-100"
-              style={{
-                background: "var(--btn)",
-                borderColor: "var(--red-deep)",
-                color: "var(--coral)",
-              }}
-            >
-              ✨ Next outfit
-            </button>
-          </div>
-        </div>
-
-        {/* colours: a quiet footnote, not competing with the filters above */}
-        <div className="mt-14 flex flex-col items-center">
-          <p className="font-label text-[11px] font-bold uppercase tracking-[0.2em] text-coral-soft">
-            Colours
-          </p>
-          <div className="mt-2.5 flex max-w-xs flex-wrap justify-center gap-1.5">
-            {wearColors.map((c) => (
-              <span
-                key={c}
-                className="size-5 rounded-full ring-1 ring-white/25"
-                style={{ background: c }}
-              />
-            ))}
+            </div>
           </div>
         </div>
       </div>

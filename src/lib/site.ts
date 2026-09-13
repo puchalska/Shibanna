@@ -253,7 +253,54 @@ export type Occasion = {
   labels: string[];
   blurb: string;
   fits: Fit[];
+  colors: string[];
 };
+
+// per-occasion colour chips — sampled from that occasion's own garment
+// photos, then normalised to a clean swatch presentation (real fabric
+// colours read as muddy under photo shading; this keeps the hue/identity
+// but lifts saturation/lightness into "paint chip" range).
+const casualColors = [
+  "#8a38f5",
+  "#007cd4",
+  "#00c452",
+  "#649a00",
+  "#f600c5",
+  "#ed8235",
+  "#ff7b00",
+  "#cb8000",
+  "#f4cc03",
+  "#ffed92",
+  "#fdffd9",
+  "#8f0a0d",
+];
+const mehendiColors = [
+  "#8c8c4d",
+  "#8c1c1c",
+  "#468c46",
+  "#5d8c2e",
+  "#8c661c",
+  "#4d8c4d",
+  "#a8a85c",
+];
+const haldiColors = [
+  "#d87676",
+  "#e5c37e",
+  "#d8d876",
+  "#8c1c1c",
+  "#a87730",
+  "#f4cc03",
+  "#fdffd9",
+];
+const weddingColors = [
+  "#8c5438",
+  "#d87860",
+  "#8c4646",
+  "#901c1c",
+  "#8c8c46",
+  "#c09048",
+  "#8c541c",
+];
 
 const casualFits: Fit[] = [
   {
@@ -289,6 +336,7 @@ export const occasions: Occasion[] = [
     labels: ["Casual"],
     blurb: "Travel days & downtime. Comfortable, breathable, nothing precious.",
     fits: casualFits,
+    colors: casualColors,
   },
   {
     id: "mehendi",
@@ -321,6 +369,7 @@ export const occasions: Occasion[] = [
         },
       },
     ],
+    colors: mehendiColors,
   },
   {
     id: "haldi",
@@ -353,6 +402,7 @@ export const occasions: Occasion[] = [
         },
       },
     ],
+    colors: haldiColors,
   },
   {
     id: "wedding",
@@ -385,6 +435,7 @@ export const occasions: Occasion[] = [
         },
       },
     ],
+    colors: weddingColors,
   },
   {
     id: "casual-2",
@@ -392,20 +443,6 @@ export const occasions: Occasion[] = [
     labels: ["Casual"],
     blurb: "Departure. Back to comfortable — layers for the flight.",
     fits: casualFits,
+    colors: casualColors,
   },
-];
-
-export const wearColors = [
-  "#8a38f5",
-  "#007cd4",
-  "#00c452",
-  "#649a00",
-  "#f600c5",
-  "#ed8235",
-  "#ff7b00",
-  "#cb8000",
-  "#f4cc03",
-  "#ffed92",
-  "#fdffd9",
-  "#8f0a0d",
 ];
