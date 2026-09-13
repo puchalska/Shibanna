@@ -6,7 +6,7 @@ import { occasions, wearColors, type Fit } from "@/lib/site";
 
 function Collage({ fit, alt }: { fit: Fit; alt: string }) {
   return (
-    <div className="mx-auto w-full max-w-[400px] sm:max-w-[460px]">
+    <div key={fit.image} className="fit-fade mx-auto w-full max-w-[400px] sm:max-w-[460px]">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={asset(fit.image)} alt={alt} width={820} height={1000} className="w-full" />
       <div className="mt-3 flex justify-between gap-3 px-1">
@@ -82,7 +82,7 @@ export default function WhatToWear() {
 
           <div className="mt-4 flex items-center justify-center gap-4">
             {active.fits.length > 1 && (
-              <div className="flex gap-2.5">
+              <div className="flex gap-2">
                 {active.fits.map((f, i) => {
                   const on = i === fitIndex % active.fits.length;
                   return (
@@ -92,14 +92,16 @@ export default function WhatToWear() {
                       aria-label={f.name}
                       aria-pressed={on}
                       onClick={() => setFitIndex(i)}
-                      className="cursor-pointer p-1.5 outline-none transition-transform hover:scale-125 focus-visible:scale-125"
+                      className="flex size-11 cursor-pointer items-center justify-center rounded-full border-2 font-serif text-base italic outline-none ring-coral transition-all duration-150 hover:brightness-110 focus-visible:ring-2 active:scale-95"
+                      style={{
+                        background: on ? "var(--orange)" : "transparent",
+                        borderColor: on ? "var(--orange)" : "var(--coral)",
+                        color: on ? "#642526" : "var(--coral)",
+                        opacity: on ? 1 : 0.65,
+                        boxShadow: on ? "0 3px 8px rgba(0,0,0,0.35)" : undefined,
+                      }}
                     >
-                      <span
-                        className="block size-1.5 rounded-full transition-[background-color]"
-                        style={{
-                          background: on ? "var(--coral)" : "rgba(255,149,149,0.35)",
-                        }}
-                      />
+                      {i + 1}
                     </button>
                   );
                 })}
