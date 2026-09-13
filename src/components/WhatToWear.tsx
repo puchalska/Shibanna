@@ -76,16 +76,11 @@ export default function WhatToWear() {
               What to wear?
             </h2>
 
-            <p className="mt-9 font-label text-xs font-bold uppercase tracking-[0.15em] text-coral-soft">
-              Occasion
-            </p>
-            <div className="mt-3 flex flex-col gap-3.5">
+            <div className="mt-9 flex flex-col gap-6">
               {days.map(({ day, items }) => (
-                <div key={day}>
-                  <p className="font-label text-[10px] font-bold uppercase tracking-[0.12em] text-coral-soft/75">
-                    {day}
-                  </p>
-                  <div className="mt-1.5 flex flex-wrap gap-2">
+                <div key={day} className="flex flex-col gap-3">
+                  <p className="font-label text-xl font-bold text-coral">{day}</p>
+                  <div className="flex flex-wrap gap-2">
                     {items.map((o) => {
                       const on = o.id === activeId || o.fits === active.fits;
                       return (
@@ -94,13 +89,10 @@ export default function WhatToWear() {
                           type="button"
                           aria-pressed={on}
                           onClick={() => select(o.id)}
-                          className="cursor-pointer rounded-[4px] border-2 px-4 py-2 text-left font-serif text-base italic outline-none ring-coral transition-all duration-150 hover:brightness-110 focus-visible:ring-2 active:scale-95"
+                          className="cursor-pointer rounded-[4px] px-5 py-2.5 text-left font-serif text-xl italic outline-none ring-coral transition-all duration-150 hover:brightness-110 focus-visible:ring-2 active:scale-95"
                           style={{
-                            background: on ? "var(--orange)" : "transparent",
-                            borderColor: on ? "var(--orange)" : "var(--coral)",
+                            background: on ? "var(--orange)" : "var(--red)",
                             color: on ? "#642526" : "var(--coral)",
-                            opacity: on ? 1 : 0.65,
-                            boxShadow: on ? "0 3px 8px rgba(0,0,0,0.35)" : undefined,
                           }}
                         >
                           {o.labels.join(" / ")}
@@ -112,14 +104,11 @@ export default function WhatToWear() {
               ))}
             </div>
 
-            <p className="mt-9 font-label text-xs font-bold uppercase tracking-[0.15em] text-coral-soft">
-              Colours
-            </p>
-            <div className="mt-3 flex max-w-[230px] flex-wrap gap-1.5">
+            <div className="mt-8 flex max-w-[240px] flex-wrap gap-2">
               {active.colors.map((c, i) => (
                 <span
                   key={`${c}-${i}`}
-                  className="size-5 rounded-full ring-1 ring-white/25"
+                  className="size-6 rounded-full ring-1 ring-white/25"
                   style={{ background: c }}
                 />
               ))}
@@ -173,14 +162,14 @@ export default function WhatToWear() {
                 ✨ Next outfit
               </button>
             </div>
-
-            <div className="mt-6">
-              <NoteBubble
-                size="sm"
-                text="Not a dress code — just inspiration. Wear what makes you feel like you."
-              />
-            </div>
           </div>
+        </div>
+
+        <div className="mt-10 flex justify-end">
+          <NoteBubble
+            background="#881817"
+            text="Not a dress code — just inspiration. Wear what makes you feel like you."
+          />
         </div>
       </div>
     </section>

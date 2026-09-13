@@ -7,9 +7,11 @@ import { asset } from "@/lib/asset";
 export default function NoteBubble({
   text,
   size = "default",
+  background = "var(--orange)",
 }: {
   text: string;
   size?: "default" | "sm";
+  background?: string;
 }) {
   const avatar = size === "sm" ? "size-[46px]" : "size-[70px]";
   const bubble =
@@ -36,7 +38,7 @@ export default function NoteBubble({
       </span>
       <p
         className={`font-sans2 leading-snug ${bubble}`}
-        style={{ background: "var(--orange)", color: "var(--yellow)" }}
+        style={{ background, color: "var(--yellow)" }}
       >
         {text}
       </p>
