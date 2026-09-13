@@ -69,9 +69,7 @@ export default function WhatToWear() {
   return (
     <section id="what-to-wear" className="px-6 py-16 sm:py-24">
       <div className="mx-auto w-full max-w-5xl">
-        <NoteBubble text="Not a dress code — just inspiration. Wear what makes you feel like you." />
-
-        <div className="mt-10 grid gap-10 lg:grid-cols-[260px_1fr] lg:gap-14">
+        <div className="grid gap-10 lg:grid-cols-[260px_1fr] lg:gap-14">
           {/* sidebar: title, day-grouped occasion nav, colour palette */}
           <div>
             <h2 className="font-serif text-4xl italic text-coral sm:text-5xl">
@@ -174,6 +172,13 @@ export default function WhatToWear() {
               >
                 ✨ Next outfit
               </button>
+            </div>
+
+            <div className="mt-6">
+              <NoteBubble
+                size="sm"
+                text="Not a dress code — just inspiration. Wear what makes you feel like you."
+              />
             </div>
           </div>
         </div>

@@ -1,11 +1,25 @@
 import { asset } from "@/lib/asset";
 
 /* Layered avatar + orange speech-bubble note — Figma node 3209:11481.
-   Shared between the day schedule and What to Wear. */
-export default function NoteBubble({ text }: { text: string }) {
+   Shared between the day schedule and What to Wear. `size="sm"` shrinks
+   the avatar/padding/type for spots where the full-size bubble is too
+   heavy (e.g. tucked under a carousel rather than leading a section). */
+export default function NoteBubble({
+  text,
+  size = "default",
+}: {
+  text: string;
+  size?: "default" | "sm";
+}) {
+  const avatar = size === "sm" ? "size-[46px]" : "size-[70px]";
+  const bubble =
+    size === "sm"
+      ? "rounded-[5px] px-4 py-2.5 text-sm"
+      : "rounded-[6px] px-5 py-3.5 text-[17px] sm:px-7 sm:text-xl";
+
   return (
     <div className="flex items-center gap-3">
-      <span className="relative block size-[70px] shrink-0 overflow-hidden rounded-full">
+      <span className={`relative block shrink-0 overflow-hidden rounded-full ${avatar}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={asset("/figma/schedule/avatar.jpg")}
@@ -21,7 +35,7 @@ export default function NoteBubble({ text }: { text: string }) {
         />
       </span>
       <p
-        className="rounded-[6px] px-5 py-3.5 font-sans2 text-[17px] leading-snug sm:px-7 sm:text-xl"
+        className={`font-sans2 leading-snug ${bubble}`}
         style={{ background: "var(--orange)", color: "var(--yellow)" }}
       >
         {text}
