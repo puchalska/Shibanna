@@ -11,7 +11,7 @@ function Collage({ fit, alt }: { fit: Fit; alt: string }) {
   return (
     <div
       key={fit.image}
-      className="fit-fade relative mx-auto w-full max-w-[420px] sm:max-w-[480px]"
+      className="fit-fade relative mx-auto w-full max-w-[630px] sm:max-w-[720px]"
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={asset(fit.image)} alt={alt} width={820} height={834} className="w-full" />
