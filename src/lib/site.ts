@@ -97,8 +97,6 @@ export type Day = {
   date: string;
   name: string;
   header: DayHeader;
-  /** short avatar-style note shown above the schedule */
-  note?: string;
   blocks: TimelineBlock[];
   cards: EventCard[];
 };
@@ -109,7 +107,6 @@ export const days: Day[] = [
     date: "17th December",
     name: "Arrival",
     header: HEADER.coral,
-    note: "Remember to set up your e-sim & e-visa before your arrival in India.",
     blocks: [{ label: "(Optional) Shopping", start: 15, end: 19, optional: true }],
     cards: [
       {

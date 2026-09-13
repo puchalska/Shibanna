@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { asset } from "@/lib/asset";
 import { occasions, type Fit, type Occasion } from "@/lib/site";
+import NoteBubble from "./NoteBubble";
 
 const ARROW = asset("/figma/outfit/note-arrow.svg");
 
@@ -68,7 +69,9 @@ export default function WhatToWear() {
   return (
     <section id="what-to-wear" className="px-6 py-16 sm:py-24">
       <div className="mx-auto w-full max-w-5xl">
-        <div className="grid gap-10 lg:grid-cols-[260px_1fr] lg:gap-14">
+        <NoteBubble text="Not a dress code — just inspiration. Wear what makes you feel like you." />
+
+        <div className="mt-10 grid gap-10 lg:grid-cols-[260px_1fr] lg:gap-14">
           {/* sidebar: title, day-grouped occasion nav, colour palette */}
           <div>
             <h2 className="font-serif text-4xl italic text-coral sm:text-5xl">
