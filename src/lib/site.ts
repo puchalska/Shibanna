@@ -214,15 +214,9 @@ export const days: Day[] = [
     name: "Departure",
     header: HEADER.coral,
     blocks: [
-      { label: "Breakfast", start: 8, end: 11 },
-      { label: "Flight to Delhi", start: 14, end: 18 },
+      { label: "Flight to Delhi", start: 14, end: 18, optional: true },
     ],
     cards: [
-      {
-        title: "Goodbye breakfast",
-        body: "Let’s gather together to eat well before we all departure.",
-        image: "/figma/breakfast.jpg",
-      },
       {
         title: "Flight to Delhi",
         body: "In the afternoon, we all fly to Delhi to make sure Anna’s parents are safe & sound on the way back.",
@@ -238,15 +232,19 @@ export const timelineTicks = ["6am", "noon", "6pm", "midnight"];
 
 /* ---------- What to wear ----------
    Full outfit photography (guest-styling shoot) — 3 alternate "looks" per
-   occasion, each a single photo of both outfits together. Replaces the
-   earlier hand-assembled paper-doll collage (individual garment cut-outs
-   positioned by guessed x/y/rotate) now that real composed photography
-   exists for every occasion; the "Next outfit" button still cycles
-   through a occasion's `fits`, just swapping a photo instead of pieces. */
+   occasion, each a photo pair (him + her, background removed) plus a
+   short styling note per person. Replaces the earlier hand-assembled
+   paper-doll collage (individual garment cut-outs positioned by guessed
+   x/y/rotate) now that real composed photography exists for every
+   occasion. Notes were originally baked into the photos as handwritten
+   captions; they're transcribed here as plain text instead, so they're
+   editable without re-exporting an image. The "Next outfit" button still
+   cycles through an occasion's `fits`. */
 
 export type Fit = {
   name: string;
   image: string;
+  notes: { him: string; her: string };
 };
 
 export type Occasion = {
@@ -258,9 +256,30 @@ export type Occasion = {
 };
 
 const casualFits: Fit[] = [
-  { name: "Look 1", image: "/figma/outfit/looks/casual-1.webp" },
-  { name: "Look 2", image: "/figma/outfit/looks/casual-2.webp" },
-  { name: "Look 3", image: "/figma/outfit/looks/casual-3.webp" },
+  {
+    name: "Look 1",
+    image: "/figma/outfit/looks/casual-1.webp",
+    notes: {
+      him: "Impractical, but that’s what all Indian men are wearing. FYI.",
+      her: "Decorative elements & jewellery are always in fashion in India.",
+    },
+  },
+  {
+    name: "Look 2",
+    image: "/figma/outfit/looks/casual-2.webp",
+    notes: {
+      him: "Very reasonable.",
+      her: "Cute bags are great, considered fashionable.",
+    },
+  },
+  {
+    name: "Look 3",
+    image: "/figma/outfit/looks/casual-3.webp",
+    notes: {
+      him: "No bling bling, less elegant.",
+      her: "The more bling bling, the more elegant it is.",
+    },
+  },
 ];
 
 export const occasions: Occasion[] = [
@@ -277,9 +296,30 @@ export const occasions: Occasion[] = [
     labels: ["Mehendi & Sangeet"],
     blurb: "Colour, pattern and movement. Dress for dancing.",
     fits: [
-      { name: "Look 1", image: "/figma/outfit/looks/mehendi-1.webp" },
-      { name: "Look 2", image: "/figma/outfit/looks/mehendi-2.webp" },
-      { name: "Look 3", image: "/figma/outfit/looks/mehendi-3.webp" },
+      {
+        name: "Look 1",
+        image: "/figma/outfit/looks/mehendi-1.webp",
+        notes: {
+          him: "Long kurta with lot of details. Max elegance.",
+          her: "Long kurti with dupatta. Max elegance.",
+        },
+      },
+      {
+        name: "Look 2",
+        image: "/figma/outfit/looks/mehendi-2.webp",
+        notes: {
+          him: "Long kurta with less details.",
+          her: "Long kurti with dupatta.",
+        },
+      },
+      {
+        name: "Look 3",
+        image: "/figma/outfit/looks/mehendi-3.webp",
+        notes: {
+          him: "Long kurta with less details.",
+          her: "Long kurti with dupatta.",
+        },
+      },
     ],
   },
   {
@@ -288,9 +328,30 @@ export const occasions: Occasion[] = [
     labels: ["Haldi"],
     blurb: "Turmeric-yellow — wear what you don’t mind staining.",
     fits: [
-      { name: "Look 1", image: "/figma/outfit/looks/haldi-1.webp" },
-      { name: "Look 2", image: "/figma/outfit/looks/haldi-2.webp" },
-      { name: "Look 3", image: "/figma/outfit/looks/haldi-3.webp" },
+      {
+        name: "Look 1",
+        image: "/figma/outfit/looks/haldi-1.webp",
+        notes: {
+          him: "Yellow kurta + white linen pants are great.",
+          her: "White simple salwar suit + yellow shawl.",
+        },
+      },
+      {
+        name: "Look 2",
+        image: "/figma/outfit/looks/haldi-2.webp",
+        notes: {
+          him: "More details = considered as more elegant.",
+          her: "More sheen is also nice. Salwar suit + dupatta.",
+        },
+      },
+      {
+        name: "Look 3",
+        image: "/figma/outfit/looks/haldi-3.webp",
+        notes: {
+          him: "Longer kurta + white pants.",
+          her: "Anarkali with some shiny bits.",
+        },
+      },
     ],
   },
   {
@@ -299,9 +360,30 @@ export const occasions: Occasion[] = [
     labels: ["Wedding & Reception"],
     blurb: "The main event — festive, shiny, as dressed-up as you like.",
     fits: [
-      { name: "Look 1", image: "/figma/outfit/looks/wedding-1.webp" },
-      { name: "Look 2", image: "/figma/outfit/looks/wedding-2.webp" },
-      { name: "Look 3", image: "/figma/outfit/looks/wedding-3.webp" },
+      {
+        name: "Look 1",
+        image: "/figma/outfit/looks/wedding-1.webp",
+        notes: {
+          him: "European suit is a great idea.",
+          her: "Shiny sari.",
+        },
+      },
+      {
+        name: "Look 2",
+        image: "/figma/outfit/looks/wedding-2.webp",
+        notes: {
+          him: "Beaded kurta. Very elegant.",
+          her: "Lehenga set (top + skirt) with dupatta.",
+        },
+      },
+      {
+        name: "Look 3",
+        image: "/figma/outfit/looks/wedding-3.webp",
+        notes: {
+          him: "Kurta with beading.",
+          her: "Sari in a vibrant color.",
+        },
+      },
     ],
   },
   {

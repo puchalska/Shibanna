@@ -4,7 +4,9 @@ import type { Day } from "@/lib/site";
    day (date + name, coloured by that day's own header variant) that jumps
    to & opens the matching accordion. Sticks under the main nav while
    scrolling through the schedule, so switching days never needs a scroll
-   back up. */
+   back up. A day with any optional block gets a dotted border instead of
+   solid — same "this part is flexible" language as the optional blocks
+   on the Timeline bar, visible before you even open the day. */
 
 export default function WeekStrip({
   days,
@@ -21,6 +23,7 @@ export default function WeekStrip({
         {days.map((day) => {
           const active = day.id === activeId;
           const tinted = day.header.fill !== "transparent";
+          const hasOptional = day.blocks.some((b) => b.optional);
           return (
             <button
               key={day.id}
@@ -35,6 +38,7 @@ export default function WeekStrip({
                     : "rgba(255,149,149,0.14)"
                   : "transparent",
                 borderColor: day.header.border,
+                borderStyle: hasOptional ? "dotted" : "solid",
                 color: active && tinted ? day.header.text : day.header.border,
                 opacity: active ? 1 : 0.55,
               }}
