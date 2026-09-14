@@ -245,6 +245,13 @@ export const timelineTicks = ["6am", "noon", "6pm", "midnight"];
    editable without re-exporting an image. The "Next outfit" button still
    cycles through an occasion's `fits`. */
 
+// the wardrobe grid's slots — always in this order, always in this
+// position, for every look. "outfit" is the escape hatch for a photo
+// that was never shot piece-by-piece (a ghost-mannequin combo, a sari
+// that doesn't split into a top+bottom): it replaces all four slots
+// with one panel instead of pretending to fill them individually.
+export type GarmentCategory = "top" | "bottom" | "shoes" | "accessory" | "outfit";
+
 // one real garment photo for the wardrobe grid — always a genuinely
 // separate item, never a chunk cropped out of a bigger combined shot to
 // fake variety. `crop` is only for trimming an otherwise-good photo (e.g.
@@ -253,9 +260,9 @@ export const timelineTicks = ["6am", "noon", "6pm", "midnight"];
 // into several "different" pieces.
 export type Garment = {
   person: "him" | "her";
+  category: GarmentCategory;
   label: string;
   image: string;
-  big?: boolean;
   crop?: { x: number; y: number; w: number; h: number; naturalW: number; naturalH: number };
 };
 
@@ -267,10 +274,11 @@ export type Fit = {
   // drape doesn't split cleanly, so the wardrobe overlay shows it as a
   // single bigger compartment instead of guessing a seam that isn't there
   herStyle?: "sari";
-  // isolated per-garment cutouts for the wardrobe grid, recovered from the
-  // site's earlier paper-doll prototype. Only populated where those source
-  // photos actually match a look — most fits fall back to the flattened
-  // photo + notes treatment until real per-garment shots exist for them.
+  // isolated per-garment cutouts for the wardrobe grid's fixed top/bottom/
+  // shoes/accessory slots, recovered from the site's earlier paper-doll
+  // prototype. Only populated where those source photos actually match a
+  // look — most fits fall back to the flattened photo + notes treatment
+  // until real per-garment shots exist for them.
   garments?: Garment[];
 };
 
@@ -340,20 +348,42 @@ const casualFits: Fit[] = [
       // only one real photo exists for him here — the shirt, jeans and
       // shoes were never shot separately, so it stays one whole-outfit
       // panel instead of being chopped into fake top/bottom/shoes cells
-      { person: "him", label: "Outfit", image: "/figma/outfit/garments/him-shirt-jeans.png" },
-      { person: "her", label: "Shirt", image: "/figma/outfit/garments/her-white-shirt.png" },
+      {
+        person: "him",
+        category: "outfit",
+        label: "Outfit",
+        image: "/figma/outfit/garments/him-shirt-jeans.png",
+      },
       {
         person: "her",
+        category: "top",
+        label: "Shirt",
+        image: "/figma/outfit/garments/her-white-shirt.png",
+      },
+      {
+        person: "her",
+        category: "bottom",
         label: "Skirt",
         image: "/figma/outfit/garments/her-cream-skirt.png",
-        big: true,
         // this source photo is on-model, not a ghost mannequin — trimmed
         // tight to the garment so no hands/skin show through
         crop: { x: 40, y: 118, w: 310, h: 342, naturalW: 391, naturalH: 520 },
       },
-      { person: "her", label: "Sandals", image: "/figma/outfit/garments/sandals-woven.png" },
-      { person: "her", label: "Bag", image: "/figma/outfit/garments/potli.png" },
-      { person: "her", label: "Bangles", image: "/figma/outfit/garments/bangles.png" },
+      {
+        person: "her",
+        category: "shoes",
+        label: "Sandals",
+        image: "/figma/outfit/garments/sandals-woven.png",
+      },
+      // two real options for the same slot — the grid paginates between
+      // them instead of trying to show both at once
+      { person: "her", category: "accessory", label: "Bag", image: "/figma/outfit/garments/potli.png" },
+      {
+        person: "her",
+        category: "accessory",
+        label: "Bangles",
+        image: "/figma/outfit/garments/bangles.png",
+      },
     ],
   },
   {
@@ -365,10 +395,17 @@ const casualFits: Fit[] = [
     },
     garments: [
       // shirt and pants were shot separately for him — two real photos,
-      // two cells. No matching shoe photo exists, so there's no third cell.
-      { person: "him", label: "Shirt", image: "/figma/outfit/garments/him-white-shirt.png" },
+      // filling the Top and Bottom slots. No matching shoe photo exists,
+      // so Shoes/Accessory just render as empty slots.
       {
         person: "him",
+        category: "top",
+        label: "Shirt",
+        image: "/figma/outfit/garments/him-white-shirt.png",
+      },
+      {
+        person: "him",
+        category: "bottom",
         label: "Pants",
         image: "/figma/outfit/garments/him-white-pants.png",
         // on-model shot showing some torso/hand — trimmed to just the pants
@@ -376,7 +413,12 @@ const casualFits: Fit[] = [
       },
       // her kurta, pants and bag were only ever shot together as one
       // outfit — one real photo, one panel, same as him in Look 1
-      { person: "her", label: "Outfit", image: "/figma/outfit/garments/her-green-kurta.png" },
+      {
+        person: "her",
+        category: "outfit",
+        label: "Outfit",
+        image: "/figma/outfit/garments/her-green-kurta.png",
+      },
     ],
   },
   {
