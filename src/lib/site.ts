@@ -363,6 +363,21 @@ const casualFits: Fit[] = [
       him: "Very reasonable.",
       her: "Cute bags are great, considered fashionable.",
     },
+    garments: [
+      // shirt and pants were shot separately for him — two real photos,
+      // two cells. No matching shoe photo exists, so there's no third cell.
+      { person: "him", label: "Shirt", image: "/figma/outfit/garments/him-white-shirt.png" },
+      {
+        person: "him",
+        label: "Pants",
+        image: "/figma/outfit/garments/him-white-pants.png",
+        // on-model shot showing some torso/hand — trimmed to just the pants
+        crop: { x: 15, y: 95, w: 360, h: 355, naturalW: 390, naturalH: 520 },
+      },
+      // her kurta, pants and bag were only ever shot together as one
+      // outfit — one real photo, one panel, same as him in Look 1
+      { person: "her", label: "Outfit", image: "/figma/outfit/garments/her-green-kurta.png" },
+    ],
   },
   {
     name: "Look 3",
