@@ -4,6 +4,7 @@ import { useState } from "react";
 import { asset } from "@/lib/asset";
 import { occasions, type Fit, type Occasion } from "@/lib/site";
 import NoteBubble from "./NoteBubble";
+import Wardrobe from "./Wardrobe";
 
 const ARROW = asset("/figma/outfit/note-arrow.svg");
 
@@ -161,6 +162,10 @@ export default function WhatToWear() {
               >
                 ✨ Next outfit
               </button>
+            </div>
+
+            <div className="mt-6 w-full">
+              <Wardrobe fit={fit} />
             </div>
           </div>
         </div>

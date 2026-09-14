@@ -249,6 +249,10 @@ export type Fit = {
   name: string;
   image: string;
   notes: { him: string; her: string };
+  // most looks put her in a distinct top + bottom; a one-piece sari/lehenga
+  // drape doesn't split cleanly, so the wardrobe overlay shows it as a
+  // single bigger compartment instead of guessing a seam that isn't there
+  herStyle?: "sari";
 };
 
 export type Occasion = {
@@ -416,6 +420,7 @@ export const occasions: Occasion[] = [
           him: "European suit is a great idea.",
           her: "Shiny sari.",
         },
+        herStyle: "sari",
       },
       {
         name: "Look 2",
@@ -432,6 +437,7 @@ export const occasions: Occasion[] = [
           him: "Kurta with beading.",
           her: "Sari in a vibrant color.",
         },
+        herStyle: "sari",
       },
     ],
     colors: weddingColors,
