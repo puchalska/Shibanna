@@ -5,6 +5,7 @@ import { asset } from "@/lib/asset";
 import { occasions, type Fit, type Occasion } from "@/lib/site";
 import NoteBubble from "./NoteBubble";
 import Wardrobe from "./Wardrobe";
+import LookGrid from "./LookGrid";
 
 const ARROW = asset("/figma/outfit/note-arrow.svg");
 
@@ -119,7 +120,11 @@ export default function WhatToWear() {
           {/* stage: photo with arrow-callout notes, look picker + next outfit */}
           <div className="flex flex-col items-center text-center lg:items-end lg:text-right">
             <div className="w-full">
-              <Collage fit={fit} alt={`${active.labels.join(" / ")} outfit — ${fit.name}`} />
+              {fit.garments ? (
+                <LookGrid fit={fit} />
+              ) : (
+                <Collage fit={fit} alt={`${active.labels.join(" / ")} outfit — ${fit.name}`} />
+              )}
             </div>
 
             <div className="mt-4 flex items-center justify-center gap-4 self-center">
@@ -164,9 +169,11 @@ export default function WhatToWear() {
               </button>
             </div>
 
-            <div className="mt-6 w-full">
-              <Wardrobe fit={fit} />
-            </div>
+            {!fit.garments && (
+              <div className="mt-6 w-full">
+                <Wardrobe fit={fit} />
+              </div>
+            )}
           </div>
         </div>
 

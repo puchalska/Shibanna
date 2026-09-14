@@ -245,6 +245,18 @@ export const timelineTicks = ["6am", "noon", "6pm", "midnight"];
    editable without re-exporting an image. The "Next outfit" button still
    cycles through an occasion's `fits`. */
 
+// one isolated garment photo (no body) for the wardrobe grid. `crop` pulls
+// a single piece out of a multi-item source shot (e.g. a combined
+// shirt+jeans+shoes photo) in that source image's own pixel dimensions;
+// omit it when `image` is already a single standalone item.
+export type Garment = {
+  person: "him" | "her";
+  label: string;
+  image: string;
+  big?: boolean;
+  crop?: { x: number; y: number; w: number; h: number; naturalW: number; naturalH: number };
+};
+
 export type Fit = {
   name: string;
   image: string;
@@ -253,6 +265,11 @@ export type Fit = {
   // drape doesn't split cleanly, so the wardrobe overlay shows it as a
   // single bigger compartment instead of guessing a seam that isn't there
   herStyle?: "sari";
+  // isolated per-garment cutouts for the wardrobe grid, recovered from the
+  // site's earlier paper-doll prototype. Only populated where those source
+  // photos actually match a look — most fits fall back to the flattened
+  // photo + notes treatment until real per-garment shots exist for them.
+  garments?: Garment[];
 };
 
 export type Occasion = {
@@ -317,6 +334,37 @@ const casualFits: Fit[] = [
       him: "Impractical, but that’s what all Indian men are wearing. FYI.",
       her: "Decorative elements & jewellery are always in fashion in India.",
     },
+    garments: [
+      {
+        person: "him",
+        label: "Shirt",
+        image: "/figma/outfit/garments/him-shirt-jeans.png",
+        crop: { x: 40, y: 10, w: 270, h: 215, naturalW: 347, naturalH: 520 },
+      },
+      {
+        person: "him",
+        label: "Jeans",
+        image: "/figma/outfit/garments/him-shirt-jeans.png",
+        crop: { x: 60, y: 225, w: 230, h: 220, naturalW: 347, naturalH: 520 },
+      },
+      {
+        person: "him",
+        label: "Shoes",
+        image: "/figma/outfit/garments/him-shirt-jeans.png",
+        crop: { x: 80, y: 452, w: 200, h: 60, naturalW: 347, naturalH: 520 },
+      },
+      { person: "her", label: "Shirt", image: "/figma/outfit/garments/her-white-shirt.png" },
+      {
+        person: "her",
+        label: "Skirt",
+        image: "/figma/outfit/garments/her-cream-skirt.png",
+        big: true,
+        crop: { x: 40, y: 118, w: 310, h: 342, naturalW: 391, naturalH: 520 },
+      },
+      { person: "her", label: "Sandals", image: "/figma/outfit/garments/sandals-woven.png" },
+      { person: "her", label: "Bag", image: "/figma/outfit/garments/potli.png" },
+      { person: "her", label: "Bangles", image: "/figma/outfit/garments/bangles.png" },
+    ],
   },
   {
     name: "Look 2",
