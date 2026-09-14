@@ -245,10 +245,12 @@ export const timelineTicks = ["6am", "noon", "6pm", "midnight"];
    editable without re-exporting an image. The "Next outfit" button still
    cycles through an occasion's `fits`. */
 
-// one isolated garment photo (no body) for the wardrobe grid. `crop` pulls
-// a single piece out of a multi-item source shot (e.g. a combined
-// shirt+jeans+shoes photo) in that source image's own pixel dimensions;
-// omit it when `image` is already a single standalone item.
+// one real garment photo for the wardrobe grid — always a genuinely
+// separate item, never a chunk cropped out of a bigger combined shot to
+// fake variety. `crop` is only for trimming an otherwise-good photo (e.g.
+// an on-model shot showing a sliver of hand/skin around the garment), in
+// that source image's own pixel dimensions — not for splitting one photo
+// into several "different" pieces.
 export type Garment = {
   person: "him" | "her";
   label: string;
@@ -335,30 +337,18 @@ const casualFits: Fit[] = [
       her: "Decorative elements & jewellery are always in fashion in India.",
     },
     garments: [
-      {
-        person: "him",
-        label: "Shirt",
-        image: "/figma/outfit/garments/him-shirt-jeans.png",
-        crop: { x: 40, y: 10, w: 270, h: 215, naturalW: 347, naturalH: 520 },
-      },
-      {
-        person: "him",
-        label: "Jeans",
-        image: "/figma/outfit/garments/him-shirt-jeans.png",
-        crop: { x: 60, y: 225, w: 230, h: 220, naturalW: 347, naturalH: 520 },
-      },
-      {
-        person: "him",
-        label: "Shoes",
-        image: "/figma/outfit/garments/him-shirt-jeans.png",
-        crop: { x: 80, y: 452, w: 200, h: 60, naturalW: 347, naturalH: 520 },
-      },
+      // only one real photo exists for him here — the shirt, jeans and
+      // shoes were never shot separately, so it stays one whole-outfit
+      // panel instead of being chopped into fake top/bottom/shoes cells
+      { person: "him", label: "Outfit", image: "/figma/outfit/garments/him-shirt-jeans.png" },
       { person: "her", label: "Shirt", image: "/figma/outfit/garments/her-white-shirt.png" },
       {
         person: "her",
         label: "Skirt",
         image: "/figma/outfit/garments/her-cream-skirt.png",
         big: true,
+        // this source photo is on-model, not a ghost mannequin — trimmed
+        // tight to the garment so no hands/skin show through
         crop: { x: 40, y: 118, w: 310, h: 342, naturalW: 391, naturalH: 520 },
       },
       { person: "her", label: "Sandals", image: "/figma/outfit/garments/sandals-woven.png" },

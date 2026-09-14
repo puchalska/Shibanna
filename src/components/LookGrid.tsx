@@ -3,10 +3,14 @@ import type { Fit, Garment } from "@/lib/site";
 
 /* The "no figure" wardrobe grid — replaces the composited photo entirely
    for fits that have isolated per-garment cutouts (see Fit.garments).
-   Items pack into a dashed-line grid, a "big" item (a dress/sari/skirt
-   that doesn't split into a top+bottom) spans two rows instead of one.
-   Falls back to the old photo+arrow-notes treatment (see WhatToWear)
-   wherever a look doesn't have real per-garment photos yet. */
+   The shape isn't fixed to a "top/bottom/shoes" template: each person's
+   half of the grid is driven by how many real photos actually exist for
+   them. One combined photo (nothing was shot separately) stays one big
+   panel; several real separate pieces become their own small grid, with
+   a "big" item (a dress/sari/skirt that doesn't split into a top+bottom)
+   spanning two rows. Falls back to the old photo+arrow-notes treatment
+   (see WhatToWear) wherever a look doesn't have real per-garment photos
+   at all yet. */
 
 function GarmentCell({ garment }: { garment: Garment }) {
   const { image, crop, label, big } = garment;
@@ -42,6 +46,31 @@ function GarmentCell({ garment }: { garment: Garment }) {
   );
 }
 
+// one real combined photo — nothing to break into pieces, so it gets one
+// full panel instead of being sliced into fake categories
+function SoloPanel({ garment }: { garment: Garment }) {
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-1.5 border border-dashed border-coral/30 p-3">
+      <div className="relative w-full flex-1" style={{ aspectRatio: "2 / 3" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={asset(garment.image)} alt="" aria-hidden className="size-full object-contain" />
+      </div>
+    </div>
+  );
+}
+
+function PersonSection({ garments }: { garments: Garment[] }) {
+  if (garments.length === 0) return null;
+  if (garments.length === 1) return <SoloPanel garment={garments[0]} />;
+  return (
+    <div className="grid grid-cols-2">
+      {garments.map((g) => (
+        <GarmentCell key={g.label} garment={g} />
+      ))}
+    </div>
+  );
+}
+
 function Comment({ text }: { text: string }) {
   return (
     <p
@@ -55,13 +84,14 @@ function Comment({ text }: { text: string }) {
 
 export default function LookGrid({ fit }: { fit: Fit }) {
   const garments = fit.garments ?? [];
+  const him = garments.filter((g) => g.person === "him");
+  const her = garments.filter((g) => g.person === "her");
 
   return (
     <div>
-      <div className="grid grid-cols-3 gap-0 border border-dashed border-coral/30 sm:grid-cols-4">
-        {garments.map((g, i) => (
-          <GarmentCell key={`${g.person}-${g.label}-${i}`} garment={g} />
-        ))}
+      <div className="grid grid-cols-2 items-stretch border border-dashed border-coral/30">
+        <PersonSection garments={him} />
+        <PersonSection garments={her} />
       </div>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
