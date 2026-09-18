@@ -126,7 +126,7 @@ export default function WhatToWear() {
           <div className="flex flex-col items-center text-center lg:items-end lg:text-right">
             <div className="w-full">
               {hasGrid ? (
-                <LookGrid fits={active.fits} jewelry={active.jewelry} notes={active.fits[0].notes} />
+                <LookGrid fits={active.fits} notes={active.fits[0].notes} />
               ) : (
                 <Collage fit={fit} alt={`${active.labels.join(" / ")} outfit — ${fit.name}`} />
               )}

@@ -20,8 +20,8 @@ import type { Fit, Garment } from "@/lib/site";
    the one exception: an "outfit" candidate takes over the top+bottom
    position as one panel (since it isn't separable), which hides the
    otherwise-independent Bottom slot only while that candidate is active.
-   Jewelry is a standing per-occasion suggestion, not tied to any look,
-   so it never cycles.
+   Jewelry is just another pooled category (some occasions vary it every
+   look, some repeat the same piece — either way it behaves the same).
 
    A slot with more than one option is a drag/swipe track: the next and
    previous photos sit just off-screen and peek a sliver into view at
@@ -190,15 +190,6 @@ function SwipeTrack({
   );
 }
 
-function FixedCell({ image, label, weight }: { image: string; label: string; weight: number }) {
-  return (
-    <div className="relative flex min-h-0 w-full items-center justify-center p-3" style={{ flexGrow: weight, flexBasis: 0 }}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={asset(image)} alt={label} className="size-full object-contain" />
-    </div>
-  );
-}
-
 function Cycle({
   items,
   weight,
@@ -240,11 +231,12 @@ function HimCard({ garments }: { garments: Garment[] }) {
   );
 }
 
-function HerCard({ garments, jewelryImage }: { garments: Garment[]; jewelryImage?: string }) {
+function HerCard({ garments }: { garments: Garment[] }) {
   const tops = garments.filter((g) => g.person === "her" && (g.category === "top" || g.category === "outfit"));
   const bottoms = garments.filter((g) => g.person === "her" && g.category === "bottom");
   const shoes = garments.filter((g) => g.person === "her" && g.category === "shoes");
   const bags = garments.filter((g) => g.person === "her" && g.category === "bag");
+  const jewelry = garments.filter((g) => g.person === "her" && g.category === "jewelry");
 
   const [topIndex, setTopIndex] = useState(0);
   const activeTopIndex = tops.length > 0 ? topIndex % tops.length : 0;
@@ -253,7 +245,7 @@ function HerCard({ garments, jewelryImage }: { garments: Garment[]; jewelryImage
   return (
     <div className="grid h-[460px] grid-cols-[3fr_4fr] grid-rows-[1fr] divide-x divide-[#ff9595]/40 overflow-hidden rounded-xl border-[4px] border-[#ff9595]">
       <div className="flex min-h-0 flex-col divide-y divide-[#ff9595]/40">
-        {jewelryImage && <FixedCell image={jewelryImage} label="Jewelry" weight={WEIGHT.herJewelry} />}
+        <Cycle items={jewelry} weight={WEIGHT.herJewelry} />
         <Cycle items={shoes} weight={WEIGHT.herShoes} imgScale={0.89} />
         <Cycle items={bags} weight={WEIGHT.herBag} />
       </div>
@@ -285,11 +277,9 @@ function Comment({ text, background }: { text: string; background: string }) {
 
 export default function LookGrid({
   fits,
-  jewelry,
   notes,
 }: {
   fits: Fit[];
-  jewelry?: { him?: string; her?: string };
   notes: { him: string; her: string };
 }) {
   const garments = fits.flatMap((f) => f.garments ?? []);
@@ -298,7 +288,7 @@ export default function LookGrid({
     <div>
       <div className="grid grid-cols-2 items-start gap-4">
         <HimCard garments={garments} />
-        <HerCard garments={garments} jewelryImage={jewelry?.her} />
+        <HerCard garments={garments} />
       </div>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">

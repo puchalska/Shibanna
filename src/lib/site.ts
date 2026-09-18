@@ -254,7 +254,7 @@ export const timelineTicks = ["6am", "noon", "6pm", "midnight"];
 // and again, tighter, for "shoes") is fine — the Figma reference itself
 // does this — but the crop is baked into its own image file ahead of
 // time (see public/figma/outfit/garments), not computed at render time.
-export type GarmentCategory = "top" | "bottom" | "shoes" | "bag" | "outfit";
+export type GarmentCategory = "top" | "bottom" | "shoes" | "bag" | "jewelry" | "outfit";
 
 // one garment photo for one look's wardrobe grid slot. Every slot in the
 // grid is a fixed size (see LookGrid) and every image fills it via
@@ -288,10 +288,6 @@ export type Occasion = {
   labels: string[];
   fits: Fit[];
   colors: string[];
-  // a standing jewelry suggestion for this occasion — unlike the other
-  // slots it doesn't change look to look (no photo exists that splits
-  // it out per-look), so it renders once with no prev/next controls
-  jewelry?: { him?: string; her?: string };
 };
 
 // per-occasion colour chips — sampled from that occasion's own garment
@@ -358,6 +354,8 @@ const casualFits: Fit[] = [
       { person: "her", category: "bottom", label: "Skirt", image: "/figma/outfit/garments/her-look1-skirt.png" },
       { person: "her", category: "shoes", label: "Sandals", image: "/figma/outfit/garments/sandals-woven.png" },
       { person: "her", category: "bag", label: "Bag", image: "/figma/outfit/garments/potli.png" },
+      { person: "her", category: "bag", label: "Patchwork Bag", image: "/figma/outfit/garments/her-casual1-bag2.png" },
+      { person: "her", category: "jewelry", label: "Bangles", image: "/figma/outfit/garments/bangles.png" },
     ],
   },
   {
@@ -376,6 +374,7 @@ const casualFits: Fit[] = [
       { person: "her", category: "bottom", label: "Pants", image: "/figma/outfit/garments/her-look2-pants.png" },
       { person: "her", category: "shoes", label: "Flip-flops", image: "/figma/outfit/garments/flipflops.png" },
       { person: "her", category: "bag", label: "Bag", image: "/figma/outfit/garments/potli.png" },
+      { person: "her", category: "jewelry", label: "Earrings", image: "/figma/outfit/garments/her-casual2-jewelry.png" },
     ],
   },
   {
@@ -394,6 +393,7 @@ const casualFits: Fit[] = [
       { person: "her", category: "bottom", label: "Pants", image: "/figma/outfit/garments/her-look3-pants.png" },
       { person: "her", category: "shoes", label: "Sandals", image: "/figma/outfit/garments/her-sandals-coral.png" },
       { person: "her", category: "bag", label: "Tote", image: "/figma/outfit/garments/her-tote-black.png" },
+      { person: "her", category: "jewelry", label: "Earring", image: "/figma/outfit/garments/her-casual3-jewelry.png" },
     ],
   },
 ];
@@ -405,7 +405,6 @@ export const occasions: Occasion[] = [
     labels: ["Casual"],
     fits: casualFits,
     colors: casualColors,
-    jewelry: { her: "/figma/outfit/garments/bangles.png" },
   },
   {
     id: "mehendi",
@@ -451,6 +450,16 @@ export const occasions: Occasion[] = [
           him: "Yellow kurta + white linen pants are great.",
           her: "White simple salwar suit + yellow shawl.",
         },
+        garments: [
+          // the kurta drapes long over the pants with no waist seam to
+          // crop at, same reasoning as Casual Look 3's tunic
+          { person: "him", category: "outfit", label: "Kurta", image: "/figma/outfit/garments/him-haldi1-outfit.png" },
+          { person: "him", category: "shoes", label: "Sandals", image: "/figma/outfit/garments/him-haldi1-shoes.png" },
+          { person: "her", category: "outfit", label: "Outfit", image: "/figma/outfit/garments/her-haldi1-outfit.png" },
+          { person: "her", category: "jewelry", label: "Earrings", image: "/figma/outfit/garments/her-haldi1-jewelry.png" },
+          { person: "her", category: "shoes", label: "Sandals", image: "/figma/outfit/garments/her-haldi1-shoes.png" },
+          { person: "her", category: "bag", label: "Bag", image: "/figma/outfit/garments/her-haldi1-bag.png" },
+        ],
       },
       {
         name: "Look 2",
@@ -459,6 +468,15 @@ export const occasions: Occasion[] = [
           him: "More details = considered as more elegant.",
           her: "More sheen is also nice. Salwar suit + dupatta.",
         },
+        garments: [
+          // shoes are baked into this photo already (visible at the hem) —
+          // no separate shoe shot exists for him in this look
+          { person: "him", category: "outfit", label: "Kurta", image: "/figma/outfit/garments/him-haldi2-outfit.png" },
+          { person: "her", category: "outfit", label: "Outfit", image: "/figma/outfit/garments/her-haldi2-outfit.png" },
+          { person: "her", category: "jewelry", label: "Bracelet", image: "/figma/outfit/garments/her-haldi2-jewelry.png" },
+          { person: "her", category: "shoes", label: "Sandals", image: "/figma/outfit/garments/her-haldi2-shoes.png" },
+          { person: "her", category: "bag", label: "Bag", image: "/figma/outfit/garments/her-haldi2-bag.png" },
+        ],
       },
       {
         name: "Look 3",
@@ -467,6 +485,13 @@ export const occasions: Occasion[] = [
           him: "Longer kurta + white pants.",
           her: "Anarkali with some shiny bits.",
         },
+        garments: [
+          { person: "him", category: "outfit", label: "Kurta", image: "/figma/outfit/garments/him-haldi3-outfit.png" },
+          { person: "her", category: "outfit", label: "Outfit", image: "/figma/outfit/garments/her-haldi3-outfit.png" },
+          { person: "her", category: "jewelry", label: "Necklace", image: "/figma/outfit/garments/her-haldi3-jewelry.png" },
+          { person: "her", category: "shoes", label: "Sandals", image: "/figma/outfit/garments/her-haldi3-shoes.png" },
+          { person: "her", category: "bag", label: "Bag", image: "/figma/outfit/garments/her-haldi3-bag.png" },
+        ],
       },
     ],
     colors: haldiColors,
@@ -511,6 +536,5 @@ export const occasions: Occasion[] = [
     labels: ["Casual"],
     fits: casualFits,
     colors: casualColors,
-    jewelry: { her: "/figma/outfit/garments/bangles.png" },
   },
 ];
