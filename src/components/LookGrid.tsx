@@ -8,8 +8,8 @@ import type { Fit, Garment } from "@/lib/site";
    for occasions that have isolated per-garment cutouts (see Fit.garments).
    Matches the Figma "Outfit widget" reference: a fixed-size card for him
    (top+bottom or one outfit panel, then shoes) and a fixed-size card for
-   her (a narrow column for jewelry/shoes/bag, a wide column for top+bottom
-   or one outfit panel). The card itself never resizes, but each garment
+   her (a narrow column for jewelry/layers/shoes/bag, a wide column for
+   top+bottom or one outfit panel). The card itself never resizes, but each garment
    photo stays fully visible inside its slot (object-fit: contain) and
    floats on the page's own background, same as the reference — no crop-
    to-fill, no label bar. Category names live in the image's alt text.
@@ -51,6 +51,7 @@ const WEIGHT = {
   herJewelry: 135,
   herShoes: 112,
   herBag: 235,
+  herLayers: 293, // Wedding's narrow column: blouse+petticoat on top, shoes below
 };
 
 function ArrowButton({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) {
@@ -237,6 +238,7 @@ function HerCard({ garments }: { garments: Garment[] }) {
   const shoes = garments.filter((g) => g.person === "her" && g.category === "shoes");
   const bags = garments.filter((g) => g.person === "her" && g.category === "bag");
   const jewelry = garments.filter((g) => g.person === "her" && g.category === "jewelry");
+  const layers = garments.filter((g) => g.person === "her" && g.category === "layers");
 
   const [topIndex, setTopIndex] = useState(0);
   const activeTopIndex = tops.length > 0 ? topIndex % tops.length : 0;
@@ -246,6 +248,7 @@ function HerCard({ garments }: { garments: Garment[] }) {
     <div className="grid h-[460px] grid-cols-[3fr_4fr] grid-rows-[1fr] divide-x divide-[#ff9595]/40 overflow-hidden rounded-xl border-[4px] border-[#ff9595]">
       <div className="flex min-h-0 flex-col divide-y divide-[#ff9595]/40">
         <Cycle items={jewelry} weight={WEIGHT.herJewelry} />
+        <Cycle items={layers} weight={WEIGHT.herLayers} />
         <Cycle items={shoes} weight={WEIGHT.herShoes} imgScale={0.89} />
         <Cycle items={bags} weight={WEIGHT.herBag} />
       </div>

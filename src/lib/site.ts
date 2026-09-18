@@ -254,7 +254,10 @@ export const timelineTicks = ["6am", "noon", "6pm", "midnight"];
 // and again, tighter, for "shoes") is fine — the Figma reference itself
 // does this — but the crop is baked into its own image file ahead of
 // time (see public/figma/outfit/garments), not computed at render time.
-export type GarmentCategory = "top" | "bottom" | "shoes" | "bag" | "jewelry" | "outfit";
+// "layers" is the sari-specific case: a blouse + petticoat photographed
+// together as the pieces worn under a sari, distinct from the sari's
+// own drape (which is "outfit") and from jewelry/shoes/bag
+export type GarmentCategory = "top" | "bottom" | "shoes" | "bag" | "jewelry" | "layers" | "outfit";
 
 // one garment photo for one look's wardrobe grid slot. Every slot in the
 // grid is a fixed size (see LookGrid) and every image fills it via
@@ -509,6 +512,14 @@ export const occasions: Occasion[] = [
           her: "Shiny sari.",
         },
         herStyle: "sari",
+        garments: [
+          { person: "him", category: "outfit", label: "Suit", image: "/figma/outfit/garments/him-wedding1-outfit.png" },
+          { person: "her", category: "outfit", label: "Sari", image: "/figma/outfit/garments/her-wedding1-outfit.png" },
+          // the blouse + petticoat worn under the sari — a real separate
+          // photo, not part of the draped sari shot itself
+          { person: "her", category: "layers", label: "Blouse & Petticoat", image: "/figma/outfit/garments/her-wedding1-layers.png" },
+          { person: "her", category: "shoes", label: "Flats", image: "/figma/outfit/garments/her-wedding1-shoes.png" },
+        ],
       },
       {
         name: "Look 2",
@@ -517,6 +528,12 @@ export const occasions: Occasion[] = [
           him: "Beaded kurta. Very elegant.",
           her: "Lehenga set (top + skirt) with dupatta.",
         },
+        garments: [
+          { person: "him", category: "outfit", label: "Sherwani", image: "/figma/outfit/garments/him-wedding2-outfit.png" },
+          { person: "her", category: "outfit", label: "Sari", image: "/figma/outfit/garments/her-wedding2-outfit.png" },
+          { person: "her", category: "layers", label: "Blouse & Petticoat", image: "/figma/outfit/garments/her-wedding2-layers.png" },
+          { person: "her", category: "shoes", label: "Sandals", image: "/figma/outfit/garments/her-wedding2-shoes.png" },
+        ],
       },
       {
         name: "Look 3",
@@ -526,6 +543,12 @@ export const occasions: Occasion[] = [
           her: "Sari in a vibrant color.",
         },
         herStyle: "sari",
+        garments: [
+          // no separate layers/shoes photos exist for this look — the
+          // lehenga is complete as shown, nothing underneath to isolate
+          { person: "him", category: "outfit", label: "Kurta", image: "/figma/outfit/garments/him-wedding3-outfit.png" },
+          { person: "her", category: "outfit", label: "Lehenga", image: "/figma/outfit/garments/her-wedding3-outfit.png" },
+        ],
       },
     ],
     colors: weddingColors,
