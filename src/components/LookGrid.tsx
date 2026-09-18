@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { asset } from "@/lib/asset";
 import type { Fit, Garment } from "@/lib/site";
 
@@ -23,51 +23,115 @@ import type { Fit, Garment } from "@/lib/site";
    Jewelry is a standing per-occasion suggestion, not tied to any look,
    so it never cycles.
 
+   A slot with more than one option is a drag/swipe track, not a click
+   target: the next and previous photos sit just off-screen and peek a
+   sliver into view at rest, so "there's another piece here" is felt by
+   looking at it, not read off an icon. Dragging past ~18% of the slot's
+   width commits the swap; short of that, it springs back.
+
    Falls back to the old photo+arrow-notes treatment (see WhatToWear)
    wherever an occasion doesn't have real per-garment photos at all yet. */
 
-const ARROW = asset("/figma/outfit/arrow.svg");
+const PEEK = 18; // px of the neighboring photo visible at rest
 
-function ArrowButton({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={dir === "prev" ? "Previous" : "Next"}
-      className={`absolute top-1/2 z-10 flex size-7 -translate-y-1/2 cursor-pointer items-center justify-center outline-none transition-opacity hover:opacity-70 ${dir === "prev" ? "left-0" : "right-0"}`}
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={ARROW}
-        alt=""
-        aria-hidden
-        className={`h-3.5 w-auto drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)] ${dir === "prev" ? "rotate-180" : ""}`}
-      />
-    </button>
-  );
-}
-
-function Cell({
-  garment,
+function SwipeTrack({
+  items,
+  index,
+  onChange,
   tall,
-  canCycle,
-  onPrev,
-  onNext,
 }: {
-  garment: Garment;
+  items: Garment[];
+  index: number;
+  onChange: (next: number) => void;
   tall?: boolean;
-  canCycle: boolean;
-  onPrev: () => void;
-  onNext: () => void;
 }) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(0);
+  const [dragX, setDragX] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const startX = useRef(0);
+
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => setWidth(entry.contentRect.width));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  if (items.length === 0) return null;
+  const n = items.length;
+  const canCycle = n > 1;
+  const current = items[index];
+
+  const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (!canCycle) return;
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      // pointerId not eligible for capture (e.g. a synthetic event) — the
+      // drag still works fine without capture, it just won't keep tracking
+      // if the pointer leaves the element's bounds mid-drag
+    }
+    startX.current = e.clientX;
+    setDragging(true);
+  };
+  const onPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (!dragging) return;
+    const raw = e.clientX - startX.current;
+    const max = Math.max(width - PEEK, 0);
+    setDragX(Math.max(-max, Math.min(max, raw)));
+  };
+  const finish = () => {
+    if (dragging) {
+      const threshold = width * 0.18;
+      if (dragX < -threshold) onChange((index + 1) % n);
+      else if (dragX > threshold) onChange((index - 1 + n) % n);
+    }
+    setDragging(false);
+    setDragX(0);
+  };
+
+  const layerStyle = (offset: number) => ({
+    transform: `translateX(${offset + dragX}px)`,
+    transition: dragging ? "none" : "transform 220ms ease-out",
+  });
+
   return (
     <div
-      className={`relative flex min-h-0 w-full items-center justify-center p-3 ${tall ? "flex-[2]" : "flex-1"}`}
+      ref={trackRef}
+      className={`relative flex min-h-0 w-full touch-pan-y select-none overflow-hidden ${tall ? "flex-[2]" : "flex-1"} ${canCycle ? "cursor-grab active:cursor-grabbing" : ""}`}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={finish}
+      onPointerCancel={finish}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={asset(garment.image)} alt={garment.label} className="max-h-full max-w-full object-contain" />
-      {canCycle && <ArrowButton dir="prev" onClick={onPrev} />}
-      {canCycle && <ArrowButton dir="next" onClick={onNext} />}
+      {canCycle && width > 0 && (
+        <div className="absolute inset-3 flex items-center justify-center" style={layerStyle(-(width - PEEK))}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={asset(items[(index - 1 + n) % n].image)}
+            alt=""
+            aria-hidden
+            className="max-h-full max-w-full object-contain"
+          />
+        </div>
+      )}
+      <div className="absolute inset-3 flex items-center justify-center" style={layerStyle(0)}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={asset(current.image)} alt={current.label} className="max-h-full max-w-full object-contain" />
+      </div>
+      {canCycle && width > 0 && (
+        <div className="absolute inset-3 flex items-center justify-center" style={layerStyle(width - PEEK)}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={asset(items[(index + 1) % n].image)}
+            alt=""
+            aria-hidden
+            className="max-h-full max-w-full object-contain"
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -84,16 +148,7 @@ function FixedCell({ image, label }: { image: string; label: string }) {
 function Cycle({ items, tall }: { items: Garment[]; tall?: boolean }) {
   const [index, setIndex] = useState(0);
   if (items.length === 0) return null;
-  const i = index % items.length;
-  return (
-    <Cell
-      garment={items[i]}
-      tall={tall}
-      canCycle={items.length > 1}
-      onPrev={() => setIndex((v) => (v - 1 + items.length) % items.length)}
-      onNext={() => setIndex((v) => (v + 1) % items.length)}
-    />
-  );
+  return <SwipeTrack items={items} index={index % items.length} onChange={setIndex} tall={tall} />;
 }
 
 function HimCard({ garments }: { garments: Garment[] }) {
@@ -102,19 +157,13 @@ function HimCard({ garments }: { garments: Garment[] }) {
   const shoes = garments.filter((g) => g.person === "him" && g.category === "shoes");
 
   const [topIndex, setTopIndex] = useState(0);
-  const activeTop = tops.length > 0 ? tops[topIndex % tops.length] : undefined;
-  const isOutfit = activeTop?.category === "outfit";
+  const activeTopIndex = tops.length > 0 ? topIndex % tops.length : 0;
+  const isOutfit = tops[activeTopIndex]?.category === "outfit";
 
   return (
     <div className="flex h-[460px] flex-col divide-y divide-[#ed8235]/40 overflow-hidden rounded-xl border-[5px] border-[#ed8235]">
-      {activeTop && (
-        <Cell
-          garment={activeTop}
-          tall={isOutfit}
-          canCycle={tops.length > 1}
-          onPrev={() => setTopIndex((v) => (v - 1 + tops.length) % tops.length)}
-          onNext={() => setTopIndex((v) => (v + 1) % tops.length)}
-        />
+      {tops.length > 0 && (
+        <SwipeTrack items={tops} index={activeTopIndex} onChange={setTopIndex} tall={isOutfit} />
       )}
       {!isOutfit && <Cycle items={bottoms} />}
       <Cycle items={shoes} />
@@ -129,8 +178,8 @@ function HerCard({ garments, jewelryImage }: { garments: Garment[]; jewelryImage
   const bags = garments.filter((g) => g.person === "her" && g.category === "bag");
 
   const [topIndex, setTopIndex] = useState(0);
-  const activeTop = tops.length > 0 ? tops[topIndex % tops.length] : undefined;
-  const isOutfit = activeTop?.category === "outfit";
+  const activeTopIndex = tops.length > 0 ? topIndex % tops.length : 0;
+  const isOutfit = tops[activeTopIndex]?.category === "outfit";
 
   return (
     <div className="grid h-[460px] grid-cols-[3fr_4fr] grid-rows-[1fr] divide-x divide-[#ff9595]/40 overflow-hidden rounded-xl border-[4px] border-[#ff9595]">
@@ -140,14 +189,8 @@ function HerCard({ garments, jewelryImage }: { garments: Garment[]; jewelryImage
         <Cycle items={bags} />
       </div>
       <div className="flex min-h-0 flex-col divide-y divide-[#ff9595]/40">
-        {activeTop && (
-          <Cell
-            garment={activeTop}
-            tall={isOutfit}
-            canCycle={tops.length > 1}
-            onPrev={() => setTopIndex((v) => (v - 1 + tops.length) % tops.length)}
-            onNext={() => setTopIndex((v) => (v + 1) % tops.length)}
-          />
+        {tops.length > 0 && (
+          <SwipeTrack items={tops} index={activeTopIndex} onChange={setTopIndex} tall={isOutfit} />
         )}
         {!isOutfit && <Cycle items={bottoms} />}
       </div>
