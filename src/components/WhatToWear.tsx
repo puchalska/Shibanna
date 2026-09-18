@@ -187,7 +187,7 @@ export default function WhatToWear() {
           </div>
         </div>
 
-        <div className="mt-10 flex justify-end">
+        <div className="mt-5 flex justify-end">
           <NoteBubble
             background="#881817"
             text="Not a dress code — just inspiration. Wear what makes you feel like you."

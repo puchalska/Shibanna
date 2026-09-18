@@ -9,9 +9,10 @@ import type { Fit, Garment } from "@/lib/site";
    Matches the Figma "Outfit widget" reference: a fixed-size card for him
    (top+bottom or one outfit panel, then shoes) and a fixed-size card for
    her (a narrow column for jewelry/shoes/bag, a wide column for top+bottom
-   or one outfit panel). The card itself never resizes — every image fills
-   its slot via object-fit: cover, cropped ahead of time into its own file
-   rather than computed at render time.
+   or one outfit panel). The card itself never resizes, but each garment
+   photo stays fully visible inside its slot (object-fit: contain) and
+   floats on the page's own background, same as the reference — no crop-
+   to-fill, no label bar. Category names live in the image's alt text.
 
    Every slot cycles independently — mix and match, not a single "look"
    moving in lockstep. Garments are pooled across every fit in the
@@ -62,10 +63,11 @@ function Cell({
   return (
     <div className={`relative min-h-0 w-full ${tall ? "flex-[2]" : "flex-1"}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={asset(garment.image)} alt="" aria-hidden className="size-full object-cover" />
-      <p className="absolute inset-x-0 bottom-0 bg-black/35 py-1 text-center font-label text-[9px] font-bold uppercase tracking-[0.15em] text-cream-light">
-        {garment.label}
-      </p>
+      <img
+        src={asset(garment.image)}
+        alt={garment.label}
+        className="size-full object-contain p-3"
+      />
       {canCycle && <ArrowButton dir="prev" onClick={onPrev} />}
       {canCycle && <ArrowButton dir="next" onClick={onNext} />}
     </div>
@@ -76,10 +78,7 @@ function FixedCell({ image, label }: { image: string; label: string }) {
   return (
     <div className="relative min-h-0 w-full flex-1">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={asset(image)} alt="" aria-hidden className="size-full object-cover" />
-      <p className="absolute inset-x-0 bottom-0 bg-black/35 py-1 text-center font-label text-[9px] font-bold uppercase tracking-[0.15em] text-cream-light">
-        {label}
-      </p>
+      <img src={asset(image)} alt={label} className="size-full object-contain p-3" />
     </div>
   );
 }
@@ -136,13 +135,13 @@ function HerCard({ garments, jewelryImage }: { garments: Garment[]; jewelryImage
   const isOutfit = activeTop?.category === "outfit";
 
   return (
-    <div className="grid h-[460px] grid-cols-[3fr_4fr] divide-x divide-[#ff9595]/40 overflow-hidden rounded-xl border-[4px] border-[#ff9595]">
-      <div className="flex flex-col divide-y divide-[#ff9595]/40">
+    <div className="grid h-[460px] grid-cols-[3fr_4fr] grid-rows-[1fr] divide-x divide-[#ff9595]/40 overflow-hidden rounded-xl border-[4px] border-[#ff9595]">
+      <div className="flex min-h-0 flex-col divide-y divide-[#ff9595]/40">
         {jewelryImage && <FixedCell image={jewelryImage} label="Jewelry" />}
         <Cycle items={shoes} />
         <Cycle items={bags} />
       </div>
-      <div className="flex flex-col divide-y divide-[#ff9595]/40">
+      <div className="flex min-h-0 flex-col divide-y divide-[#ff9595]/40">
         {activeTop && (
           <Cell
             garment={activeTop}
