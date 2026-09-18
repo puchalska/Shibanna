@@ -133,7 +133,6 @@ function SwipeTrack({
 
   const layerStyle = (offset: number) => ({
     transform: `translateX(${offset + dragX}px)`,
-    transition: dragging ? "none" : "transform 220ms ease-out",
   });
 
   return (
