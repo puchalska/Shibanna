@@ -36,6 +36,23 @@ import type { Fit, Garment } from "@/lib/site";
 const PEEK = 18; // px of the neighboring photo visible at rest
 const ARROW = asset("/figma/outfit/arrow.svg");
 
+// row-height weights lifted straight from the Figma reference's own pixel
+// measurements (e.g. him's card: shirt 159 / jeans 227 / shoes 96 out of
+// 482) — shoes is a genuinely smaller compartment than shirt or jeans
+// there, not an equal third, so these are deliberately uneven
+const WEIGHT = {
+  himTop: 159,
+  himBottom: 227,
+  himOutfit: 159 + 227,
+  himShoes: 96,
+  herWideTop: 192,
+  herWideBottom: 290,
+  herWideOutfit: 192 + 290,
+  herJewelry: 135,
+  herShoes: 112,
+  herBag: 235,
+};
+
 function ArrowButton({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) {
   return (
     <button
@@ -60,12 +77,12 @@ function SwipeTrack({
   items,
   index,
   onChange,
-  tall,
+  weight,
 }: {
   items: Garment[];
   index: number;
   onChange: (next: number) => void;
-  tall?: boolean;
+  weight: number;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
@@ -122,7 +139,8 @@ function SwipeTrack({
   return (
     <div
       ref={trackRef}
-      className={`relative flex min-h-0 w-full touch-pan-y select-none overflow-hidden ${tall ? "flex-[2]" : "flex-1"} ${canCycle ? "cursor-grab active:cursor-grabbing" : ""}`}
+      className={`relative flex min-h-0 w-full touch-pan-y select-none overflow-hidden ${canCycle ? "cursor-grab active:cursor-grabbing" : ""}`}
+      style={{ flexGrow: weight, flexBasis: 0 }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={finish}
@@ -164,19 +182,19 @@ function SwipeTrack({
   );
 }
 
-function FixedCell({ image, label }: { image: string; label: string }) {
+function FixedCell({ image, label, weight }: { image: string; label: string; weight: number }) {
   return (
-    <div className="relative flex min-h-0 w-full flex-1 items-center justify-center p-3">
+    <div className="relative flex min-h-0 w-full items-center justify-center p-3" style={{ flexGrow: weight, flexBasis: 0 }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={asset(image)} alt={label} className="max-h-full max-w-full object-contain" />
     </div>
   );
 }
 
-function Cycle({ items, tall }: { items: Garment[]; tall?: boolean }) {
+function Cycle({ items, weight }: { items: Garment[]; weight: number }) {
   const [index, setIndex] = useState(0);
   if (items.length === 0) return null;
-  return <SwipeTrack items={items} index={index % items.length} onChange={setIndex} tall={tall} />;
+  return <SwipeTrack items={items} index={index % items.length} onChange={setIndex} weight={weight} />;
 }
 
 function HimCard({ garments }: { garments: Garment[] }) {
@@ -191,10 +209,15 @@ function HimCard({ garments }: { garments: Garment[] }) {
   return (
     <div className="flex h-[460px] flex-col divide-y divide-[#ed8235]/40 overflow-hidden rounded-xl border-[5px] border-[#ed8235]">
       {tops.length > 0 && (
-        <SwipeTrack items={tops} index={activeTopIndex} onChange={setTopIndex} tall={isOutfit} />
+        <SwipeTrack
+          items={tops}
+          index={activeTopIndex}
+          onChange={setTopIndex}
+          weight={isOutfit ? WEIGHT.himOutfit : WEIGHT.himTop}
+        />
       )}
-      {!isOutfit && <Cycle items={bottoms} />}
-      <Cycle items={shoes} />
+      {!isOutfit && <Cycle items={bottoms} weight={WEIGHT.himBottom} />}
+      <Cycle items={shoes} weight={WEIGHT.himShoes} />
     </div>
   );
 }
@@ -212,15 +235,20 @@ function HerCard({ garments, jewelryImage }: { garments: Garment[]; jewelryImage
   return (
     <div className="grid h-[460px] grid-cols-[3fr_4fr] grid-rows-[1fr] divide-x divide-[#ff9595]/40 overflow-hidden rounded-xl border-[4px] border-[#ff9595]">
       <div className="flex min-h-0 flex-col divide-y divide-[#ff9595]/40">
-        {jewelryImage && <FixedCell image={jewelryImage} label="Jewelry" />}
-        <Cycle items={shoes} />
-        <Cycle items={bags} />
+        {jewelryImage && <FixedCell image={jewelryImage} label="Jewelry" weight={WEIGHT.herJewelry} />}
+        <Cycle items={shoes} weight={WEIGHT.herShoes} />
+        <Cycle items={bags} weight={WEIGHT.herBag} />
       </div>
       <div className="flex min-h-0 flex-col divide-y divide-[#ff9595]/40">
         {tops.length > 0 && (
-          <SwipeTrack items={tops} index={activeTopIndex} onChange={setTopIndex} tall={isOutfit} />
+          <SwipeTrack
+            items={tops}
+            index={activeTopIndex}
+            onChange={setTopIndex}
+            weight={isOutfit ? WEIGHT.herWideOutfit : WEIGHT.herWideTop}
+          />
         )}
-        {!isOutfit && <Cycle items={bottoms} />}
+        {!isOutfit && <Cycle items={bottoms} weight={WEIGHT.herWideBottom} />}
       </div>
     </div>
   );
