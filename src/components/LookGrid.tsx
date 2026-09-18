@@ -2,166 +2,194 @@
 
 import { useState } from "react";
 import { asset } from "@/lib/asset";
-import type { Fit, Garment, GarmentCategory } from "@/lib/site";
+import type { Fit, Garment } from "@/lib/site";
 
 /* The "no figure" wardrobe grid — replaces the composited photo entirely
-   for fits that have isolated per-garment cutouts (see Fit.garments).
-   The grid itself never changes shape: every look gets the same four
-   slots (top/bottom/shoes/accessory) in the same positions, and what
-   changes between looks is only which photo — if any — fills each one.
-   A slot with no photo for this look renders empty rather than the grid
-   reflowing. A slot with more than one candidate (e.g. two accessory
-   options) paginates in place instead of doubling up.
+   for occasions that have isolated per-garment cutouts (see Fit.garments).
+   Matches the Figma "Outfit widget" reference: a fixed-size card for him
+   (top+bottom or one outfit panel, then shoes) and a fixed-size card for
+   her (a narrow column for jewelry/shoes/bag, a wide column for top+bottom
+   or one outfit panel). The card itself never resizes — every image fills
+   its slot via object-fit: cover, cropped ahead of time into its own file
+   rather than computed at render time.
 
-   "outfit" is the one exception: a photo that was never shot piece by
-   piece (a combined ghost-mannequin shot, a sari that has no top/bottom
-   seam) replaces all four slots with a single panel — pretending to
-   slice it into parts would be fabricating detail that isn't there.
+   Every slot cycles independently — mix and match, not a single "look"
+   moving in lockstep. Garments are pooled across every fit in the
+   occasion, and each slot keeps its own local index. Him's top slot is
+   the one exception: an "outfit" candidate takes over the top+bottom
+   position as one panel (since it isn't separable), which hides the
+   otherwise-independent Bottom slot only while that candidate is active.
+   Jewelry is a standing per-occasion suggestion, not tied to any look,
+   so it never cycles.
 
    Falls back to the old photo+arrow-notes treatment (see WhatToWear)
-   wherever a look doesn't have real per-garment photos at all yet. */
+   wherever an occasion doesn't have real per-garment photos at all yet. */
 
-const SLOTS: GarmentCategory[] = ["top", "bottom", "shoes", "accessory"];
-const SLOT_LABEL: Record<GarmentCategory, string> = {
-  top: "Top",
-  bottom: "Bottom",
-  shoes: "Shoes",
-  accessory: "Accessory",
-  outfit: "Outfit",
-};
+const ARROW = asset("/figma/outfit/arrow.svg");
 
-// pink for her, a cool off-white for him — a subtle cue for which side
-// of the grid you're looking at, independent of the photos themselves
-const SIDE_BORDER: Record<"him" | "her", string> = {
-  him: "border-[#dce9f2]/40",
-  her: "border-[#ffc4cb]/50",
-};
-
-function GarmentImage({ garment }: { garment: Garment }) {
-  const { image, crop } = garment;
-  if (!crop) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={asset(image)} alt="" aria-hidden className="size-full object-contain" />;
-  }
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={asset(image)}
-      alt=""
-      aria-hidden
-      className="absolute max-w-none"
-      style={{
-        width: `${(crop.naturalW / crop.w) * 100}%`,
-        height: `${(crop.naturalH / crop.h) * 100}%`,
-        left: `${(-crop.x / crop.w) * 100}%`,
-        top: `${(-crop.y / crop.h) * 100}%`,
-      }}
-    />
-  );
-}
-
-function Slot({
-  side,
-  category,
-  items,
-}: {
-  side: "him" | "her";
-  category: GarmentCategory;
-  items: Garment[];
-}) {
-  const [index, setIndex] = useState(0);
-  const border = SIDE_BORDER[side];
-
-  if (items.length === 0) {
-    return (
-      <div className={`flex flex-col gap-1.5 border border-dashed p-2 opacity-30 ${border}`}>
-        <div className="w-full" style={{ aspectRatio: "1 / 1" }} />
-        <p className="text-center font-label text-[9px] font-bold uppercase tracking-[0.15em] text-coral-soft">
-          {SLOT_LABEL[category]}
-        </p>
-      </div>
-    );
-  }
-
-  const active = items[index % items.length];
-  const aspect = active.crop ? `${active.crop.w} / ${active.crop.h}` : "1 / 1";
-  const multi = items.length > 1;
-
+function ArrowButton({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) {
   return (
     <button
       type="button"
-      onClick={() => multi && setIndex((v) => v + 1)}
-      className={`flex flex-col gap-1.5 border border-dashed p-2 text-left ${border} ${multi ? "cursor-pointer" : "cursor-default"}`}
+      onClick={onClick}
+      aria-label={dir === "prev" ? "Previous" : "Next"}
+      className={`absolute top-1/2 z-10 flex size-7 -translate-y-1/2 cursor-pointer items-center justify-center outline-none transition-opacity hover:opacity-70 ${dir === "prev" ? "left-0" : "right-0"}`}
     >
-      <div className="relative w-full overflow-hidden" style={{ aspectRatio: aspect }}>
-        <GarmentImage garment={active} />
-      </div>
-      <div className="flex items-center justify-between gap-1">
-        <p className="font-label text-[9px] font-bold uppercase tracking-[0.15em] text-coral-soft">
-          {active.label}
-        </p>
-        {multi && (
-          <span className="flex shrink-0 gap-0.5" aria-hidden>
-            {items.map((_, i) => (
-              <span
-                key={i}
-                className="size-1 rounded-full"
-                style={{ background: i === index % items.length ? "var(--coral)" : "rgba(255,255,255,0.3)" }}
-              />
-            ))}
-          </span>
-        )}
-      </div>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={ARROW}
+        alt=""
+        aria-hidden
+        className={`h-3.5 w-auto drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)] ${dir === "prev" ? "rotate-180" : ""}`}
+      />
     </button>
   );
 }
 
-function PersonGrid({ side, garments }: { side: "him" | "her"; garments: Garment[] }) {
-  const outfit = garments.find((g) => g.category === "outfit");
-  if (outfit) {
-    return (
-      <div className={`flex h-full flex-col items-center justify-center border border-dashed p-3 ${SIDE_BORDER[side]}`}>
-        <div className="relative w-full flex-1" style={{ aspectRatio: "2 / 3" }}>
-          <GarmentImage garment={outfit} />
-        </div>
-      </div>
-    );
-  }
+function Cell({
+  garment,
+  tall,
+  canCycle,
+  onPrev,
+  onNext,
+}: {
+  garment: Garment;
+  tall?: boolean;
+  canCycle: boolean;
+  onPrev: () => void;
+  onNext: () => void;
+}) {
   return (
-    <div className="grid grid-cols-2">
-      {SLOTS.map((category) => (
-        <Slot key={category} side={side} category={category} items={garments.filter((g) => g.category === category)} />
-      ))}
+    <div className={`relative min-h-0 w-full ${tall ? "flex-[2]" : "flex-1"}`}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={asset(garment.image)} alt="" aria-hidden className="size-full object-cover" />
+      <p className="absolute inset-x-0 bottom-0 bg-black/35 py-1 text-center font-label text-[9px] font-bold uppercase tracking-[0.15em] text-cream-light">
+        {garment.label}
+      </p>
+      {canCycle && <ArrowButton dir="prev" onClick={onPrev} />}
+      {canCycle && <ArrowButton dir="next" onClick={onNext} />}
     </div>
   );
 }
 
-function Comment({ text }: { text: string }) {
+function FixedCell({ image, label }: { image: string; label: string }) {
+  return (
+    <div className="relative min-h-0 w-full flex-1">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={asset(image)} alt="" aria-hidden className="size-full object-cover" />
+      <p className="absolute inset-x-0 bottom-0 bg-black/35 py-1 text-center font-label text-[9px] font-bold uppercase tracking-[0.15em] text-cream-light">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+function Cycle({ items, tall }: { items: Garment[]; tall?: boolean }) {
+  const [index, setIndex] = useState(0);
+  if (items.length === 0) return null;
+  const i = index % items.length;
+  return (
+    <Cell
+      garment={items[i]}
+      tall={tall}
+      canCycle={items.length > 1}
+      onPrev={() => setIndex((v) => (v - 1 + items.length) % items.length)}
+      onNext={() => setIndex((v) => (v + 1) % items.length)}
+    />
+  );
+}
+
+function HimCard({ garments }: { garments: Garment[] }) {
+  const tops = garments.filter((g) => g.person === "him" && (g.category === "top" || g.category === "outfit"));
+  const bottoms = garments.filter((g) => g.person === "him" && g.category === "bottom");
+  const shoes = garments.filter((g) => g.person === "him" && g.category === "shoes");
+
+  const [topIndex, setTopIndex] = useState(0);
+  const activeTop = tops.length > 0 ? tops[topIndex % tops.length] : undefined;
+  const isOutfit = activeTop?.category === "outfit";
+
+  return (
+    <div className="flex h-[460px] flex-col divide-y divide-[#ed8235]/40 overflow-hidden rounded-xl border-[5px] border-[#ed8235]">
+      {activeTop && (
+        <Cell
+          garment={activeTop}
+          tall={isOutfit}
+          canCycle={tops.length > 1}
+          onPrev={() => setTopIndex((v) => (v - 1 + tops.length) % tops.length)}
+          onNext={() => setTopIndex((v) => (v + 1) % tops.length)}
+        />
+      )}
+      {!isOutfit && <Cycle items={bottoms} />}
+      <Cycle items={shoes} />
+    </div>
+  );
+}
+
+function HerCard({ garments, jewelryImage }: { garments: Garment[]; jewelryImage?: string }) {
+  const tops = garments.filter((g) => g.person === "her" && (g.category === "top" || g.category === "outfit"));
+  const bottoms = garments.filter((g) => g.person === "her" && g.category === "bottom");
+  const shoes = garments.filter((g) => g.person === "her" && g.category === "shoes");
+  const bags = garments.filter((g) => g.person === "her" && g.category === "bag");
+
+  const [topIndex, setTopIndex] = useState(0);
+  const activeTop = tops.length > 0 ? tops[topIndex % tops.length] : undefined;
+  const isOutfit = activeTop?.category === "outfit";
+
+  return (
+    <div className="grid h-[460px] grid-cols-[3fr_4fr] divide-x divide-[#ff9595]/40 overflow-hidden rounded-xl border-[4px] border-[#ff9595]">
+      <div className="flex flex-col divide-y divide-[#ff9595]/40">
+        {jewelryImage && <FixedCell image={jewelryImage} label="Jewelry" />}
+        <Cycle items={shoes} />
+        <Cycle items={bags} />
+      </div>
+      <div className="flex flex-col divide-y divide-[#ff9595]/40">
+        {activeTop && (
+          <Cell
+            garment={activeTop}
+            tall={isOutfit}
+            canCycle={tops.length > 1}
+            onPrev={() => setTopIndex((v) => (v - 1 + tops.length) % tops.length)}
+            onNext={() => setTopIndex((v) => (v + 1) % tops.length)}
+          />
+        )}
+        {!isOutfit && <Cycle items={bottoms} />}
+      </div>
+    </div>
+  );
+}
+
+function Comment({ text, background }: { text: string; background: string }) {
   return (
     <p
       className="rounded-[8px] px-5 py-4 font-hand text-base leading-snug sm:text-lg"
-      style={{ background: "#ffc4cb", color: "var(--red-deep)" }}
+      style={{ background, color: "#4b0103" }}
     >
       {text}
     </p>
   );
 }
 
-export default function LookGrid({ fit }: { fit: Fit }) {
-  const garments = fit.garments ?? [];
-  const him = garments.filter((g) => g.person === "him");
-  const her = garments.filter((g) => g.person === "her");
+export default function LookGrid({
+  fits,
+  jewelry,
+  notes,
+}: {
+  fits: Fit[];
+  jewelry?: { him?: string; her?: string };
+  notes: { him: string; her: string };
+}) {
+  const garments = fits.flatMap((f) => f.garments ?? []);
 
   return (
     <div>
-      <div className="grid grid-cols-2 items-stretch border border-dashed border-coral/20">
-        <PersonGrid side="him" garments={him} />
-        <PersonGrid side="her" garments={her} />
+      <div className="grid grid-cols-2 items-start gap-4">
+        <HimCard garments={garments} />
+        <HerCard garments={garments} jewelryImage={jewelry?.her} />
       </div>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        <Comment text={fit.notes.him} />
-        <Comment text={fit.notes.her} />
+        <Comment text={notes.him} background="#ed8235" />
+        <Comment text={notes.her} background="#ff9595" />
       </div>
     </div>
   );

@@ -245,25 +245,25 @@ export const timelineTicks = ["6am", "noon", "6pm", "midnight"];
    editable without re-exporting an image. The "Next outfit" button still
    cycles through an occasion's `fits`. */
 
-// the wardrobe grid's slots — always in this order, always in this
-// position, for every look. "outfit" is the escape hatch for a photo
-// that was never shot piece-by-piece (a ghost-mannequin combo, a sari
-// that doesn't split into a top+bottom): it replaces all four slots
-// with one panel instead of pretending to fill them individually.
-export type GarmentCategory = "top" | "bottom" | "shoes" | "accessory" | "outfit";
+// the wardrobe grid's per-look slots — always in this order, always in
+// this position. "outfit" is for a photo that was never shot piece by
+// piece (a ghost-mannequin combo, a tunic that doesn't have a clean
+// waist seam to crop at): it merges the top+bottom position into one
+// panel instead of pretending to split it. Cropping one photo to fill
+// two of these slots (e.g. a combined shot cropped once for "bottom"
+// and again, tighter, for "shoes") is fine — the Figma reference itself
+// does this — but the crop is baked into its own image file ahead of
+// time (see public/figma/outfit/garments), not computed at render time.
+export type GarmentCategory = "top" | "bottom" | "shoes" | "bag" | "outfit";
 
-// one real garment photo for the wardrobe grid — always a genuinely
-// separate item, never a chunk cropped out of a bigger combined shot to
-// fake variety. `crop` is only for trimming an otherwise-good photo (e.g.
-// an on-model shot showing a sliver of hand/skin around the garment), in
-// that source image's own pixel dimensions — not for splitting one photo
-// into several "different" pieces.
+// one garment photo for one look's wardrobe grid slot. Every slot in the
+// grid is a fixed size (see LookGrid) and every image fills it via
+// object-fit: cover, so there's nothing to pass but the image itself.
 export type Garment = {
   person: "him" | "her";
   category: GarmentCategory;
   label: string;
   image: string;
-  crop?: { x: number; y: number; w: number; h: number; naturalW: number; naturalH: number };
 };
 
 export type Fit = {
@@ -275,10 +275,10 @@ export type Fit = {
   // single bigger compartment instead of guessing a seam that isn't there
   herStyle?: "sari";
   // isolated per-garment cutouts for the wardrobe grid's fixed top/bottom/
-  // shoes/accessory slots, recovered from the site's earlier paper-doll
-  // prototype. Only populated where those source photos actually match a
-  // look — most fits fall back to the flattened photo + notes treatment
-  // until real per-garment shots exist for them.
+  // shoes/bag slots, recovered from the site's earlier paper-doll
+  // prototype plus new photography from the Figma reference. Only
+  // populated where real source photos exist for a look — other fits
+  // fall back to the flattened photo + notes treatment.
   garments?: Garment[];
 };
 
@@ -288,6 +288,10 @@ export type Occasion = {
   labels: string[];
   fits: Fit[];
   colors: string[];
+  // a standing jewelry suggestion for this occasion — unlike the other
+  // slots it doesn't change look to look (no photo exists that splits
+  // it out per-look), so it renders once with no prev/next controls
+  jewelry?: { him?: string; her?: string };
 };
 
 // per-occasion colour chips — sampled from that occasion's own garment
@@ -345,45 +349,15 @@ const casualFits: Fit[] = [
       her: "Decorative elements & jewellery are always in fashion in India.",
     },
     garments: [
-      // only one real photo exists for him here — the shirt, jeans and
-      // shoes were never shot separately, so it stays one whole-outfit
-      // panel instead of being chopped into fake top/bottom/shoes cells
-      {
-        person: "him",
-        category: "outfit",
-        label: "Outfit",
-        image: "/figma/outfit/garments/him-shirt-jeans.png",
-      },
-      {
-        person: "her",
-        category: "top",
-        label: "Shirt",
-        image: "/figma/outfit/garments/her-white-shirt.png",
-      },
-      {
-        person: "her",
-        category: "bottom",
-        label: "Skirt",
-        image: "/figma/outfit/garments/her-cream-skirt.png",
-        // this source photo is on-model, not a ghost mannequin — trimmed
-        // tight to the garment so no hands/skin show through
-        crop: { x: 40, y: 118, w: 310, h: 342, naturalW: 391, naturalH: 520 },
-      },
-      {
-        person: "her",
-        category: "shoes",
-        label: "Sandals",
-        image: "/figma/outfit/garments/sandals-woven.png",
-      },
-      // two real options for the same slot — the grid paginates between
-      // them instead of trying to show both at once
-      { person: "her", category: "accessory", label: "Bag", image: "/figma/outfit/garments/potli.png" },
-      {
-        person: "her",
-        category: "accessory",
-        label: "Bangles",
-        image: "/figma/outfit/garments/bangles.png",
-      },
+      // one combined photo, pre-cropped three ways — no separate
+      // shirt/jeans/shoe photos exist for this look
+      { person: "him", category: "top", label: "Shirt", image: "/figma/outfit/garments/him-look1-shirt.png" },
+      { person: "him", category: "bottom", label: "Jeans", image: "/figma/outfit/garments/him-look1-jeans.png" },
+      { person: "him", category: "shoes", label: "Shoes", image: "/figma/outfit/garments/him-look1-shoes.png" },
+      { person: "her", category: "top", label: "Shirt", image: "/figma/outfit/garments/her-white-shirt.png" },
+      { person: "her", category: "bottom", label: "Skirt", image: "/figma/outfit/garments/her-look1-skirt.png" },
+      { person: "her", category: "shoes", label: "Sandals", image: "/figma/outfit/garments/sandals-woven.png" },
+      { person: "her", category: "bag", label: "Bag", image: "/figma/outfit/garments/potli.png" },
     ],
   },
   {
@@ -394,31 +368,14 @@ const casualFits: Fit[] = [
       her: "Cute bags are great, considered fashionable.",
     },
     garments: [
-      // shirt and pants were shot separately for him — two real photos,
-      // filling the Top and Bottom slots. No matching shoe photo exists,
-      // so Shoes/Accessory just render as empty slots.
-      {
-        person: "him",
-        category: "top",
-        label: "Shirt",
-        image: "/figma/outfit/garments/him-white-shirt.png",
-      },
-      {
-        person: "him",
-        category: "bottom",
-        label: "Pants",
-        image: "/figma/outfit/garments/him-white-pants.png",
-        // on-model shot showing some torso/hand — trimmed to just the pants
-        crop: { x: 15, y: 95, w: 360, h: 355, naturalW: 390, naturalH: 520 },
-      },
-      // her kurta, pants and bag were only ever shot together as one
-      // outfit — one real photo, one panel, same as him in Look 1
-      {
-        person: "her",
-        category: "outfit",
-        label: "Outfit",
-        image: "/figma/outfit/garments/her-green-kurta.png",
-      },
+      { person: "him", category: "top", label: "Shirt", image: "/figma/outfit/garments/him-white-shirt.png" },
+      { person: "him", category: "bottom", label: "Pants", image: "/figma/outfit/garments/him-look2-pants.png" },
+      // same on-model photo, pre-cropped down to just the shoes at the ankle
+      { person: "him", category: "shoes", label: "Shoes", image: "/figma/outfit/garments/him-look2-shoes.png" },
+      { person: "her", category: "top", label: "Kurta", image: "/figma/outfit/garments/her-look2-kurta.png" },
+      { person: "her", category: "bottom", label: "Pants", image: "/figma/outfit/garments/her-look2-pants.png" },
+      { person: "her", category: "shoes", label: "Flip-flops", image: "/figma/outfit/garments/flipflops.png" },
+      { person: "her", category: "bag", label: "Bag", image: "/figma/outfit/garments/potli.png" },
     ],
   },
   {
@@ -428,6 +385,16 @@ const casualFits: Fit[] = [
       him: "No bling bling, less elegant.",
       her: "The more bling bling, the more elegant it is.",
     },
+    garments: [
+      // the tunic drapes asymmetrically with no clean waist seam to crop
+      // at — same reasoning as a sari, so it stays one outfit panel
+      { person: "him", category: "outfit", label: "Outfit", image: "/figma/outfit/garments/him-tunic-pants.png" },
+      { person: "him", category: "shoes", label: "Sandals", image: "/figma/outfit/garments/him-sandals-tan.png" },
+      { person: "her", category: "top", label: "Tunic", image: "/figma/outfit/garments/her-look3-tunic.png" },
+      { person: "her", category: "bottom", label: "Pants", image: "/figma/outfit/garments/her-look3-pants.png" },
+      { person: "her", category: "shoes", label: "Sandals", image: "/figma/outfit/garments/her-sandals-coral.png" },
+      { person: "her", category: "bag", label: "Tote", image: "/figma/outfit/garments/her-tote-black.png" },
+    ],
   },
 ];
 
@@ -438,6 +405,7 @@ export const occasions: Occasion[] = [
     labels: ["Casual"],
     fits: casualFits,
     colors: casualColors,
+    jewelry: { her: "/figma/outfit/garments/bangles.png" },
   },
   {
     id: "mehendi",
@@ -543,5 +511,6 @@ export const occasions: Occasion[] = [
     labels: ["Casual"],
     fits: casualFits,
     colors: casualColors,
+    jewelry: { her: "/figma/outfit/garments/bangles.png" },
   },
 ];

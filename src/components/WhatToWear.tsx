@@ -48,7 +48,12 @@ export default function WhatToWear() {
   const [activeId, setActiveId] = useState(occasions[0].id);
   const [fitIndex, setFitIndex] = useState(0);
   const active = occasions.find((o) => o.id === activeId) ?? occasions[0];
-  const fit = active.fits[fitIndex % active.fits.length];
+  const currentFitIndex = fitIndex % active.fits.length;
+  const fit = active.fits[currentFitIndex];
+  // the wardrobe grid pools every look's garments and lets each slot
+  // (top/bottom/shoes/bag) cycle on its own — there's no single "current
+  // look" for it the way the flattened-photo occasions still have one
+  const hasGrid = active.fits.some((f) => f.garments);
 
   const select = (id: string) => {
     setActiveId(id);
@@ -120,14 +125,18 @@ export default function WhatToWear() {
           {/* stage: photo with arrow-callout notes, look picker + next outfit */}
           <div className="flex flex-col items-center text-center lg:items-end lg:text-right">
             <div className="w-full">
-              {fit.garments ? (
-                <LookGrid fit={fit} />
+              {hasGrid ? (
+                <LookGrid fits={active.fits} jewelry={active.jewelry} notes={active.fits[0].notes} />
               ) : (
                 <Collage fit={fit} alt={`${active.labels.join(" / ")} outfit — ${fit.name}`} />
               )}
             </div>
 
-            <div className="mt-4 flex items-center justify-center gap-4 self-center">
+            {/* the wardrobe grid carries its own prev/next arrows on every
+                cell (see LookGrid) — this picker is only needed as a
+                fallback for looks still on the flattened-photo treatment */}
+            {!hasGrid && (
+              <div className="mt-4 flex items-center justify-center gap-4 self-center">
               {active.fits.length > 1 && (
                 <div className="flex gap-2">
                   {active.fits.map((f, i) => {
@@ -168,8 +177,9 @@ export default function WhatToWear() {
                 ✨ Next outfit
               </button>
             </div>
+            )}
 
-            {!fit.garments && (
+            {!hasGrid && (
               <div className="mt-6 w-full">
                 <Wardrobe fit={fit} />
               </div>
