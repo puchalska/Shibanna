@@ -235,7 +235,7 @@ function HimCard({ garments }: { garments: Garment[] }) {
         />
       )}
       {!isOutfit && <Cycle items={bottoms} weight={WEIGHT.himBottom} />}
-      <Cycle items={shoes} weight={WEIGHT.himShoes} imgScale={0.45} />
+      <Cycle items={shoes} weight={WEIGHT.himShoes} />
     </div>
   );
 }
