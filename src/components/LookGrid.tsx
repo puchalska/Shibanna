@@ -235,7 +235,7 @@ function HimCard({ garments }: { garments: Garment[] }) {
         />
       )}
       {!isOutfit && <Cycle items={bottoms} weight={WEIGHT.himBottom} />}
-      <Cycle items={shoes} weight={WEIGHT.himShoes} />
+      <Cycle items={shoes} weight={WEIGHT.himShoes} imgScale={0.6} />
     </div>
   );
 }
@@ -254,7 +254,7 @@ function HerCard({ garments, jewelryImage }: { garments: Garment[]; jewelryImage
     <div className="grid h-[460px] grid-cols-[3fr_4fr] grid-rows-[1fr] divide-x divide-[#ff9595]/40 overflow-hidden rounded-xl border-[4px] border-[#ff9595]">
       <div className="flex min-h-0 flex-col divide-y divide-[#ff9595]/40">
         {jewelryImage && <FixedCell image={jewelryImage} label="Jewelry" weight={WEIGHT.herJewelry} />}
-        <Cycle items={shoes} weight={WEIGHT.herShoes} />
+        <Cycle items={shoes} weight={WEIGHT.herShoes} imgScale={0.89} />
         <Cycle items={bags} weight={WEIGHT.herBag} />
       </div>
       <div className="flex min-h-0 flex-col divide-y divide-[#ff9595]/40">
