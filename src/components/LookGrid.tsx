@@ -152,13 +152,13 @@ function SwipeTrack({
             src={asset(items[(index - 1 + n) % n].image)}
             alt=""
             aria-hidden
-            className="max-h-full max-w-full object-contain"
+            className="size-full object-contain"
           />
         </div>
       )}
       <div className="absolute inset-3 flex items-center justify-center" style={layerStyle(0)}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={asset(current.image)} alt={current.label} className="max-h-full max-w-full object-contain" />
+        <img src={asset(current.image)} alt={current.label} className="size-full object-contain" />
       </div>
       {canCycle && width > 0 && (
         <div className="absolute inset-3 flex items-center justify-center" style={layerStyle(width - PEEK)}>
@@ -167,7 +167,7 @@ function SwipeTrack({
             src={asset(items[(index + 1) % n].image)}
             alt=""
             aria-hidden
-            className="max-h-full max-w-full object-contain"
+            className="size-full object-contain"
           />
         </div>
       )}
@@ -185,7 +185,7 @@ function FixedCell({ image, label, weight }: { image: string; label: string; wei
   return (
     <div className="relative flex min-h-0 w-full items-center justify-center p-3" style={{ flexGrow: weight, flexBasis: 0 }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={asset(image)} alt={label} className="max-h-full max-w-full object-contain" />
+      <img src={asset(image)} alt={label} className="size-full object-contain" />
     </div>
   );
 }
