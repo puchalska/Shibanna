@@ -60,7 +60,7 @@ function ArrowButton({ dir, onClick }: { dir: "prev" | "next"; onClick: () => vo
       onClick={onClick}
       onPointerDown={(e) => e.stopPropagation()}
       aria-label={dir === "prev" ? "Previous" : "Next"}
-      className={`absolute top-1/2 z-10 flex size-7 -translate-y-1/2 cursor-pointer items-center justify-center outline-none transition-opacity hover:opacity-70 ${dir === "prev" ? "left-0" : "right-0"}`}
+      className={`absolute inset-y-0 z-10 flex w-12 cursor-pointer items-center outline-none transition-opacity hover:opacity-70 ${dir === "prev" ? "left-0 justify-start pl-1" : "right-0 justify-end pr-1"}`}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
