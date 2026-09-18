@@ -61,13 +61,11 @@ function Cell({
   onNext: () => void;
 }) {
   return (
-    <div className={`relative min-h-0 w-full ${tall ? "flex-[2]" : "flex-1"}`}>
+    <div
+      className={`relative flex min-h-0 w-full items-center justify-center p-3 ${tall ? "flex-[2]" : "flex-1"}`}
+    >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={asset(garment.image)}
-        alt={garment.label}
-        className="size-full object-contain p-3"
-      />
+      <img src={asset(garment.image)} alt={garment.label} className="max-h-full max-w-full object-contain" />
       {canCycle && <ArrowButton dir="prev" onClick={onPrev} />}
       {canCycle && <ArrowButton dir="next" onClick={onNext} />}
     </div>
@@ -76,9 +74,9 @@ function Cell({
 
 function FixedCell({ image, label }: { image: string; label: string }) {
   return (
-    <div className="relative min-h-0 w-full flex-1">
+    <div className="relative flex min-h-0 w-full flex-1 items-center justify-center p-3">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={asset(image)} alt={label} className="size-full object-contain p-3" />
+      <img src={asset(image)} alt={label} className="max-h-full max-w-full object-contain" />
     </div>
   );
 }
