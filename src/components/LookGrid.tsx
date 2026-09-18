@@ -78,11 +78,13 @@ function SwipeTrack({
   index,
   onChange,
   weight,
+  imgScale = 1,
 }: {
   items: Garment[];
   index: number;
   onChange: (next: number) => void;
   weight: number;
+  imgScale?: number;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
@@ -153,12 +155,18 @@ function SwipeTrack({
             alt=""
             aria-hidden
             className="size-full object-contain"
+            style={{ transform: `scale(${imgScale})` }}
           />
         </div>
       )}
       <div className="absolute inset-3 flex items-center justify-center" style={layerStyle(0)}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={asset(current.image)} alt={current.label} className="size-full object-contain" />
+        <img
+          src={asset(current.image)}
+          alt={current.label}
+          className="size-full object-contain"
+          style={{ transform: `scale(${imgScale})` }}
+        />
       </div>
       {canCycle && width > 0 && (
         <div className="absolute inset-3 flex items-center justify-center" style={layerStyle(width - PEEK)}>
@@ -168,6 +176,7 @@ function SwipeTrack({
             alt=""
             aria-hidden
             className="size-full object-contain"
+            style={{ transform: `scale(${imgScale})` }}
           />
         </div>
       )}
@@ -190,10 +199,20 @@ function FixedCell({ image, label, weight }: { image: string; label: string; wei
   );
 }
 
-function Cycle({ items, weight }: { items: Garment[]; weight: number }) {
+function Cycle({
+  items,
+  weight,
+  imgScale,
+}: {
+  items: Garment[];
+  weight: number;
+  imgScale?: number;
+}) {
   const [index, setIndex] = useState(0);
   if (items.length === 0) return null;
-  return <SwipeTrack items={items} index={index % items.length} onChange={setIndex} weight={weight} />;
+  return (
+    <SwipeTrack items={items} index={index % items.length} onChange={setIndex} weight={weight} imgScale={imgScale} />
+  );
 }
 
 function HimCard({ garments }: { garments: Garment[] }) {
@@ -216,7 +235,7 @@ function HimCard({ garments }: { garments: Garment[] }) {
         />
       )}
       {!isOutfit && <Cycle items={bottoms} weight={WEIGHT.himBottom} />}
-      <Cycle items={shoes} weight={WEIGHT.himShoes} />
+      <Cycle items={shoes} weight={WEIGHT.himShoes} imgScale={0.45} />
     </div>
   );
 }
