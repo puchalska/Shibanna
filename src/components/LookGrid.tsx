@@ -23,16 +23,38 @@ import type { Fit, Garment } from "@/lib/site";
    Jewelry is a standing per-occasion suggestion, not tied to any look,
    so it never cycles.
 
-   A slot with more than one option is a drag/swipe track, not a click
-   target: the next and previous photos sit just off-screen and peek a
-   sliver into view at rest, so "there's another piece here" is felt by
-   looking at it, not read off an icon. Dragging past ~18% of the slot's
-   width commits the swap; short of that, it springs back.
+   A slot with more than one option is a drag/swipe track: the next and
+   previous photos sit just off-screen and peek a sliver into view at
+   rest, so "there's another piece here" is felt by looking at it, not
+   just read off an icon. Dragging past ~18% of the slot's width commits
+   the swap; short of that, it springs back. Arrow buttons sit alongside
+   the drag rather than replacing it, for anyone who'd rather click.
 
    Falls back to the old photo+arrow-notes treatment (see WhatToWear)
    wherever an occasion doesn't have real per-garment photos at all yet. */
 
 const PEEK = 18; // px of the neighboring photo visible at rest
+const ARROW = asset("/figma/outfit/arrow.svg");
+
+function ArrowButton({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      onPointerDown={(e) => e.stopPropagation()}
+      aria-label={dir === "prev" ? "Previous" : "Next"}
+      className={`absolute top-1/2 z-10 flex size-7 -translate-y-1/2 cursor-pointer items-center justify-center outline-none transition-opacity hover:opacity-70 ${dir === "prev" ? "left-0" : "right-0"}`}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={ARROW}
+        alt=""
+        aria-hidden
+        className={`h-3.5 w-auto drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)] ${dir === "prev" ? "rotate-180" : ""}`}
+      />
+    </button>
+  );
+}
 
 function SwipeTrack({
   items,
@@ -131,6 +153,12 @@ function SwipeTrack({
             className="max-h-full max-w-full object-contain"
           />
         </div>
+      )}
+      {canCycle && (
+        <>
+          <ArrowButton dir="prev" onClick={() => onChange((index - 1 + n) % n)} />
+          <ArrowButton dir="next" onClick={() => onChange((index + 1) % n)} />
+        </>
       )}
     </div>
   );
