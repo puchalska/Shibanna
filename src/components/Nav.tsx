@@ -47,19 +47,19 @@ export default function Nav() {
         borderBottom: `1px solid rgba(255, 149, 149, ${scrolled ? 0.18 : 0})`,
       }}
     >
-      <div className="mx-auto flex w-full max-w-[1180px] items-center justify-between px-6 py-3 sm:px-10">
+      <div className="mx-auto flex w-full max-w-[1180px] flex-col items-center gap-2 px-6 py-3 sm:flex-row sm:justify-between sm:gap-0 sm:px-10">
         <a
           href="#"
           className="font-serif text-lg italic text-coral sm:text-xl"
         >
           Anna &amp; Shib
         </a>
-        <ul className="flex items-center gap-5 sm:gap-8">
+        <ul className="flex items-center gap-4 sm:gap-8">
           {LINKS.map((l) => (
             <li key={l.href}>
               <a
                 href={l.href}
-                className="font-label text-xs font-bold uppercase tracking-[0.15em] transition-colors sm:text-sm"
+                className="whitespace-nowrap font-label text-[11px] font-bold uppercase tracking-[0.15em] transition-colors sm:text-sm"
                 style={{
                   color: active === l.href ? "var(--coral)" : "var(--coral-soft)",
                 }}
