@@ -12,12 +12,17 @@ import { guides } from "@/lib/site";
 
    Click a cover and it "opens": the clicked cell takes the full grid
    row (col-span-full) and unfolds into a two-page spread — the cover
-   as the left page, the written guide as the right page on a cream
-   paper ground, with a spine shadow down the seam. Every other cover
-   stays put around it, same as pulling one book off a shelf and
-   opening it flat rather than navigating away. Same smooth
-   grid-template-rows reveal Preparation's accordion cards use, so it
-   reads as part of the same system.
+   as the left page, the written guide as the right page, with a
+   spine shadow down the seam. Every other cover stays put around it,
+   same as pulling one book off a shelf and opening it flat rather
+   than navigating away.
+
+   The right page reads directly on the site's own red paper ground
+   (same texture as the covers), not inside a white panel — white is
+   reserved for the small "Guide" label tag, same restrained role it
+   plays everywhere else on the site. Body text and any future images
+   sit straight on the red, coral/cream ink, matching how every other
+   section here presents content.
 
    Closing has four redundant paths, since a small "×" alone is easy
    to miss: a labeled Close pill, clicking the cover page itself
@@ -110,64 +115,71 @@ function OpenBook({
   const paragraphs = guide.body.split("\n\n").filter(Boolean);
 
   return (
-    <div ref={ref} className="grid overflow-hidden rounded-[3px] shadow-[6px_10px_24px_rgba(0,0,0,0.4)]" style={{ gridTemplateRows: "1fr" }}>
-      <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,280px)_1fr]">
-        {/* left page: the cover — click it to close, same as shutting the book */}
+    <div
+      ref={ref}
+      className="flex flex-col overflow-hidden rounded-[3px] shadow-[6px_10px_24px_rgba(0,0,0,0.4)] sm:h-[min(640px,75vh)] sm:flex-row"
+      style={{ backgroundImage: `url(${asset("/figma/bg-red.jpg")})`, backgroundSize: "cover" }}
+    >
+      {/* left page: the cover — click it to close, same as shutting the book.
+          Crops to match the spread's height on sm+ (instead of keeping its
+          own aspect ratio) so it never runs shorter or taller than a right
+          page that scrolls independently. */}
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close guide"
+        title="Close"
+        className="group relative w-full shrink-0 cursor-pointer border-[6px] border-coral outline-none ring-coral focus-visible:ring-2 sm:h-full sm:w-[280px]"
+        style={{ borderTopLeftRadius: 2, borderBottomLeftRadius: 2 }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={asset(guide.image)}
+          alt={guide.title}
+          className="block aspect-[749/1025] w-full object-cover transition-[filter] duration-150 group-hover:brightness-90 sm:aspect-auto sm:h-full"
+        />
+        <span className="absolute inset-0 flex items-center justify-center bg-[rgba(75,1,3,0.55)] opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+          <span className="font-label text-xs font-bold uppercase tracking-[0.2em] text-[var(--cream)]">
+            Close book
+          </span>
+        </span>
+      </button>
+
+      {/* spine shadow, sitting in the seam between the two pages */}
+      <div
+        className="pointer-events-none hidden w-3 -translate-x-3 sm:block"
+        style={{ background: "linear-gradient(to right, rgba(75,1,3,0.45), rgba(75,1,3,0))" }}
+      />
+
+      {/* right page: the written guide, straight on the red ground —
+          scrolls on its own once content runs past the spread's height,
+          rather than growing the whole card past a readable size */}
+      <div className="relative flex flex-1 flex-col overflow-y-auto px-6 py-7 sm:px-10 sm:py-10">
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close guide"
-          title="Close"
-          className="group relative cursor-pointer border-[6px] border-coral outline-none ring-coral focus-visible:ring-2"
-          style={{ borderTopLeftRadius: 2, borderBottomLeftRadius: 2 }}
+          className="absolute right-4 top-4 flex cursor-pointer items-center gap-1.5 rounded-full bg-[rgba(255,149,149,0.12)] py-1.5 pl-3 pr-2.5 text-xs font-bold text-coral outline-none ring-coral transition-colors duration-150 hover:bg-[rgba(255,149,149,0.22)] focus-visible:ring-2 active:scale-95"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={asset(guide.image)}
-            alt={guide.title}
-            className="block aspect-[749/1025] w-full object-cover transition-[filter] duration-150 group-hover:brightness-90 sm:h-full sm:aspect-auto"
-          />
-          <span className="absolute inset-0 flex items-center justify-center bg-[rgba(75,1,3,0.55)] opacity-0 transition-opacity duration-150 group-hover:opacity-100">
-            <span className="font-label text-xs font-bold uppercase tracking-[0.2em] text-[var(--cream)]">
-              Close book
-            </span>
+          Close
+          <span aria-hidden className="text-base leading-none">
+            ×
           </span>
         </button>
 
-        {/* spine shadow, sitting in the seam between the two pages */}
-        <div
-          className="pointer-events-none hidden w-3 -translate-x-3 sm:block"
-          style={{ background: "linear-gradient(to right, rgba(75,1,3,0.35), rgba(75,1,3,0))" }}
-        />
+        <span
+          className="inline-block w-fit rounded-[3px] px-2.5 py-1 font-label text-[11px] font-bold uppercase tracking-[0.2em]"
+          style={{ background: "var(--cream)", color: "var(--btn)" }}
+        >
+          Guide
+        </span>
+        <h3 className="mt-3 font-serif text-3xl italic text-coral">{guide.title}</h3>
 
-        {/* right page: the written guide */}
-        <div className="relative flex flex-col bg-[var(--cream)] px-6 py-7 sm:px-10 sm:py-10">
-          <button
-            type="button"
-            onClick={onClose}
-            className="absolute right-4 top-4 flex cursor-pointer items-center gap-1.5 rounded-full py-1.5 pl-3 pr-2.5 text-xs font-bold outline-none ring-[var(--red-deep)] transition-colors duration-150 hover:bg-[var(--red-deep)]/10 focus-visible:ring-2 active:scale-95"
-            style={{ color: "var(--red-deep)" }}
-          >
-            Close
-            <span aria-hidden className="text-base leading-none">
-              ×
-            </span>
-          </button>
-
-          <p className="font-label text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: "var(--btn)" }}>
-            Guide
-          </p>
-          <h3 className="mt-1 font-serif text-3xl italic" style={{ color: "var(--red-deep)" }}>
-            {guide.title}
-          </h3>
-
-          <div className="mt-5 flex flex-col gap-4">
-            {paragraphs.map((p, i) => (
-              <p key={i} className="max-w-prose text-sm leading-relaxed" style={{ color: "var(--ink)" }}>
-                {p}
-              </p>
-            ))}
-          </div>
+        <div className="mt-5 flex flex-col gap-4">
+          {paragraphs.map((p, i) => (
+            <p key={i} className="max-w-prose text-sm leading-relaxed text-coral-soft">
+              {p}
+            </p>
+          ))}
         </div>
       </div>
     </div>
