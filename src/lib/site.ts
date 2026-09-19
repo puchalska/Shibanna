@@ -418,25 +418,32 @@ export const occasions: Occasion[] = [
         name: "Look 1",
         image: "/figma/outfit/looks/mehendi-1.webp",
         notes: {
-          him: "Long kurta with lot of details. Max elegance.",
-          her: "Long kurti with dupatta. Max elegance.",
+          him: "Green kurta + white pants. Easy, breathable.",
+          her: "Mustard kurta set, striped dupatta, beaded clutch.",
         },
+        garments: [
+          // long kurta drapes past the waist with no seam to crop at,
+          // same reasoning as Haldi/Casual's tunic looks
+          { person: "him", category: "outfit", label: "Kurta", image: "/figma/outfit/garments/him-mehendi1-outfit.png" },
+          { person: "her", category: "outfit", label: "Kurta & Dupatta", image: "/figma/outfit/garments/her-mehendi1-outfit.png" },
+          { person: "her", category: "bag", label: "Clutch", image: "/figma/outfit/garments/her-mehendi1-bag.png" },
+          { person: "her", category: "shoes", label: "Sandals", image: "/figma/outfit/garments/her-mehendi1-shoes.png" },
+        ],
       },
       {
         name: "Look 2",
         image: "/figma/outfit/looks/mehendi-2.webp",
         notes: {
-          him: "Long kurta with less details.",
-          her: "Long kurti with dupatta.",
+          him: "Printed kurta, more pattern.",
+          her: "Sage kurta with a sheer dupatta drape.",
         },
-      },
-      {
-        name: "Look 3",
-        image: "/figma/outfit/looks/mehendi-3.webp",
-        notes: {
-          him: "Long kurta with less details.",
-          her: "Long kurti with dupatta.",
-        },
+        garments: [
+          { person: "him", category: "outfit", label: "Kurta", image: "/figma/outfit/garments/him-mehendi2-outfit.png" },
+          { person: "her", category: "outfit", label: "Kurta & Dupatta", image: "/figma/outfit/garments/her-mehendi2-outfit.png" },
+          { person: "her", category: "jewelry", label: "Earrings", image: "/figma/outfit/garments/her-mehendi2-jewelry.png" },
+          { person: "her", category: "bag", label: "Clutch", image: "/figma/outfit/garments/her-mehendi2-bag.png" },
+          { person: "her", category: "shoes", label: "Sandals", image: "/figma/outfit/garments/her-mehendi2-shoes.png" },
+        ],
       },
     ],
     colors: mehendiColors,
