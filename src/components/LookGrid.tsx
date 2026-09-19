@@ -61,7 +61,7 @@ function ArrowButton({ dir, onClick }: { dir: "prev" | "next"; onClick: () => vo
       onClick={onClick}
       onPointerDown={(e) => e.stopPropagation()}
       aria-label={dir === "prev" ? "Previous" : "Next"}
-      className={`absolute inset-y-0 z-10 flex w-12 cursor-pointer items-center outline-none transition-opacity hover:opacity-70 ${dir === "prev" ? "left-0 justify-start pl-1" : "right-0 justify-end pr-1"}`}
+      className={`absolute inset-y-0 z-10 flex w-12 cursor-pointer items-center opacity-0 outline-none transition-opacity duration-150 group-hover:opacity-100 hover:opacity-70 focus-visible:opacity-100 ${dir === "prev" ? "left-0 justify-start pl-1" : "right-0 justify-end pr-1"}`}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -141,7 +141,7 @@ function SwipeTrack({
   return (
     <div
       ref={trackRef}
-      className={`relative flex min-h-0 w-full touch-pan-y select-none overflow-hidden ${canCycle ? "cursor-grab active:cursor-grabbing" : ""}`}
+      className={`group relative flex min-h-0 w-full touch-pan-y select-none overflow-hidden ${canCycle ? "cursor-grab active:cursor-grabbing" : ""}`}
       style={{ flexGrow: weight, flexBasis: 0 }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
