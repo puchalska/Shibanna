@@ -74,6 +74,16 @@ function ArrowButton({ dir, onClick }: { dir: "prev" | "next"; onClick: () => vo
   );
 }
 
+// combines the category-wide imgScale (e.g. shoes rendering too big by
+// default) with a per-garment scale/rotate override (e.g. Wedding Look
+// 2's saree, the one photo Figma itself crops+tilts to sit denser in
+// its column instead of shrinking to stay fully visible)
+function itemTransform(item: Garment, imgScale: number) {
+  const scale = imgScale * (item.scale ?? 1);
+  const rotate = item.rotate ?? 0;
+  return `scale(${scale}) rotate(${rotate}deg)`;
+}
+
 function SwipeTrack({
   items,
   index,
@@ -156,7 +166,7 @@ function SwipeTrack({
             alt=""
             aria-hidden
             className="size-full object-contain"
-            style={{ transform: `scale(${imgScale})` }}
+            style={{ transform: itemTransform(items[(index - 1 + n) % n], imgScale) }}
           />
         </div>
       )}
@@ -166,7 +176,7 @@ function SwipeTrack({
           src={asset(current.image)}
           alt={current.label}
           className="size-full object-contain"
-          style={{ transform: `scale(${imgScale})` }}
+          style={{ transform: itemTransform(current, imgScale) }}
         />
       </div>
       {canCycle && width > 0 && (
@@ -177,7 +187,7 @@ function SwipeTrack({
             alt=""
             aria-hidden
             className="size-full object-contain"
-            style={{ transform: `scale(${imgScale})` }}
+            style={{ transform: itemTransform(items[(index + 1) % n], imgScale) }}
           />
         </div>
       )}
@@ -217,7 +227,7 @@ function HimCard({ garments }: { garments: Garment[] }) {
   const isOutfit = tops[activeTopIndex]?.category === "outfit";
 
   return (
-    <div className="flex h-[460px] flex-col divide-y divide-[#ed8235]/40 overflow-hidden rounded-xl border-[5px] border-[#ed8235]">
+    <div className="flex aspect-[245/482] flex-col divide-y divide-[#ed8235]/40 overflow-hidden rounded-xl border-[5px] border-[#ed8235]">
       {tops.length > 0 && (
         <SwipeTrack
           items={tops}
@@ -245,7 +255,7 @@ function HerCard({ garments }: { garments: Garment[] }) {
   const isOutfit = tops[activeTopIndex]?.category === "outfit";
 
   return (
-    <div className="grid h-[460px] grid-cols-[3fr_4fr] grid-rows-[1fr] divide-x divide-[#ff9595]/40 overflow-hidden rounded-xl border-[4px] border-[#ff9595]">
+    <div className="grid aspect-[367/482] grid-cols-[3fr_4fr] grid-rows-[1fr] divide-x divide-[#ff9595]/40 overflow-hidden rounded-xl border-[4px] border-[#ff9595]">
       <div className="flex min-h-0 flex-col divide-y divide-[#ff9595]/40">
         <Cycle items={jewelry} weight={WEIGHT.herJewelry} />
         <Cycle items={layers} weight={WEIGHT.herLayers} />
@@ -289,7 +299,7 @@ export default function LookGrid({
 
   return (
     <div>
-      <div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-[245fr_367fr]">
         <HimCard garments={garments} />
         <HerCard garments={garments} />
       </div>

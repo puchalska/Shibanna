@@ -267,6 +267,12 @@ export type Garment = {
   category: GarmentCategory;
   label: string;
   image: string;
+  // Figma crops+tilts a small number of photos a few degrees for a
+  // candid, styled-not-catalog feel (e.g. Wedding Look 2's saree) —
+  // the only place the reference departs from "shrink to fit, fully
+  // visible." Matches that exact treatment; omit for the common case.
+  rotate?: number;
+  scale?: number;
 };
 
 export type Fit = {
@@ -520,8 +526,8 @@ export const occasions: Occasion[] = [
         },
         herStyle: "sari",
         garments: [
-          { person: "him", category: "outfit", label: "Suit", image: "/figma/outfit/garments/him-wedding1-outfit.png" },
-          { person: "her", category: "outfit", label: "Sari", image: "/figma/outfit/garments/her-wedding1-outfit.png" },
+          { person: "him", category: "outfit", label: "Suit", image: "/figma/outfit/garments/him-wedding1-outfit.png", scale: 0.925 },
+          { person: "her", category: "outfit", label: "Sari", image: "/figma/outfit/garments/her-wedding1-outfit.png", scale: 0.924 },
           // the blouse + petticoat worn under the sari — a real separate
           // photo, not part of the draped sari shot itself
           { person: "her", category: "layers", label: "Blouse & Petticoat", image: "/figma/outfit/garments/her-wedding1-layers.png" },
@@ -536,8 +542,8 @@ export const occasions: Occasion[] = [
           her: "Lehenga set (top + skirt) with dupatta.",
         },
         garments: [
-          { person: "him", category: "outfit", label: "Sherwani", image: "/figma/outfit/garments/him-wedding2-outfit.png" },
-          { person: "her", category: "outfit", label: "Sari", image: "/figma/outfit/garments/her-wedding2-outfit.png" },
+          { person: "him", category: "outfit", label: "Sherwani", image: "/figma/outfit/garments/him-wedding2-outfit.png", scale: 1.315 },
+          { person: "her", category: "outfit", label: "Sari", image: "/figma/outfit/garments/her-wedding2-outfit.png", scale: 1.501, rotate: 4.82 },
           { person: "her", category: "layers", label: "Blouse & Petticoat", image: "/figma/outfit/garments/her-wedding2-layers.png" },
           { person: "her", category: "shoes", label: "Sandals", image: "/figma/outfit/garments/her-wedding2-shoes.png" },
         ],
@@ -553,8 +559,8 @@ export const occasions: Occasion[] = [
         garments: [
           // no separate layers/shoes photos exist for this look — the
           // lehenga is complete as shown, nothing underneath to isolate
-          { person: "him", category: "outfit", label: "Kurta", image: "/figma/outfit/garments/him-wedding3-outfit.png" },
-          { person: "her", category: "outfit", label: "Lehenga", image: "/figma/outfit/garments/her-wedding3-outfit.png" },
+          { person: "him", category: "outfit", label: "Kurta", image: "/figma/outfit/garments/him-wedding3-outfit.png", scale: 0.907 },
+          { person: "her", category: "outfit", label: "Lehenga", image: "/figma/outfit/garments/her-wedding3-outfit.png", scale: 0.92 },
         ],
       },
     ],
