@@ -66,26 +66,25 @@ export const hotels: Hotel[] = [
 
 /* "Guides" — a shelf of book covers, one per topic, straight from the
    Figma "Guides" frame. No content behind them yet (that's the next
-   pass) — this is just the shelf itself. `photo` marks the one cover
-   that's a real family photo instead of the plain lace-on-crimson
-   treatment every other cover uses. `composite` marks the two covers
-   (Flight, Street Life) that get a unique flight-path/animal graphic
-   inside the wreath, not just every cover — rather than reassembling
-   that from separate rotated SVG pieces (fragile, easy to get subtly
-   wrong), it's the exact flattened render Figma produces, cropped
-   straight from a node screenshot. Title text is baked into the image
-   for these two, so `title` is skipped in the overlay for them. */
-export type Guide = { title: string; photo?: string; composite?: string };
+   pass) — this is just the shelf itself. Every cover's `image` is the
+   exact flattened render Figma produces for that card (screenshotted
+   node, cropped to the interior), title baked in — not a redraw.
+   Two covers (Flight, Street Life) have a unique flight-path/animal
+   graphic Figma only drew for them; Family Guide has a real photo
+   with its own warm overlay. Reusing the exact render for every cover,
+   not just those, means the wreath, title kerning, and paper texture
+   all match Figma pixel-for-pixel with nothing hand-repositioned. */
+export type Guide = { title: string; image: string };
 
 export const guides: Guide[] = [
-  { title: "Hotels" },
-  { title: "Flight", composite: "/figma/guides/flight-composite.png" },
-  { title: "Events" },
-  { title: "Street Life", composite: "/figma/guides/street-composite.png" },
-  { title: "Family Guide", photo: "/figma/guides/family-guide-photo.png" },
-  { title: "Mental prep" },
-  { title: "Culture" },
-  { title: "New Delhi" },
+  { title: "Hotels", image: "/figma/guides/hotels.png" },
+  { title: "Flight", image: "/figma/guides/flight.png" },
+  { title: "Events", image: "/figma/guides/events.png" },
+  { title: "Street Life", image: "/figma/guides/street-life.png" },
+  { title: "Family Guide", image: "/figma/guides/family-guide.png" },
+  { title: "Mental prep", image: "/figma/guides/mental-prep.png" },
+  { title: "Culture", image: "/figma/guides/culture.png" },
+  { title: "New Delhi", image: "/figma/guides/new-delhi.png" },
 ];
 
 /* "The Guest Journey" — the full trip broken into its smallest actual
