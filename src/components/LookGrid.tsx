@@ -289,7 +289,7 @@ export default function LookGrid({
 
   return (
     <div>
-      <div className="grid grid-cols-2 items-start gap-4">
+      <div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
         <HimCard garments={garments} />
         <HerCard garments={garments} />
       </div>
