@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { asset } from "@/lib/asset";
 import { guides } from "@/lib/site";
 
@@ -17,10 +17,35 @@ import { guides } from "@/lib/site";
    stays put around it, same as pulling one book off a shelf and
    opening it flat rather than navigating away. Same smooth
    grid-template-rows reveal Preparation's accordion cards use, so it
-   reads as part of the same system. */
+   reads as part of the same system.
+
+   Closing has four redundant paths, since a small "×" alone is easy
+   to miss: a labeled Close pill, clicking the cover page itself
+   (closing the book you just opened), clicking anywhere outside the
+   open spread, and Escape. */
 
 export default function Guides() {
   const [openTitle, setOpenTitle] = useState<string | null>(null);
+  const openRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!openTitle) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpenTitle(null);
+    };
+    const onPointerDown = (e: PointerEvent) => {
+      if (openRef.current && !openRef.current.contains(e.target as Node)) {
+        setOpenTitle(null);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [openTitle]);
 
   return (
     <section id="guides" className="mx-auto w-full max-w-5xl px-6 py-16 sm:py-24">
@@ -39,7 +64,7 @@ export default function Guides() {
           return (
             <div key={g.title} className={isOpen ? "col-span-full" : undefined}>
               {isOpen ? (
-                <OpenBook guide={g} onClose={() => setOpenTitle(null)} />
+                <OpenBook ref={openRef} guide={g} onClose={() => setOpenTitle(null)} />
               ) : (
                 <button
                   type="button"
@@ -73,17 +98,41 @@ function Cover({ image, title }: { image: string; title: string }) {
   );
 }
 
-function OpenBook({ guide, onClose }: { guide: { title: string; image: string; body: string }; onClose: () => void }) {
+function OpenBook({
+  guide,
+  onClose,
+  ref,
+}: {
+  guide: { title: string; image: string; body: string };
+  onClose: () => void;
+  ref: React.Ref<HTMLDivElement>;
+}) {
   const paragraphs = guide.body.split("\n\n").filter(Boolean);
 
   return (
-    <div className="grid overflow-hidden rounded-[3px] shadow-[6px_10px_24px_rgba(0,0,0,0.4)]" style={{ gridTemplateRows: "1fr" }}>
+    <div ref={ref} className="grid overflow-hidden rounded-[3px] shadow-[6px_10px_24px_rgba(0,0,0,0.4)]" style={{ gridTemplateRows: "1fr" }}>
       <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,280px)_1fr]">
-        {/* left page: the cover, sitting flat */}
-        <div className="relative border-[6px] border-coral" style={{ borderTopLeftRadius: 2, borderBottomLeftRadius: 2 }}>
+        {/* left page: the cover — click it to close, same as shutting the book */}
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close guide"
+          title="Close"
+          className="group relative cursor-pointer border-[6px] border-coral outline-none ring-coral focus-visible:ring-2"
+          style={{ borderTopLeftRadius: 2, borderBottomLeftRadius: 2 }}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={asset(guide.image)} alt={guide.title} className="block aspect-[749/1025] w-full object-cover sm:h-full sm:aspect-auto" />
-        </div>
+          <img
+            src={asset(guide.image)}
+            alt={guide.title}
+            className="block aspect-[749/1025] w-full object-cover transition-[filter] duration-150 group-hover:brightness-90 sm:h-full sm:aspect-auto"
+          />
+          <span className="absolute inset-0 flex items-center justify-center bg-[rgba(75,1,3,0.55)] opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+            <span className="font-label text-xs font-bold uppercase tracking-[0.2em] text-[var(--cream)]">
+              Close book
+            </span>
+          </span>
+        </button>
 
         {/* spine shadow, sitting in the seam between the two pages */}
         <div
@@ -96,10 +145,13 @@ function OpenBook({ guide, onClose }: { guide: { title: string; image: string; b
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close guide"
-            className="absolute right-4 top-4 flex size-8 cursor-pointer items-center justify-center rounded-full text-lg text-[var(--red-deep)] outline-none ring-[var(--red-deep)] transition-transform duration-150 hover:scale-110 focus-visible:ring-2 active:scale-95"
+            className="absolute right-4 top-4 flex cursor-pointer items-center gap-1.5 rounded-full py-1.5 pl-3 pr-2.5 text-xs font-bold outline-none ring-[var(--red-deep)] transition-colors duration-150 hover:bg-[var(--red-deep)]/10 focus-visible:ring-2 active:scale-95"
+            style={{ color: "var(--red-deep)" }}
           >
-            ×
+            Close
+            <span aria-hidden className="text-base leading-none">
+              ×
+            </span>
           </button>
 
           <p className="font-label text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: "var(--btn)" }}>
