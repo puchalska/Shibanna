@@ -536,7 +536,6 @@ export const occasions: Occasion[] = [
           her: "Lehenga set (top + skirt) with dupatta.",
         },
         garments: [
-          { person: "him", category: "outfit", label: "Sherwani", image: "/figma/outfit/garments/him-wedding2-outfit.png" },
           { person: "her", category: "outfit", label: "Sari", image: "/figma/outfit/garments/her-wedding2-outfit.png" },
           { person: "her", category: "shoes", label: "Sandals", image: "/figma/outfit/garments/her-wedding2-shoes.png" },
         ],
