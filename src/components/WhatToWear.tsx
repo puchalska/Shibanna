@@ -111,15 +111,6 @@ export default function WhatToWear() {
               ))}
             </div>
 
-            <div className="mt-8 flex max-w-[240px] flex-wrap gap-2">
-              {active.colors.map((c, i) => (
-                <span
-                  key={`${c}-${i}`}
-                  className="size-6 rounded-full ring-1 ring-white/25"
-                  style={{ background: c }}
-                />
-              ))}
-            </div>
           </div>
 
           {/* stage: photo with arrow-callout notes, look picker + next outfit */}
@@ -184,14 +175,24 @@ export default function WhatToWear() {
                 <Wardrobe fit={fit} />
               </div>
             )}
-          </div>
-        </div>
 
-        <div className="mt-5 flex justify-end">
-          <NoteBubble
-            background="#881817"
-            text="Not a dress code — just inspiration. Wear what makes you feel like you."
-          />
+            <div className="mt-6 flex w-full flex-wrap items-center justify-end gap-4">
+              <div className="flex flex-wrap gap-2">
+                {active.colors.map((c, i) => (
+                  <span
+                    key={`${c}-${i}`}
+                    className="size-6 rounded-full ring-1 ring-white/25"
+                    style={{ background: c }}
+                  />
+                ))}
+              </div>
+              <NoteBubble
+                size="sm"
+                background="#881817"
+                text="Not a dress code — just inspiration. Wear what makes you feel like you."
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>
