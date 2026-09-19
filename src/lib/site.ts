@@ -68,14 +68,16 @@ export const hotels: Hotel[] = [
    Figma "Guides" frame. No content behind them yet (that's the next
    pass) — this is just the shelf itself. `photo` marks the one cover
    that's a real family photo instead of the plain lace-on-crimson
-   treatment every other cover uses. */
-export type Guide = { title: string; photo?: string };
+   treatment every other cover uses. `icon` marks the two covers that
+   get a small line-icon (top + mirrored bottom) inside the wreath —
+   Figma only drew these for Flight and Street Life, not every cover. */
+export type Guide = { title: string; photo?: string; icon?: "cow" | "plane" };
 
 export const guides: Guide[] = [
   { title: "Hotels" },
-  { title: "Flight" },
+  { title: "Flight", icon: "plane" },
   { title: "Events" },
-  { title: "Street Life" },
+  { title: "Street Life", icon: "cow" },
   { title: "Family Guide", photo: "/figma/guides/family-guide-photo.png" },
   { title: "Mental prep" },
   { title: "Culture" },
