@@ -11,6 +11,7 @@ const LINKS = [
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -38,31 +39,73 @@ export default function Nav() {
     return () => io.disconnect();
   }, []);
 
+  const linkColor = (href: string) => (active === href ? "var(--coral)" : "var(--coral-soft)");
+
   return (
     <nav
       className="fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-300"
       style={{
-        backgroundColor: scrolled ? "rgba(60, 2, 2, 0.72)" : "rgba(60, 2, 2, 0)",
-        backdropFilter: scrolled ? "blur(8px)" : "none",
-        borderBottom: `1px solid rgba(255, 149, 149, ${scrolled ? 0.18 : 0})`,
+        backgroundColor: scrolled || open ? "rgba(60, 2, 2, 0.72)" : "rgba(60, 2, 2, 0)",
+        backdropFilter: scrolled || open ? "blur(8px)" : "none",
+        borderBottom: `1px solid rgba(255, 149, 149, ${scrolled || open ? 0.18 : 0})`,
       }}
     >
-      <div className="mx-auto flex w-full max-w-[1180px] flex-col items-center gap-2 px-6 py-3 sm:flex-row sm:justify-between sm:gap-0 sm:px-10">
-        <a
-          href="#"
-          className="font-serif text-lg italic text-coral sm:text-xl"
-        >
+      <div className="mx-auto flex w-full max-w-[1180px] items-center justify-between px-6 py-3 sm:px-10">
+        <a href="#" className="font-serif text-lg italic text-coral sm:text-xl">
           Anna &amp; Shib
         </a>
-        <ul className="flex items-center gap-4 sm:gap-8">
+
+        {/* sm and up: links inline, no hamburger needed */}
+        <ul className="hidden items-center gap-8 sm:flex">
           {LINKS.map((l) => (
             <li key={l.href}>
               <a
                 href={l.href}
-                className="whitespace-nowrap font-label text-[11px] font-bold uppercase tracking-[0.15em] transition-colors sm:text-sm"
-                style={{
-                  color: active === l.href ? "var(--coral)" : "var(--coral-soft)",
-                }}
+                className="font-label text-sm font-bold uppercase tracking-[0.15em] transition-colors"
+                style={{ color: linkColor(l.href) }}
+              >
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        {/* below sm: hamburger toggles a dropdown, avoids the links
+            wrapping mid-word across multiple cramped lines */}
+        <button
+          type="button"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+          className="flex size-8 cursor-pointer flex-col items-center justify-center gap-[5px] sm:hidden"
+        >
+          <span
+            className="h-[1.5px] w-5 rounded-full bg-current transition-transform duration-200"
+            style={{ color: "var(--coral)", transform: open ? "translateY(6.5px) rotate(45deg)" : "none" }}
+          />
+          <span
+            className="h-[1.5px] w-5 rounded-full bg-current transition-opacity duration-200"
+            style={{ color: "var(--coral)", opacity: open ? 0 : 1 }}
+          />
+          <span
+            className="h-[1.5px] w-5 rounded-full bg-current transition-transform duration-200"
+            style={{ color: "var(--coral)", transform: open ? "translateY(-6.5px) rotate(-45deg)" : "none" }}
+          />
+        </button>
+      </div>
+
+      {/* mobile dropdown panel */}
+      <div
+        className={`overflow-hidden transition-[max-height] duration-300 sm:hidden ${open ? "max-h-60" : "max-h-0"}`}
+      >
+        <ul className="flex flex-col items-center gap-5 px-6 pb-6 pt-2">
+          {LINKS.map((l) => (
+            <li key={l.href}>
+              <a
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className="font-label text-sm font-bold uppercase tracking-[0.15em] transition-colors"
+                style={{ color: linkColor(l.href) }}
               >
                 {l.label}
               </a>
