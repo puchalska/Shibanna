@@ -207,7 +207,7 @@ function Cycle({
   );
 }
 
-function HimCard({ garments }: { garments: Garment[] }) {
+function HimCard({ garments, outfitScale }: { garments: Garment[]; outfitScale?: number }) {
   const tops = garments.filter((g) => g.person === "him" && (g.category === "top" || g.category === "outfit"));
   const bottoms = garments.filter((g) => g.person === "him" && g.category === "bottom");
   const shoes = garments.filter((g) => g.person === "him" && g.category === "shoes");
@@ -224,6 +224,7 @@ function HimCard({ garments }: { garments: Garment[] }) {
           index={activeTopIndex}
           onChange={setTopIndex}
           weight={isOutfit ? WEIGHT.himOutfit : WEIGHT.himTop}
+          imgScale={outfitScale}
         />
       )}
       {!isOutfit && <Cycle items={bottoms} weight={WEIGHT.himBottom} />}
@@ -232,7 +233,7 @@ function HimCard({ garments }: { garments: Garment[] }) {
   );
 }
 
-function HerCard({ garments }: { garments: Garment[] }) {
+function HerCard({ garments, outfitScale }: { garments: Garment[]; outfitScale?: number }) {
   const tops = garments.filter((g) => g.person === "her" && (g.category === "top" || g.category === "outfit"));
   const bottoms = garments.filter((g) => g.person === "her" && g.category === "bottom");
   const shoes = garments.filter((g) => g.person === "her" && g.category === "shoes");
@@ -259,6 +260,7 @@ function HerCard({ garments }: { garments: Garment[] }) {
             index={activeTopIndex}
             onChange={setTopIndex}
             weight={isOutfit ? WEIGHT.herWideOutfit : WEIGHT.herWideTop}
+            imgScale={outfitScale}
           />
         )}
         {!isOutfit && <Cycle items={bottoms} weight={WEIGHT.herWideBottom} />}
@@ -281,17 +283,26 @@ function Comment({ text, background }: { text: string; background: string }) {
 export default function LookGrid({
   fits,
   notes,
+  outfitScale,
 }: {
   fits: Fit[];
   notes: { him: string; her: string };
+  // the card's inset-3 margin caps a natural object-contain fit at ~95%
+  // of the card height — Figma's own reference sits noticeably smaller
+  // than that ceiling for full-body outfit shots, which padding/cropping
+  // the photo itself can't reach (object-contain always maxes out the
+  // constraining dimension). Wedding is the one occasion where every
+  // look is a full-body shot against that ceiling; other occasions'
+  // outfit photos don't hit it the same way, so this stays opt-in.
+  outfitScale?: number;
 }) {
   const garments = fits.flatMap((f) => f.garments ?? []);
 
   return (
     <div>
       <div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-[245fr_367fr]">
-        <HimCard garments={garments} />
-        <HerCard garments={garments} />
+        <HimCard garments={garments} outfitScale={outfitScale} />
+        <HerCard garments={garments} outfitScale={outfitScale} />
       </div>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
