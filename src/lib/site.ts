@@ -65,26 +65,28 @@ export const hotels: Hotel[] = [
 ];
 
 /* "Guides" — a shelf of book covers, one per topic, straight from the
-   Figma "Guides" frame. No content behind them yet (that's the next
-   pass) — this is just the shelf itself. Every cover's `image` is the
-   exact flattened render Figma produces for that card (screenshotted
-   node, cropped to the interior), title baked in — not a redraw.
-   Two covers (Flight, Street Life) have a unique flight-path/animal
-   graphic Figma only drew for them; Family Guide has a real photo
-   with its own warm overlay. Reusing the exact render for every cover,
-   not just those, means the wreath, title kerning, and paper texture
-   all match Figma pixel-for-pixel with nothing hand-repositioned. */
-export type Guide = { title: string; image: string };
+   Figma "Guides" frame. Every cover's `image` is the exact flattened
+   render Figma produces for that card (screenshotted node, cropped to
+   the interior), title baked in — not a redraw. Two covers (Flight,
+   Street Life) have a unique flight-path/animal graphic Figma only
+   drew for them; Family Guide has a real photo with its own warm
+   overlay. `body` is the actual written guide — plain paragraphs,
+   blank line between them. Nothing's written yet, so every guide
+   carries the same honest placeholder; swap it out guide by guide as
+   the real writing gets done, no code changes needed. */
+export type Guide = { title: string; image: string; body: string };
+
+const notWrittenYet = "This guide hasn't been written yet — check back closer to the date.";
 
 export const guides: Guide[] = [
-  { title: "Hotels", image: "/figma/guides/hotels.png" },
-  { title: "Flight", image: "/figma/guides/flight.png" },
-  { title: "Events", image: "/figma/guides/events.png" },
-  { title: "Street Life", image: "/figma/guides/street-life.png" },
-  { title: "Family Guide", image: "/figma/guides/family-guide.png" },
-  { title: "Mental prep", image: "/figma/guides/mental-prep.png" },
-  { title: "Culture", image: "/figma/guides/culture.png" },
-  { title: "New Delhi", image: "/figma/guides/new-delhi.png" },
+  { title: "Hotels", image: "/figma/guides/hotels.png", body: notWrittenYet },
+  { title: "Flight", image: "/figma/guides/flight.png", body: notWrittenYet },
+  { title: "Events", image: "/figma/guides/events.png", body: notWrittenYet },
+  { title: "Street Life", image: "/figma/guides/street-life.png", body: notWrittenYet },
+  { title: "Family Guide", image: "/figma/guides/family-guide.png", body: notWrittenYet },
+  { title: "Mental prep", image: "/figma/guides/mental-prep.png", body: notWrittenYet },
+  { title: "Culture", image: "/figma/guides/culture.png", body: notWrittenYet },
+  { title: "New Delhi", image: "/figma/guides/new-delhi.png", body: notWrittenYet },
 ];
 
 /* "The Guest Journey" — the full trip broken into its smallest actual
