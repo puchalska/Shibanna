@@ -3,6 +3,7 @@ import Invitation from "@/components/Invitation";
 import Nav from "@/components/Nav";
 import Story from "@/components/Story";
 import Preparation from "@/components/Preparation";
+import Guides from "@/components/Guides";
 import Schedule from "@/components/Schedule";
 import WhatToWear from "@/components/WhatToWear";
 import Journey from "@/components/Journey";
@@ -16,6 +17,7 @@ export default function Home() {
       <Invitation />
       <Story />
       <Preparation />
+      <Guides />
       <Schedule />
       <WhatToWear />
       <Journey />

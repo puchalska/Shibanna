@@ -64,6 +64,24 @@ export const hotels: Hotel[] = [
   },
 ];
 
+/* "Guides" — a shelf of book covers, one per topic, straight from the
+   Figma "Guides" frame. No content behind them yet (that's the next
+   pass) — this is just the shelf itself. `photo` marks the one cover
+   that's a real family photo instead of the plain lace-on-crimson
+   treatment every other cover uses. */
+export type Guide = { title: string; photo?: string };
+
+export const guides: Guide[] = [
+  { title: "Hotels" },
+  { title: "Flight" },
+  { title: "Events" },
+  { title: "Street Life" },
+  { title: "Family Guide", photo: "/figma/guides/family-guide-photo.png" },
+  { title: "Mental prep" },
+  { title: "Culture" },
+  { title: "New Delhi" },
+];
+
 /* "The Guest Journey" — the full trip broken into its smallest actual
    steps, deliberately over-explicit (nothing bundled, nothing assumed).
    Each group's href points at whichever existing section actually has
