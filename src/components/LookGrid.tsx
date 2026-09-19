@@ -74,16 +74,6 @@ function ArrowButton({ dir, onClick }: { dir: "prev" | "next"; onClick: () => vo
   );
 }
 
-// combines the category-wide imgScale (e.g. shoes rendering too big by
-// default) with a per-garment scale/rotate override (e.g. Wedding Look
-// 2's saree, the one photo Figma itself crops+tilts to sit denser in
-// its column instead of shrinking to stay fully visible)
-function itemTransform(item: Garment, imgScale: number) {
-  const scale = imgScale * (item.scale ?? 1);
-  const rotate = item.rotate ?? 0;
-  return `scale(${scale}) rotate(${rotate}deg)`;
-}
-
 function SwipeTrack({
   items,
   index,
@@ -166,7 +156,7 @@ function SwipeTrack({
             alt=""
             aria-hidden
             className="size-full object-contain"
-            style={{ transform: itemTransform(items[(index - 1 + n) % n], imgScale) }}
+            style={{ transform: `scale(${imgScale})` }}
           />
         </div>
       )}
@@ -176,7 +166,7 @@ function SwipeTrack({
           src={asset(current.image)}
           alt={current.label}
           className="size-full object-contain"
-          style={{ transform: itemTransform(current, imgScale) }}
+          style={{ transform: `scale(${imgScale})` }}
         />
       </div>
       {canCycle && width > 0 && (
@@ -187,7 +177,7 @@ function SwipeTrack({
             alt=""
             aria-hidden
             className="size-full object-contain"
-            style={{ transform: itemTransform(items[(index + 1) % n], imgScale) }}
+            style={{ transform: `scale(${imgScale})` }}
           />
         </div>
       )}
