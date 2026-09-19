@@ -7,25 +7,20 @@ import { guides, type Guide } from "@/lib/site";
    asset as the page background, see layout.tsx), a pink lace wreath
    sized small and centered so it reads as a quiet frame rather than
    filling the cover, book-style asymmetric corners (tight spine edge,
-   rounded page edge), and a spine-shadow strip down the left. Family
+   rounded page edge) and a spine-shadow strip down the left. Family
    Guide is the one exception — a real photo behind the wreath, run
    through the site's existing duotone treatment (globals.css) instead
-   of the plain paper ground. Two covers (Flight, Street Life) get a
-   small line-icon top and bottom of the wreath, matching Figma —
-   every other cover is just the wreath and the title. */
+   of the plain paper ground. Flight and Street Life are also special:
+   Figma draws a unique flight-path/animal graphic inside their wreath
+   that no other cover has — `composite` swaps in the exact flattened
+   Figma render for those two instead of the programmatic wreath+text,
+   see the `Guide` type in site.ts for why. */
 
 const LACE = asset("/figma/guides/lace-border.svg");
 const LACE_CREAM = asset("/figma/guides/lace-border-cream.svg");
 const PAPER = asset("/figma/bg-red.jpg");
 
-const ICONS = {
-  cow: { top: asset("/figma/guides/icon-cow-top.svg"), bottom: asset("/figma/guides/icon-cow-bottom.svg") },
-  plane: { top: asset("/figma/guides/icon-plane-top.svg"), bottom: asset("/figma/guides/icon-plane-bottom.svg") },
-};
-
-function Cover({ title, photo, icon }: Guide) {
-  const iconSet = icon ? ICONS[icon] : null;
-
+function Cover({ title, photo, composite }: Guide) {
   return (
     <div
       className="relative aspect-[749/1025] overflow-hidden border-[6px] border-coral shadow-[6px_8px_18px_rgba(0,0,0,0.35)]"
@@ -34,7 +29,7 @@ function Cover({ title, photo, icon }: Guide) {
         borderBottomLeftRadius: 2,
         borderTopRightRadius: 20,
         borderBottomRightRadius: 20,
-        backgroundImage: photo ? undefined : `url(${PAPER})`,
+        backgroundImage: photo || composite ? undefined : `url(${PAPER})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -46,39 +41,28 @@ function Cover({ title, photo, icon }: Guide) {
         </div>
       )}
 
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={photo ? LACE_CREAM : LACE}
-        alt=""
-        aria-hidden
-        className="absolute left-1/2 top-1/2 h-[58%] w-[58%] -translate-x-1/2 -translate-y-1/2 rotate-90 object-contain opacity-90"
-      />
+      {composite && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={asset(composite)} alt="" className="absolute inset-0 size-full object-cover" />
+      )}
 
-      {iconSet && (
+      {!composite && (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={iconSet.top}
+            src={photo ? LACE_CREAM : LACE}
             alt=""
             aria-hidden
-            className="absolute left-1/2 top-[15%] w-[15%] -translate-x-1/2 object-contain opacity-90"
+            className="absolute left-1/2 top-1/2 h-[58%] w-[58%] -translate-x-1/2 -translate-y-1/2 rotate-90 object-contain opacity-90"
           />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={iconSet.bottom}
-            alt=""
-            aria-hidden
-            className="absolute bottom-[15%] left-1/2 w-[15%] -translate-x-1/2 object-contain opacity-90"
-          />
+          <p
+            className="absolute left-1/2 top-1/2 w-[70%] -translate-x-1/2 -translate-y-1/2 text-center font-serif text-lg leading-tight sm:text-xl"
+            style={{ color: photo ? "var(--cream)" : "var(--coral)" }}
+          >
+            {title}
+          </p>
         </>
       )}
-
-      <p
-        className="absolute left-1/2 top-1/2 w-[70%] -translate-x-1/2 -translate-y-1/2 text-center font-serif text-lg leading-tight sm:text-xl"
-        style={{ color: photo ? "var(--cream)" : "var(--coral)" }}
-      >
-        {title}
-      </p>
 
       <div
         className="pointer-events-none absolute inset-y-0 left-0 w-[5px]"
