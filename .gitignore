@@ -45,3 +45,4 @@ next-env.d.ts
 
 # original design source images (large)
 /design-src/
+.claude-scratch/

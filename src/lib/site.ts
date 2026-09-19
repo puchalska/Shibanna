@@ -64,6 +64,214 @@ export const hotels: Hotel[] = [
   },
 ];
 
+/* "The Guest Journey" — the full trip broken into its smallest actual
+   steps, deliberately over-explicit (nothing bundled, nothing assumed).
+   Each group's href points at whichever existing section actually has
+   the detail — Preparation for pre-trip logistics, Timeline for the
+   day-of schedule. */
+export type JourneyGroup = { label?: string; href: string; steps: string[] };
+export type JourneyPhase = { date: string; name: string; accent: "orange" | "red"; groups: JourneyGroup[] };
+
+export const journey: JourneyPhase[] = [
+  {
+    date: "Before you fly",
+    name: "Get ready",
+    accent: "orange",
+    groups: [
+      {
+        label: "Flights",
+        href: "#prepare",
+        steps: [
+          "Check your passport expiry (6mo+ validity)",
+          "Compare flight prices",
+          "Book your flights",
+          "Save your booking confirmation",
+          "Add flight numbers to your calendar",
+          "Send us your flight details for pickup",
+        ],
+      },
+      {
+        label: "Visa",
+        href: "#prepare",
+        steps: [
+          "Go to the e-visa website",
+          "Fill out the application",
+          "Pay the $35 fee",
+          "Save your visa approval PDF",
+          "Print a paper copy as backup",
+        ],
+      },
+      {
+        label: "Insurance",
+        href: "#prepare",
+        steps: [
+          "Check if your card already covers travel insurance",
+          "Buy insurance if it doesn't",
+          "Save your policy number somewhere accessible",
+          "Check if your card tier includes lounge access",
+        ],
+      },
+      {
+        label: "Vaccinations",
+        href: "#prepare",
+        steps: [
+          "Check which vaccines are recommended",
+          "Book a vaccination appointment",
+          "Get your first dose",
+          "Get your second dose (if needed)",
+        ],
+      },
+      {
+        label: "Medication",
+        href: "#prepare",
+        steps: [
+          "Count out prescriptions for the full trip + spares",
+          "Keep meds in original labeled packaging",
+          "Pack medication in your carry-on",
+          "Ask your doctor about malaria prophylaxis",
+          "Buy a small travel health kit",
+        ],
+      },
+      {
+        label: "Money",
+        href: "#prepare",
+        steps: [
+          "Call your bank — tell them you're travelling",
+          "Check your card's foreign transaction fee",
+          "Withdraw or exchange some cash",
+        ],
+      },
+      {
+        label: "Connectivity",
+        href: "#prepare",
+        steps: [
+          "Download Airalo or Holafly",
+          "Buy an India e-SIM data plan",
+          "Confirm your home SIM stays active for OTPs",
+        ],
+      },
+      {
+        label: "Packing",
+        href: "#what-to-wear",
+        steps: [
+          "Read What to Wear for each event",
+          "Pack light, breathable fabrics (~30°C)",
+          "Pack for Haldi separately (stainable clothes)",
+          "Set aside a blessing or letter — skip the gift",
+        ],
+      },
+      {
+        label: "Mindset",
+        href: "#prepare",
+        steps: ["Look up Sambalpur on Google Maps Street View", "Read the full day-by-day below once"],
+      },
+    ],
+  },
+  {
+    date: "17th December",
+    name: "Arrival",
+    accent: "red",
+    groups: [
+      {
+        href: "#schedule",
+        steps: [
+          "You land",
+          "Clear immigration & customs",
+          "Find your taxi",
+          "Drive to Grand Siba Hotel",
+          "Check in",
+          "Drop your bags in your room",
+          "Optional shopping (3–7PM)",
+          "Evening — free",
+        ],
+      },
+    ],
+  },
+  {
+    date: "18th December",
+    name: "Engagement, Mehendi & Dinner",
+    accent: "red",
+    groups: [
+      {
+        href: "#schedule",
+        steps: [
+          "Morning — free",
+          "Get dressed for Engagement",
+          "Engagement ceremony (12–3PM)",
+          "Change outfit for Mehendi/Dinner",
+          "Mehendi (from 4PM)",
+          "Let your henna dry before touching anything",
+          "Dinner (evening)",
+          "Night winds down",
+        ],
+      },
+    ],
+  },
+  {
+    date: "19th December",
+    name: "Recovery",
+    accent: "red",
+    groups: [
+      {
+        href: "#schedule",
+        steps: [
+          "Morning — recover",
+          "Decide: safari or shopping",
+          "Safari / shopping (10AM–6PM)",
+          "Repack your bags",
+          "Check out of Grand Siba",
+          "Transfer to The Royal Retreat",
+          "Check in",
+          "Lay out tomorrow's Haldi outfit",
+          "Early night",
+        ],
+      },
+    ],
+  },
+  {
+    date: "20th December",
+    name: "Wedding Day",
+    accent: "red",
+    groups: [
+      {
+        href: "#schedule",
+        steps: [
+          "Wear clothes you don't mind staining",
+          "Haldi (8–11AM)",
+          "Shower off the turmeric",
+          "Midday reset / rest",
+          "Get dressed for the wedding",
+          "Baraat (from 3PM)",
+          "Find your seat for the ceremony",
+          "Wedding ceremony",
+          "Reception (8PM–midnight)",
+          "Say hello to Anna & Shib if you catch them",
+          "Duck out whenever you're done",
+        ],
+      },
+    ],
+  },
+  {
+    date: "21st December",
+    name: "Departure",
+    accent: "red",
+    groups: [
+      {
+        href: "#schedule",
+        steps: [
+          "Slow morning",
+          "Pack your bags",
+          "Check out",
+          "Decide: fly to Delhi or go direct",
+          "Optional flight to Delhi (2–6PM)",
+          "Onward travel home",
+          "Goodbye",
+        ],
+      },
+    ],
+  },
+];
+
 export type TimelineBlock = {
   label: string;
   /** 24h decimal, e.g. 15.5 = 15:30. Timeline runs 6:00 → 24:00. */

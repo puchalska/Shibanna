@@ -5,6 +5,7 @@ import Story from "@/components/Story";
 import Preparation from "@/components/Preparation";
 import Schedule from "@/components/Schedule";
 import WhatToWear from "@/components/WhatToWear";
+import Journey from "@/components/Journey";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
       <Preparation />
       <Schedule />
       <WhatToWear />
+      <Journey />
       <Footer />
     </main>
   );

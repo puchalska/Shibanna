@@ -6,6 +6,7 @@ const LINKS = [
   { href: "#prepare", label: "Preparation" },
   { href: "#schedule", label: "Timeline" },
   { href: "#what-to-wear", label: "What to Wear" },
+  { href: "#journey", label: "Guest Journey" },
 ];
 
 export default function Nav() {
