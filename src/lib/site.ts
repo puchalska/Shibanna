@@ -133,7 +133,7 @@ export const days: Day[] = [
     header: HEADER.orange,
     blocks: [
       { label: "Engagement", start: 12, end: 15 },
-      { label: "Mehendi / Henna & Sangeet", start: 16, end: 23 },
+      { label: "Mehendi / Henna & Dinner", start: 16, end: 23 },
     ],
     cards: [
       {
@@ -147,8 +147,8 @@ export const days: Day[] = [
         image: "/figma/mehendi.jpg",
       },
       {
-        title: "Sangeet",
-        body: "Family & friends perform, dance, chaos in the best way. Probably a European party just for us.",
+        title: "Dinner",
+        body: "European dinner. We chat and dance and enjoy. Not a part of the official ceremony. Elegant casual.",
         image: "/figma/sangeet.jpg",
       },
     ],
@@ -412,7 +412,7 @@ export const occasions: Occasion[] = [
   {
     id: "mehendi",
     day: "Day 2",
-    labels: ["Mehendi & Sangeet"],
+    labels: ["Engagement & Mehendi & Dinner"],
     fits: [
       {
         name: "Look 1",
