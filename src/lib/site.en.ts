@@ -35,7 +35,7 @@ export const preparation = {
   medication:
     "Bring enough of any prescription medication for the whole trip plus a few spare days, kept in its original labeled packaging in your carry-on. Ask your doctor about malaria prophylaxis before you go. A small travel kit — something for an upset stomach, painkillers, and rehydration salts — covers most of what actually comes up.",
   flights: {
-    body: "Flights from Europe typically run 7,000–9,000 NOK. LOT is cheapest; Lufthansa or Finnair have better service — we recommend Lufthansa. Book international to Delhi or Mumbai, then a short domestic hop to Jharsuguda.",
+    body: "Flights from Europe typically run 7,000–9,000 NOK. LOT is cheapest; Lufthansa or Finnair have better service — we recommend Lufthansa. Book international to Delhi or Mumbai, then a short domestic hop to Jharsuguda. We recommend buying the Indian domestic flight through Kiwi or another third-party site.",
     example: "e.g. Lufthansa Frankfurt–Delhi, then IndiGo Delhi–Jharsuguda.",
   },
   payments:

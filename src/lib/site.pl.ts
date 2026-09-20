@@ -44,7 +44,7 @@ export const preparation = {
   medication:
     "Zabierz ze sobą wystarczającą ilość leków na receptę na cały wyjazd plus kilka dni zapasu, w oryginalnym, opisanym opakowaniu, w bagażu podręcznym. Zapytaj lekarza o profilaktykę przeciwmalaryczną przed wyjazdem. Mała apteczka podróżna — coś na rozstrój żołądka, leki przeciwbólowe i elektrolity — pokrywa większość realnych potrzeb.",
   flights: {
-    body: "Loty z Europy kosztują zwykle 7 000–9 000 NOK. LOT jest najtańszy; Lufthansa lub Finnair oferują lepszy standard — polecamy Lufthansę. Zarezerwuj lot międzynarodowy do Delhi lub Mumbaju, a potem krótki lot krajowy do Jharsugudy.",
+    body: "Loty z Europy kosztują zwykle 7 000–9 000 NOK. LOT jest najtańszy; Lufthansa lub Finnair oferują lepszy standard — polecamy Lufthansę. Zarezerwuj lot międzynarodowy do Delhi lub Mumbaju, a potem krótki lot krajowy do Jharsugudy. Lot krajowy po Indiach polecamy kupować przez Kiwi lub inną porównywarkę.",
     example: "np. Lufthansa Frankfurt–Delhi, a potem IndiGo Delhi–Jharsuguda.",
   },
   payments:
