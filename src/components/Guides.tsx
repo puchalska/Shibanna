@@ -32,9 +32,6 @@ export default function Guides() {
 
   return (
     <section id="guides" className="mx-auto w-full max-w-5xl px-6 py-16 sm:py-24">
-      <p className="mb-2 font-label text-[11px] font-bold uppercase tracking-[0.2em] text-coral-soft">
-        {ui.guides.eyebrow}
-      </p>
       <div className="flex flex-wrap items-baseline gap-3">
         <h2 className="font-serif text-4xl italic text-coral sm:text-5xl">{ui.guides.heading}</h2>
         <span className="rounded-full border border-dashed border-coral/50 px-3 py-1 font-label text-[10px] font-bold uppercase tracking-[0.15em] text-coral-soft">

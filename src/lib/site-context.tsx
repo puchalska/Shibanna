@@ -52,7 +52,6 @@ function dataFor(locale: Locale): SiteData {
 export type UiStrings = {
   nav: { preparation: string; guides: string; timeline: string; whatToWear: string; openMenu: string; closeMenu: string };
   guides: {
-    eyebrow: string;
     heading: string;
     intro: string;
     guideLabel: string;
@@ -61,7 +60,6 @@ export type UiStrings = {
     comingSoon: string;
   };
   preparation: {
-    eyebrow: string;
     heading: string;
     whereToStay: string;
     visaLinkLabel: string;
@@ -104,7 +102,6 @@ const uiEn: UiStrings = {
     closeMenu: "Close menu",
   },
   guides: {
-    eyebrow: "A shelf for later",
     heading: "Guides",
     intro:
       "Short reads for once you're here — hotels, flights, what to expect on the street, family customs, and more. Tap a cover to open it.",
@@ -114,7 +111,6 @@ const uiEn: UiStrings = {
     comingSoon: "Guides section coming soon",
   },
   preparation: {
-    eyebrow: "Before you travel",
     heading: "Preparation",
     whereToStay: "Where you'll stay",
     visaLinkLabel: "Apply for the e-visa",
@@ -155,7 +151,6 @@ const uiPl: UiStrings = {
     closeMenu: "Zamknij menu",
   },
   guides: {
-    eyebrow: "Półka na później",
     heading: "Przewodniki",
     intro:
       "Krótkie lektury, gdy już tu dotrzesz — hotele, loty, czego się spodziewać na ulicy, rodzinne zwyczaje i więcej. Stuknij okładkę, żeby ją otworzyć.",
@@ -165,7 +160,6 @@ const uiPl: UiStrings = {
     comingSoon: "Sekcja przewodników już wkrótce",
   },
   preparation: {
-    eyebrow: "Przed podróżą",
     heading: "Przygotowania",
     whereToStay: "Gdzie się zatrzymasz",
     visaLinkLabel: "Złóż wniosek o e-wizę",

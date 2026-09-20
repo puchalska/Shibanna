@@ -74,9 +74,6 @@ export default function Preparation() {
       id="prepare"
       className="mx-auto w-full max-w-5xl px-6 py-16 sm:py-24"
     >
-      <p className="mb-2 font-label text-[11px] font-bold uppercase tracking-[0.2em] text-coral-soft">
-        {ui.preparation.eyebrow}
-      </p>
       <h2 className="font-serif text-4xl italic text-coral sm:text-5xl">
         {ui.preparation.heading}
       </h2>
