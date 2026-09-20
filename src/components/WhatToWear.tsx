@@ -25,22 +25,16 @@ function MobileNav({
   active,
   activeId,
   onSelect,
-  activePerson,
-  onPersonChange,
-  showPersonToggle,
 }: {
   days: { day: string; items: Occasion[] }[];
   active: Occasion;
   activeId: string;
   onSelect: (id: string) => void;
-  activePerson: "him" | "her";
-  onPersonChange: (p: "him" | "her") => void;
-  showPersonToggle: boolean;
 }) {
-  // one compact sticky unit instead of two separate pickers: which day,
-  // which look that day (only shown when the day actually has more than
-  // one — Wedding day is Haldi or Wedding & Reception), and which card
-  // the stage shows. Day pills use the real event name (Arrival,
+  // day pills, plus a sub-pick only for days with more than one look
+  // (Wedding day is Haldi or Wedding & Reception) — the Him/Her toggle
+  // used to live here too, but moved up into the header for a cleaner,
+  // less crowded sticky bar. Day pills use the real event name (Arrival,
   // Prewedding, …) instead of "Day 1/Day 2", and it all sits on the
   // page's own red rather than a dark scrim — still opaque enough to
   // stay legible once it's stuck to the top and content scrolls under it.
@@ -97,28 +91,34 @@ function MobileNav({
           })}
         </div>
       )}
+    </div>
+  );
+}
 
-      {showPersonToggle && (
-        <div className="flex justify-center pt-1 sm:hidden">
-          <div className="inline-flex gap-1 rounded-full border border-coral/40 p-1">
-            {(["him", "her"] as const).map((p) => (
-              <button
-                key={p}
-                type="button"
-                onClick={() => onPersonChange(p)}
-                aria-pressed={activePerson === p}
-                className="cursor-pointer rounded-full px-6 py-1 font-label text-xs font-bold uppercase tracking-[0.12em] outline-none ring-coral transition-all duration-150 focus-visible:ring-2 active:scale-95"
-                style={{
-                  background: activePerson === p ? "var(--orange)" : "transparent",
-                  color: activePerson === p ? "#642526" : "var(--coral)",
-                }}
-              >
-                {p === "him" ? "Him" : "Her"}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+function PersonToggle({
+  activePerson,
+  onPersonChange,
+}: {
+  activePerson: "him" | "her";
+  onPersonChange: (p: "him" | "her") => void;
+}) {
+  return (
+    <div className="inline-flex gap-1 rounded-full border border-coral/40 p-1">
+      {(["him", "her"] as const).map((p) => (
+        <button
+          key={p}
+          type="button"
+          onClick={() => onPersonChange(p)}
+          aria-pressed={activePerson === p}
+          className="cursor-pointer rounded-full px-6 py-1 font-label text-xs font-bold uppercase tracking-[0.12em] outline-none ring-coral transition-all duration-150 focus-visible:ring-2 active:scale-95"
+          style={{
+            background: activePerson === p ? "var(--orange)" : "transparent",
+            color: activePerson === p ? "#642526" : "var(--coral)",
+          }}
+        >
+          {p === "him" ? "Him" : "Her"}
+        </button>
+      ))}
     </div>
   );
 }
@@ -200,9 +200,19 @@ export default function WhatToWear() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[260px_1fr] lg:gap-14">
           {/* sidebar: title, day-grouped occasion nav, colour palette */}
           <div>
-            <h2 className="font-serif text-4xl italic text-coral sm:text-5xl">
-              What to wear?
-            </h2>
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="font-serif text-4xl italic text-coral sm:text-5xl">
+                What to wear?
+              </h2>
+              {/* Him/Her lives in the header now, not the sticky nav below —
+                  a cleaner, less crowded bar once you've scrolled past it.
+                  Mobile-only; sm+ already shows both cards side by side. */}
+              {hasGrid && (
+                <div className="sm:hidden">
+                  <PersonToggle activePerson={activePerson} onPersonChange={setActivePerson} />
+                </div>
+              )}
+            </div>
 
             {/* lg+: full stacked day-grouped picker in the sidebar */}
             <div className="mt-9 hidden flex-col gap-6 lg:flex">
@@ -233,20 +243,9 @@ export default function WhatToWear() {
               ))}
             </div>
 
-            {/* below lg: one compact sticky nav — day pills, a sub-pick
-                only for days with more than one look, and the Him/Her
-                toggle (moved out of LookGrid) all combined into a single
-                minimal unit, so the outfit itself gets the rest of the
-                screen. */}
-            <MobileNav
-              days={days}
-              active={active}
-              activeId={activeId}
-              onSelect={select}
-              activePerson={activePerson}
-              onPersonChange={setActivePerson}
-              showPersonToggle={hasGrid}
-            />
+            {/* below lg: a compact sticky nav — day pills, plus a sub-pick
+                only for days with more than one look (Wedding day) */}
+            <MobileNav days={days} active={active} activeId={activeId} onSelect={select} />
           </div>
 
           {/* stage: photo with arrow-callout notes, look picker + next outfit.
