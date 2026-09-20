@@ -70,11 +70,22 @@ export const hotels: Hotel[] = [
    the interior), title baked in — not a redraw. Two covers (Flight,
    Street Life) have a unique flight-path/animal graphic Figma only
    drew for them; Family Guide has a real photo with its own warm
-   overlay. `body` is the actual written guide — plain paragraphs,
-   blank line between them. Nothing's written yet, so every guide
-   carries the same honest placeholder; swap it out guide by guide as
-   the real writing gets done, no code changes needed. */
-export type Guide = { title: string; image: string; body: string };
+   overlay.
+
+   `body` is the actual written guide. Most are still the honest
+   placeholder — swap guide by guide as the real writing gets done, no
+   code changes needed. A guide with real writing that has structure
+   (section headings, a checklist, a comparison table) uses a
+   `GuideBlock[]` instead of a plain string; OpenBook in Guides.tsx
+   renders either. */
+export type GuideBlock =
+  | { kind: "heading"; text: string }
+  | { kind: "subheading"; text: string }
+  | { kind: "p"; text: string }
+  | { kind: "list"; items: string[] }
+  | { kind: "table"; headers: string[]; rows: string[][] };
+
+export type Guide = { title: string; image: string; body: string | GuideBlock[] };
 
 const notWrittenYet = "This guide hasn't been written yet — check back closer to the date.";
 
@@ -82,9 +93,150 @@ export const guides: Guide[] = [
   { title: "Hotels", image: "/figma/guides/hotels.png", body: notWrittenYet },
   { title: "Flight", image: "/figma/guides/flight.png", body: notWrittenYet },
   { title: "Events", image: "/figma/guides/events.png", body: notWrittenYet },
-  { title: "Street Life", image: "/figma/guides/street-life.png", body: notWrittenYet },
+  {
+    title: "Street Life",
+    image: "/figma/guides/street-life.png",
+    body: [
+      { kind: "heading", text: "How to enjoy India" },
+      {
+        kind: "p",
+        text: "India can be incredibly welcoming, generous and chaotic at the same time. Some perfectly normal Indian interactions can feel strange coming from Europe: someone may offer to carry your bag, help you use an ATM, arrange a taxi, show you where to go, recommend a shop, ask where you're from, ask for a photo, or offer to “help” with something you weren't struggling with. Some people push this with real intensity — looking at you, New Delhi — and the pushy sales tactics in touristy areas annoy most people, not just tourists.",
+      },
+      {
+        kind: "p",
+        text: "This doesn't automatically mean something is wrong. India has a much more hands-on, service-oriented culture than most of Europe, and some people make a living from small services, commissions and tips you may not be used to. The trick is telling apart “someone is being helpful” from “I've just accepted a service I'm now expected to pay for.”",
+      },
+      {
+        kind: "p",
+        text: "You're allowed to say no. You're also allowed to ask “Is there a charge for this?” before accepting anything — one sentence, and it saves a lot of awkwardness. A firm “no, thank you” (a raised hand works too) is fine. The more mellow you are normally, the more exaggerated that “no” might need to be.",
+      },
+      { kind: "heading", text: "The most important rule about money" },
+      { kind: "p", text: "If you didn't agree to pay for it, don't assume you have to pay for it. This matters most with tours." },
+      {
+        kind: "p",
+        text: "Say you book a Delhi → Agra day trip online and pay the full package upfront. It might include a private car, driver, guide, hotel pickup, entrance tickets, lunch, parking and tolls — but not necessarily gratuities. Being prepaid doesn't mean every person involved has been tipped. And a guide saying “tip is customary” doesn't mean you've acquired a mandatory extra charge.",
+      },
+      {
+        kind: "p",
+        text: "Sometimes a new person appears, suddenly “involved” in your trip and expecting to be paid. Ask “Who is this?” and “Is there a charge for this?” Tipping in India is generally discretionary, though common in tourism and hospitality.",
+      },
+      { kind: "p", text: "Before booking a tour, ask exactly what's included, and get it confirmed in writing where you can:" },
+      {
+        kind: "list",
+        items: [
+          "🚗 Transport",
+          "👨‍✈️ Driver",
+          "🧑‍🏫 Guide",
+          "🎫 Entrance tickets",
+          "🍛 Meals",
+          "🛣️ Tolls",
+          "🅿️ Parking",
+          "⛽ Fuel",
+          "🧳 Luggage",
+          "🏨 Hotel pickup/drop-off",
+          "💸 Taxes",
+          "💰 Tips/gratuities",
+        ],
+      },
+      {
+        kind: "p",
+        text: "Then you know exactly what you're paying for. If someone says there's no charge and later changes their mind, they lied — push back. That's usually enough for them to let it go.",
+      },
+      { kind: "heading", text: "The shopping stop" },
+      {
+        kind: "p",
+        text: "On organised trips, guides and taxi drivers may recommend particular shops. Sometimes it's a genuine recommendation; most often the guide or driver gets a commission and it's a tourist trap — pricier for sure, not necessarily a scam. You don't have to buy anything.",
+      },
+      {
+        kind: "p",
+        text: "“Thank you, we'll have a look” or simply “No thank you, we're not shopping today” both work — then keep walking. You don't owe someone a purchase because they drove you somewhere; that they're waiting is their risk, not your obligation. The same dynamic shows up with drivers suggesting “alternative” hotels or shops.",
+      },
+      {
+        kind: "list",
+        items: [
+          "“No thank you, I'm okay.”",
+          "“No thank you, we're just looking.”",
+          "“No, we're not buying anything.”",
+          "“No, it's okay, we've already arranged everything.”",
+        ],
+      },
+      { kind: "heading", text: "Tipping" },
+      {
+        kind: "p",
+        text: "Tipping is fairly intuitive. Restaurants: add 10% or more if you're happy, same as Poland or Norway — optional, not required. Anything hospitality-adjacent, like carrying bags, is a service worth a small tip.",
+      },
+      {
+        kind: "table",
+        headers: ["Situation", "What to do"],
+        rows: [
+          ["Street shop / supermarket", "No tip"],
+          ["Chai / casual counter service", "No tip expected"],
+          ["Auto-rickshaw", "No tip required; rounding up is fine"],
+          ["App taxi", "Optional"],
+          ["Airport/hotel porter", "Small cash tip if they carry your bags"],
+          ["Housekeeping", "Optional"],
+          ["Private driver", "Tip at the end if you were happy"],
+          ["Private guide", "Tip at the end if you were happy"],
+          ["Restaurant", "Check the bill first, then tip if you like"],
+          ["Exceptional personal service", "Tip if you genuinely want to"],
+        ],
+      },
+      {
+        kind: "table",
+        headers: ["Amount", "What it means"],
+        rows: [
+          ["₹20–50", "Tiny thank-you / rounding up / very small service"],
+          ["₹100", "A normal small gesture"],
+          ["₹200–500", "A meaningful tip for someone who genuinely helped you"],
+        ],
+      },
+    ],
+  },
   { title: "Family Guide", image: "/figma/guides/family-guide.png", body: notWrittenYet },
-  { title: "Mental prep", image: "/figma/guides/mental-prep.png", body: notWrittenYet },
+  {
+    title: "Mental prep",
+    image: "/figma/guides/mental-prep.png",
+    body: [
+      { kind: "heading", text: "Paying in India" },
+      {
+        kind: "p",
+        text: "Worth knowing before you land, since Europe has gone cashless enough that it's easy to assume your phone will do everything. India has a huge digital payment system called UPI, working through QR codes — you'll see it everywhere, even a tiny shop scanning ₹40 off a QR code.",
+      },
+      {
+        kind: "p",
+        text: "The catch: UPI isn't as simple for a visitor as it is for an Indian resident. NPCI offers “UPI One World” for international visitors through authorised partner apps, but it needs onboarding/KYC first and is built for merchant payments, not a stand-in for an Indian bank account.",
+      },
+      { kind: "p", text: "So: bring a card, carry some rupees, and don't depend on your phone alone." },
+      {
+        kind: "list",
+        items: [
+          "💳 Card → hotels, larger restaurants, shops",
+          "💵 Cash → small shops, tips, transport, unexpected situations",
+          "📱 UPI → great if you've actually set it up",
+        ],
+      },
+      { kind: "p", text: "And you don't need to arrive with €500 in cash either — you don't need that much." },
+      { kind: "heading", text: "Your little emergency wallet" },
+      {
+        kind: "p",
+        text: "Worth arriving with a small amount of rupees in small denominations — handing someone ₹2,000 for a ₹100 service is awkward when they don't have change. Keep ₹100/₹200/₹500 notes separate from your main wallet, for a porter, a small tip, tea, a small shop, a driver, a temple donation if you want to make one, or any unexpected small expense.",
+      },
+      { kind: "heading", text: "Rough price comparison" },
+      {
+        kind: "table",
+        headers: ["", "Delhi", "Sambalpur"],
+        rows: [
+          ["Local meal", "₹300–400 (30–40 NOK / 12–16 PLN)", "₹150–250 (15–25 NOK / 6–10 PLN)"],
+          ["Coffee", "~₹220 (22 NOK / 9 PLN)", "~₹110 (11 NOK / 4 PLN)"],
+          ["Nice meal for 2", "~₹2,000 (200 NOK / 80 PLN)", "~₹550–1,100 (55–110 NOK / 22–44 PLN)"],
+          ["Local transport", "~₹40 (4 NOK / 1.6 PLN)", "~₹30 (3 NOK / 1 PLN)"],
+          ["Hotel/night", "~₹6,500–9,000 (650–900 NOK / 260–360 PLN)", "~₹2,000–4,000 (200–400 NOK / 80–160 PLN)"],
+        ],
+      },
+      { kind: "heading", text: "If something goes wrong" },
+      { kind: "list", items: ["Hotel", "Airline", "Airport help desk", "Tourist helpline — 1363", "Emergency — 112"] },
+    ],
+  },
   {
     title: "Culture",
     image: "/figma/guides/culture.png",
@@ -92,7 +244,80 @@ export const guides: Guide[] = [
     // paragraph flow — swap for the actual guide whenever it's written
     body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
   },
-  { title: "New Delhi", image: "/figma/guides/new-delhi.png", body: notWrittenYet },
+  {
+    title: "New Delhi",
+    image: "/figma/guides/new-delhi.png",
+    body: [
+      { kind: "heading", text: "Delhi: if your flight connects there" },
+      {
+        kind: "p",
+        text: "This is probably the thing you'll Google at 2AM before the trip, so here's the short version. First, check what kind of connection you actually have — there are three very different situations.",
+      },
+      { kind: "heading", text: "Europe → Delhi → elsewhere in India" },
+      {
+        kind: "p",
+        text: "Example: Warsaw → Delhi → Jharsuguda. You're entering India in Delhi, which means immigration → baggage → customs → domestic connection. Delhi Airport is explicit that international passengers connecting to a domestic flight must clear immigration, collect baggage and go through customs there — even with one boarding pass all the way to your final stop, don't assume your suitcase continues without you. IndiGo, for example, requires passengers on international-to-domestic connections to collect their bag at the first Indian airport and drop it again for the domestic leg.",
+      },
+      { kind: "heading", text: "Delhi → Europe" },
+      {
+        kind: "p",
+        text: "The reverse: your domestic flight lands in Delhi and you continue internationally. All international departures are from Terminal 3 — depending on where your domestic flight arrives and whether bags are checked through, you may need to change terminals and check in again.",
+      },
+      { kind: "heading", text: "International → international" },
+      {
+        kind: "p",
+        text: "Example: Frankfurt → Delhi → Bangkok. These transfers stay within Terminal 3 — follow the orange signs. You may still need security screening, and it's worth checking in advance whether your specific itinerary needs a transit visa.",
+      },
+      { kind: "heading", text: "Delhi Airport's colour system" },
+      { kind: "p", text: "Worth knowing before you land — it makes the airport far less intimidating." },
+      {
+        kind: "list",
+        items: [
+          "🟡 Yellow = domestic transfer — arriving internationally and continuing to an Indian domestic flight: immigration → baggage → customs → follow yellow signs.",
+          "🟠 Orange = international transfer — transferring between international flights: follow orange signs.",
+        ],
+      },
+      { kind: "heading", text: "Changing terminals" },
+      {
+        kind: "p",
+        text: "Delhi has T1, T2 and T3 — don't panic. A free inter-terminal shuttle runs 24/7, roughly every 20 minutes; bring your boarding pass and follow the airport's own signs to it. Don't follow a random person offering to “take you to Terminal 3” — follow the signs, and if you need help, ask an airport employee or a help desk.",
+      },
+      { kind: "heading", text: "Long layover — should I leave the airport?" },
+      {
+        kind: "list",
+        items: [
+          "2–4 hours: stay at the airport. A short connection is already immigration, security, baggage and terminal logistics — don't try to “see Delhi” on top of it.",
+          "5–8 hours: you can leave, but skip ambitious sightseeing. If you're wiped from a long-haul flight, get a hotel, eat, shower and reset.",
+          "Overnight / 12–24 hours: this is when staying in Delhi properly makes sense. For a first visit, pick where to stay based on what's next, not just “the best hotel.”",
+        ],
+      },
+      { kind: "heading", text: "Where to stay in Delhi" },
+      { kind: "subheading", text: "Aerocity — easiest for a connection" },
+      {
+        kind: "p",
+        text: "If you're sleeping in Delhi because of an early flight, stay in Aerocity — the hotel district right by the airport, which Delhi Airport itself recommends for longer layovers. Holiday Inn New Delhi Int'l Airport, Novotel New Delhi Aerocity and Lemon Tree Premier Delhi Airport are all options — not that you need one specifically, just that Aerocity is the easy call when the airport is the priority.",
+      },
+      { kind: "subheading", text: "Connaught Place — if you actually want to see Delhi" },
+      {
+        kind: "p",
+        text: "With a full day or two, staying centrally makes more sense — Connaught Place is one of the city's main hubs, with metro connections, restaurants, and a common base for first-time visitors. Radisson Blu Marina Hotel Connaught Place, The Connaught (IHCL SeleQtions) and The Lalit New Delhi are all in the area.",
+      },
+      { kind: "subheading", text: "South Delhi — calmer" },
+      {
+        kind: "p",
+        text: "If sensory overload is already a worry, South Delhi is a calmer base than the busiest parts of the city. The trade-off is relying more on cars and the metro than walking everywhere.",
+      },
+      { kind: "heading", text: "“Your hotel is closed”" },
+      {
+        kind: "p",
+        text: "If a taxi driver tells you your hotel is closed, there's a protest, the road is blocked, they know a better hotel, or to come to “this tourist office” — don't just believe them. Call your hotel, check Google Maps, check your booking. Delhi Airport has official prepaid taxis, plus app-based options like Uber and Ola.",
+      },
+      {
+        kind: "p",
+        text: "This exact “your hotel is closed / I know another hotel” scenario shows up in traveller reports, sometimes ending at a business that pays for the diversion. It doesn't mean taxi drivers are dangerous — it means you already have a hotel, and you don't need a stranger to find you another one.",
+      },
+    ],
+  },
 ];
 
 /* "The Guest Journey" — the full trip broken into its smallest actual

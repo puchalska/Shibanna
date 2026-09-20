@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { asset } from "@/lib/asset";
-import { guides } from "@/lib/site";
+import { guides, type Guide, type GuideBlock } from "@/lib/site";
 
 /* "Guides" — a shelf of book covers (Figma "Guides" frame), sitting
    between Preparation and the Timeline. Every cover's artwork —
@@ -108,12 +108,10 @@ function OpenBook({
   onClose,
   ref,
 }: {
-  guide: { title: string; image: string; body: string };
+  guide: Guide;
   onClose: () => void;
   ref: React.Ref<HTMLDivElement>;
 }) {
-  const paragraphs = guide.body.split("\n\n").filter(Boolean);
-
   return (
     <div
       ref={ref}
@@ -174,14 +172,82 @@ function OpenBook({
         </span>
         <h3 className="mt-3 font-serif text-3xl italic text-coral">{guide.title}</h3>
 
-        <div className="mt-5 flex flex-col gap-4">
-          {paragraphs.map((p, i) => (
-            <p key={i} className="max-w-prose text-sm leading-relaxed text-coral-soft">
-              {p}
-            </p>
-          ))}
+        <div className="mt-5 flex max-w-prose flex-col gap-4">
+          {typeof guide.body === "string"
+            ? guide.body
+                .split("\n\n")
+                .filter(Boolean)
+                .map((p, i) => (
+                  <p key={i} className="text-sm leading-relaxed text-coral-soft">
+                    {p}
+                  </p>
+                ))
+            : guide.body.map((block, i) => <GuideBlockView key={i} block={block} />)}
         </div>
       </div>
     </div>
   );
+}
+
+function GuideBlockView({ block }: { block: GuideBlock }) {
+  switch (block.kind) {
+    case "heading":
+      return (
+        <h4 className="mt-3 font-serif text-xl italic text-coral first:mt-0">{block.text}</h4>
+      );
+    case "subheading":
+      return (
+        <p className="mt-1 font-label text-[11px] font-bold uppercase tracking-[0.16em] text-coral">
+          {block.text}
+        </p>
+      );
+    case "p":
+      return <p className="text-sm leading-relaxed text-coral-soft">{block.text}</p>;
+    case "list":
+      return (
+        <ul className="flex flex-col gap-1.5 text-sm leading-relaxed text-coral-soft">
+          {block.items.map((item, i) => (
+            <li key={i} className="flex gap-2">
+              <span aria-hidden className="text-coral">
+                &middot;
+              </span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      );
+    case "table":
+      return (
+        <div className="-mx-1 overflow-x-auto px-1">
+          <table className="w-full min-w-[420px] border-collapse text-left text-xs sm:text-sm">
+            <thead>
+              <tr>
+                {block.headers.map((h, i) => (
+                  <th
+                    key={i}
+                    className="border-b border-[rgba(255,149,149,0.3)] py-1.5 pr-4 font-label text-[10px] font-bold uppercase tracking-[0.12em] text-coral"
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {block.rows.map((row, i) => (
+                <tr key={i}>
+                  {row.map((cell, j) => (
+                    <td
+                      key={j}
+                      className="border-b border-[rgba(255,149,149,0.12)] py-1.5 pr-4 align-top leading-relaxed text-coral-soft"
+                    >
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+  }
 }
