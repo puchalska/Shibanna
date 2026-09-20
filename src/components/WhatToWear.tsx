@@ -9,54 +9,116 @@ import LookGrid from "./LookGrid";
 
 const ARROW = asset("/figma/outfit/note-arrow.svg");
 
-function MobileOccasionPicker({
+// what each "Day N" actually is on the ground — Day 1 is arrival day, Day
+// 4 is departure day, etc. (matches the Schedule section's own day names
+// for the events these occasions correspond to). Reads as real trip
+// context on mobile instead of an abstract counter.
+const DAY_EVENT: Record<string, string> = {
+  "Day 1": "Arrival",
+  "Day 2": "Prewedding",
+  "Day 3": "Wedding day",
+  "Day 4": "Departure",
+};
+
+function MobileNav({
   days,
   active,
   activeId,
   onSelect,
+  activePerson,
+  onPersonChange,
+  showPersonToggle,
 }: {
   days: { day: string; items: Occasion[] }[];
   active: Occasion;
   activeId: string;
   onSelect: (id: string) => void;
+  activePerson: "him" | "her";
+  onPersonChange: (p: "him" | "her") => void;
+  showPersonToggle: boolean;
 }) {
-  // shopping-filter pills, wrapping instead of scrolling sideways or
-  // collapsing into a dropdown — same button styling as the desktop
-  // sidebar (rounded-[4px], serif italic, orange/red), just smaller and
-  // flowing onto as many lines as it needs instead of stacking one
-  // group per row
+  // one compact sticky unit instead of two separate pickers: which day,
+  // which look that day (only shown when the day actually has more than
+  // one — Wedding day is Haldi or Wedding & Reception), and which card
+  // the stage shows. Day pills use the real event name (Arrival,
+  // Prewedding, …) instead of "Day 1/Day 2", and it all sits on the
+  // page's own red rather than a dark scrim — still opaque enough to
+  // stay legible once it's stuck to the top and content scrolls under it.
+  const activeGroup = days.find((d) => d.day === active.day);
+
   return (
     <div
-      className="sticky top-14 z-20 -mx-6 mt-6 px-6 py-3 lg:hidden"
-      style={{ background: "rgba(60,2,2,0.85)", backdropFilter: "blur(8px)" }}
+      className="sticky top-14 z-20 -mx-6 mt-6 flex flex-col gap-2 px-6 py-3 lg:hidden"
+      style={{ background: "rgba(143,10,13,0.92)" }}
     >
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        {days.map(({ day, items }) => (
-          <div key={day} className="flex flex-wrap items-center gap-1.5">
-            <span className="font-label text-[9px] font-bold uppercase tracking-[0.08em] text-coral-soft/60">
-              {day.replace("Day ", "D")}
-            </span>
-            {items.map((o) => {
-              const on = o.id === activeId || o.fits === active.fits;
-              return (
-                <button
-                  key={o.id}
-                  type="button"
-                  aria-pressed={on}
-                  onClick={() => onSelect(o.id)}
-                  className="cursor-pointer whitespace-nowrap rounded-[4px] px-3 py-1.5 text-left font-serif text-sm italic outline-none ring-coral transition-all duration-150 focus-visible:ring-2 active:scale-95"
-                  style={{
-                    background: on ? "var(--orange)" : "var(--red)",
-                    color: on ? "#642526" : "var(--coral)",
-                  }}
-                >
-                  {o.labels.join(" / ")}
-                </button>
-              );
-            })}
-          </div>
-        ))}
+      <div className="flex flex-wrap gap-1.5">
+        {days.map(({ day, items }) => {
+          const on = day === active.day;
+          return (
+            <button
+              key={day}
+              type="button"
+              aria-pressed={on}
+              onClick={() => {
+                if (!on) onSelect(items[0].id);
+              }}
+              className="cursor-pointer whitespace-nowrap rounded-[4px] px-3.5 py-1.5 text-left font-serif text-sm italic outline-none ring-coral transition-all duration-150 focus-visible:ring-2 active:scale-95"
+              style={{
+                background: on ? "var(--orange)" : "var(--red)",
+                color: on ? "#642526" : "var(--coral)",
+              }}
+            >
+              {DAY_EVENT[day] ?? day}
+            </button>
+          );
+        })}
       </div>
+
+      {activeGroup && activeGroup.items.length > 1 && (
+        <div className="flex flex-wrap gap-1.5">
+          {activeGroup.items.map((o) => {
+            const on = o.id === activeId;
+            return (
+              <button
+                key={o.id}
+                type="button"
+                aria-pressed={on}
+                onClick={() => onSelect(o.id)}
+                className="cursor-pointer whitespace-nowrap rounded-full px-3 py-1 text-left font-label text-[11px] font-bold uppercase tracking-[0.08em] outline-none ring-coral transition-all duration-150 focus-visible:ring-2 active:scale-95"
+                style={{
+                  background: on ? "var(--coral)" : "transparent",
+                  color: on ? "var(--red-deep)" : "var(--coral-soft)",
+                  border: "1px solid var(--coral)",
+                }}
+              >
+                {o.labels.join(" / ")}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {showPersonToggle && (
+        <div className="flex justify-center pt-1">
+          <div className="inline-flex gap-1 rounded-full border border-coral/40 p-1">
+            {(["him", "her"] as const).map((p) => (
+              <button
+                key={p}
+                type="button"
+                onClick={() => onPersonChange(p)}
+                aria-pressed={activePerson === p}
+                className="cursor-pointer rounded-full px-6 py-1 font-label text-xs font-bold uppercase tracking-[0.12em] outline-none ring-coral transition-all duration-150 focus-visible:ring-2 active:scale-95"
+                style={{
+                  background: activePerson === p ? "var(--orange)" : "transparent",
+                  color: activePerson === p ? "#642526" : "var(--coral)",
+                }}
+              >
+                {p === "him" ? "Him" : "Her"}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -99,6 +161,7 @@ function Collage({ fit, alt }: { fit: Fit; alt: string }) {
 export default function WhatToWear() {
   const [activeId, setActiveId] = useState(occasions[0].id);
   const [fitIndex, setFitIndex] = useState(0);
+  const [activePerson, setActivePerson] = useState<"him" | "her">("him");
   const active = occasions.find((o) => o.id === activeId) ?? occasions[0];
   const currentFitIndex = fitIndex % active.fits.length;
   const fit = active.fits[currentFitIndex];
@@ -170,17 +233,20 @@ export default function WhatToWear() {
               ))}
             </div>
 
-            {/* below lg: a compact dropdown instead — a horizontal-scroll
-                strip of every occasion still meant hunting sideways for
-                the one you want. This translates the sidebar's own
-                day-grouped list into a single sticky row: it shows just
-                the current pick, and tapping it drops down that same
-                grouped list (Day 1, Day 2, …) to choose from, closing on
-                a pick, outside tap, or Escape — a standard "filter chip"
-                pattern rather than a scroller or a full-screen sheet,
-                since this is a quick pick, not something worth a whole
-                overlay for. */}
-            <MobileOccasionPicker days={days} active={active} activeId={activeId} onSelect={select} />
+            {/* below lg: one compact sticky nav — day pills, a sub-pick
+                only for days with more than one look, and the Him/Her
+                toggle (moved out of LookGrid) all combined into a single
+                minimal unit, so the outfit itself gets the rest of the
+                screen. */}
+            <MobileNav
+              days={days}
+              active={active}
+              activeId={activeId}
+              onSelect={select}
+              activePerson={activePerson}
+              onPersonChange={setActivePerson}
+              showPersonToggle={hasGrid}
+            />
           </div>
 
           {/* stage: photo with arrow-callout notes, look picker + next outfit.
@@ -195,6 +261,7 @@ export default function WhatToWear() {
                   fits={active.fits}
                   notes={active.fits[0].notes}
                   outfitScale={active.id === "wedding" ? 0.91 : undefined}
+                  activePerson={activePerson}
                 />
               ) : (
                 <Collage fit={fit} alt={`${active.labels.join(" / ")} outfit — ${fit.name}`} />

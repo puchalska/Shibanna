@@ -284,6 +284,7 @@ export default function LookGrid({
   fits,
   notes,
   outfitScale,
+  activePerson,
 }: {
   fits: Fit[];
   notes: { him: string; her: string };
@@ -295,36 +296,16 @@ export default function LookGrid({
   // look is a full-body shot against that ceiling; other occasions'
   // outfit photos don't hit it the same way, so this stays opt-in.
   outfitScale?: number;
+  // which card shows below sm — owned by WhatToWear now, combined into
+  // its one compact mobile nav bar alongside the day/occasion pills,
+  // rather than a second separate toggle living inside the grid itself
+  activePerson: "him" | "her";
 }) {
   const garments = fits.flatMap((f) => f.garments ?? []);
-  const [active, setActive] = useState<"him" | "her">("him");
+  const active = activePerson;
 
   return (
     <div className="min-w-0">
-      {/* below sm, showing both full-height cards stacked meant a lot of
-          scrolling just to compare — a compact Him/Her toggle switches
-          which one's showing instead. sm+ already fits both side by side,
-          so the toggle disappears and both stay visible regardless of it. */}
-      <div className="mb-4 flex justify-center sm:hidden">
-        <div className="inline-flex gap-1 rounded-full border border-coral/40 p-1">
-          {(["him", "her"] as const).map((p) => (
-            <button
-              key={p}
-              type="button"
-              onClick={() => setActive(p)}
-              aria-pressed={active === p}
-              className="cursor-pointer rounded-full px-6 py-1.5 font-label text-xs font-bold uppercase tracking-[0.12em] outline-none ring-coral transition-all duration-150 focus-visible:ring-2 active:scale-95"
-              style={{
-                background: active === p ? "var(--orange)" : "transparent",
-                color: active === p ? "#642526" : "var(--coral)",
-              }}
-            >
-              {p === "him" ? "Him" : "Her"}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* min-w-0 all the way down: grid/flex items default to
           min-width:auto, so a fixed-aspect card would otherwise refuse to
           shrink below its own content width instead of scaling with the
