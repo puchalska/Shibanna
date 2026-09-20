@@ -4,20 +4,20 @@ import { story } from "@/lib/site";
 export default function Story() {
   return (
     <section className="mx-auto w-full max-w-3xl px-6 pb-16 sm:pb-24">
-      <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:gap-8">
-        {/* the actual night — a beach selfie, warmed to the site's own
-            red/coral grading so it sits in the page rather than on it */}
-        <div
-          className="aspect-[1400/1085] w-full max-w-[280px] shrink-0 overflow-hidden border-[6px] border-coral shadow-[6px_8px_18px_rgba(0,0,0,0.35)] sm:max-w-[260px]"
-          style={{ borderTopLeftRadius: 2, borderBottomLeftRadius: 2, borderTopRightRadius: 20, borderBottomRightRadius: 20 }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={asset("/together.jpg")} alt="Anna & Shib" className="size-full object-cover" />
-        </div>
+      <p className="font-serif text-2xl italic leading-[1.5] text-coral sm:text-[2rem] sm:leading-[1.55]">
+        {story}
+      </p>
 
-        <p className="font-serif text-2xl italic leading-[1.5] text-coral sm:text-[2rem] sm:leading-[1.55]">
-          {story}
-        </p>
+      {/* the actual night — a beach selfie, warmed to the site's own
+          red/coral grading. No frame: it just fades up into the page's
+          own red at the top instead of stopping at a hard edge. */}
+      <div className="relative mx-auto mt-8 aspect-[1400/1085] w-full max-w-md overflow-hidden rounded-[6px]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={asset("/together.jpg")} alt="Anna & Shib" className="size-full object-cover" />
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{ background: "linear-gradient(to bottom, rgba(143,10,13,1) 0%, rgba(143,10,13,0) 45%)" }}
+        />
       </div>
 
       {/* aurora line + heart, echoing the Figma illustration */}
