@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useDragControls, type PanInfo } from "motion/react";
 import { asset } from "@/lib/asset";
-import { guides, type Guide, type GuideBlock } from "@/lib/site";
+import type { Guide, GuideBlock } from "@/lib/site";
+import { useSite, useUi } from "@/lib/site-context";
 
 /* "Guides" — a shelf of book covers (Figma "Guides" frame), sitting
    between Preparation and the Timeline. Every cover's artwork —
@@ -24,19 +25,18 @@ import { guides, type Guide, type GuideBlock } from "@/lib/site";
    dragging the handle down. */
 
 export default function Guides() {
+  const { guides } = useSite();
+  const ui = useUi();
   const [openTitle, setOpenTitle] = useState<string | null>(null);
   const open = guides.find((g) => g.title === openTitle) ?? null;
 
   return (
     <section id="guides" className="mx-auto w-full max-w-5xl px-6 py-16 sm:py-24">
       <p className="mb-2 font-label text-[11px] font-bold uppercase tracking-[0.2em] text-coral-soft">
-        A shelf for later
+        {ui.guides.eyebrow}
       </p>
-      <h2 className="font-serif text-4xl italic text-coral sm:text-5xl">Guides</h2>
-      <p className="mt-4 max-w-xl text-sm leading-relaxed text-coral-soft">
-        Short reads for once you're here — hotels, flights, what to expect on the street, family customs, and more.
-        Tap a cover to open it.
-      </p>
+      <h2 className="font-serif text-4xl italic text-coral sm:text-5xl">{ui.guides.heading}</h2>
+      <p className="mt-4 max-w-xl text-sm leading-relaxed text-coral-soft">{ui.guides.intro}</p>
 
       <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {guides.map((g) => (
@@ -75,6 +75,7 @@ function Cover({ image, title }: { image: string; title: string }) {
 }
 
 function GuideModal({ guide, onClose }: { guide: Guide; onClose: () => void }) {
+  const ui = useUi();
   const dragControls = useDragControls();
 
   useEffect(() => {
@@ -138,10 +139,10 @@ function GuideModal({ guide, onClose }: { guide: Guide; onClose: () => void }) {
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close guide"
+          aria-label={ui.guides.closeGuide}
           className="absolute right-4 top-4 flex size-8 cursor-pointer items-center justify-center rounded-full bg-[rgba(255,149,149,0.12)] text-coral outline-none ring-coral transition-colors duration-150 hover:bg-[rgba(255,149,149,0.22)] focus-visible:ring-2 active:scale-95 sm:h-auto sm:w-auto sm:gap-1.5 sm:py-1.5 sm:pl-3 sm:pr-2.5"
         >
-          <span className="hidden text-xs font-bold sm:inline">Close</span>
+          <span className="hidden text-xs font-bold sm:inline">{ui.guides.close}</span>
           <span aria-hidden className="text-base leading-none">
             ×
           </span>
@@ -152,7 +153,7 @@ function GuideModal({ guide, onClose }: { guide: Guide; onClose: () => void }) {
             className="inline-block w-fit rounded-[3px] px-2.5 py-1 font-label text-[11px] font-bold uppercase tracking-[0.2em]"
             style={{ background: "var(--cream)", color: "var(--btn)" }}
           >
-            Guide
+            {ui.guides.guideLabel}
           </span>
           <h3 className="mt-3 font-serif text-3xl italic text-coral">{guide.title}</h3>
 

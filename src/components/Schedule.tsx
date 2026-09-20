@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { days } from "@/lib/site";
+import { useSite } from "@/lib/site-context";
 import DayDetail from "./DayDetail";
 import WeekOverview from "./WeekOverview";
 import WeekStrip from "./WeekStrip";
 
 export default function Schedule() {
+  const { days } = useSite();
   const [activeId, setActiveId] = useState(days[0].id);
   const active = days.find((d) => d.id === activeId) ?? days[0];
 

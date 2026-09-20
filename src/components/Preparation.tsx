@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { hotels, preparation } from "@/lib/site";
+import { useSite, useUi } from "@/lib/site-context";
 
 /* "What you need to prepare" (guest-info doc) — practical pre-trip
    logistics: visa, insurance/vaccine, flights, packing, gift, hotels. Cards
@@ -12,60 +12,62 @@ import { hotels, preparation } from "@/lib/site";
    whichever was open, and the open card takes the full grid row (instead
    of staying cramped in its own cell) so its text has room to breathe. */
 
-const cards = [
-  {
-    title: "Visa",
-    body: `${preparation.visa.body} (${preparation.visa.cost})`,
-    link: preparation.visa.link,
-    linkLabel: preparation.visa.linkLabel,
-  },
-  {
-    title: "Insurance",
-    body: preparation.insurance,
-  },
-  {
-    title: "Vaccination",
-    body: preparation.vaccine,
-  },
-  {
-    title: "Medication",
-    body: preparation.medication,
-  },
-  {
-    title: "Flights",
-    body: preparation.flights.body,
-    note: preparation.flights.example,
-  },
-  {
-    title: "Payments",
-    body: preparation.payments,
-  },
-  {
-    title: "Get an e-SIM",
-    body: preparation.esim,
-  },
-  {
-    title: "Packing",
-    body: preparation.packing,
-  },
-  {
-    title: "Gift",
-    body: preparation.gift,
-  },
-  {
-    title: "Mental preparedness",
-    body: preparation.mentalPrep,
-    link: "https://www.google.com/maps/place/Sambalpur,+Odisha,+India",
-    linkLabel: "See Sambalpur on Google Maps",
-  },
-];
-
 export default function Preparation() {
+  const { hotels, preparation } = useSite();
+  const ui = useUi();
   const [openTitle, setOpenTitle] = useState<string | null>(null);
 
   const toggle = (title: string) => {
     setOpenTitle((prev) => (prev === title ? null : title));
   };
+
+  const cards = [
+    {
+      title: ui.preparation.cardTitles.visa,
+      body: `${preparation.visa.body} (${preparation.visa.cost})`,
+      link: preparation.visa.link,
+      linkLabel: preparation.visa.linkLabel,
+    },
+    {
+      title: ui.preparation.cardTitles.insurance,
+      body: preparation.insurance,
+    },
+    {
+      title: ui.preparation.cardTitles.vaccination,
+      body: preparation.vaccine,
+    },
+    {
+      title: ui.preparation.cardTitles.medication,
+      body: preparation.medication,
+    },
+    {
+      title: ui.preparation.cardTitles.flights,
+      body: preparation.flights.body,
+      note: preparation.flights.example,
+    },
+    {
+      title: ui.preparation.cardTitles.payments,
+      body: preparation.payments,
+    },
+    {
+      title: ui.preparation.cardTitles.esim,
+      body: preparation.esim,
+    },
+    {
+      title: ui.preparation.cardTitles.packing,
+      body: preparation.packing,
+    },
+    {
+      title: ui.preparation.cardTitles.gift,
+      body: preparation.gift,
+    },
+    {
+      title: ui.preparation.cardTitles.mentalPrep,
+      body: preparation.mentalPrep,
+      link: "https://www.google.com/maps/place/Sambalpur,+Odisha,+India",
+      linkLabel: ui.preparation.mentalPrepLink,
+    },
+  ];
 
   return (
     <section
@@ -73,10 +75,10 @@ export default function Preparation() {
       className="mx-auto w-full max-w-5xl px-6 py-16 sm:py-24"
     >
       <p className="mb-2 font-label text-[11px] font-bold uppercase tracking-[0.2em] text-coral-soft">
-        Before you travel
+        {ui.preparation.eyebrow}
       </p>
       <h2 className="font-serif text-4xl italic text-coral sm:text-5xl">
-        Preparation
+        {ui.preparation.heading}
       </h2>
 
       <div className="mt-10 grid items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -138,7 +140,7 @@ export default function Preparation() {
       </div>
 
       <p className="mt-12 font-serif text-xl italic text-coral">
-        Where you’ll stay
+        {ui.preparation.whereToStay}
       </p>
       <div className="mt-3 flex flex-col gap-2">
         {hotels.map((h) => (

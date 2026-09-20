@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { asset } from "@/lib/asset";
 import type { Fit, Garment } from "@/lib/site";
+import { useUi } from "@/lib/site-context";
 
 /* The "no figure" wardrobe grid — replaces the composited photo entirely
    for occasions that have isolated per-garment cutouts (see Fit.garments).
@@ -55,12 +56,13 @@ const WEIGHT = {
 };
 
 function ArrowButton({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) {
+  const ui = useUi();
   return (
     <button
       type="button"
       onClick={onClick}
       onPointerDown={(e) => e.stopPropagation()}
-      aria-label={dir === "prev" ? "Previous" : "Next"}
+      aria-label={dir === "prev" ? ui.lookGrid.previous : ui.lookGrid.next}
       className={`absolute inset-y-0 z-10 flex w-12 cursor-pointer items-center opacity-60 outline-none transition-opacity duration-150 hover:opacity-100 focus-visible:opacity-100 group-hover:opacity-100 ${dir === "prev" ? "left-0 justify-start pl-1" : "right-0 justify-end pr-1"}`}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -2,23 +2,13 @@
 
 import { useState } from "react";
 import { asset } from "@/lib/asset";
-import { occasions, type Fit, type Occasion } from "@/lib/site";
+import type { Fit, Occasion } from "@/lib/site";
+import { useSite, useUi } from "@/lib/site-context";
 import NoteBubble from "./NoteBubble";
 import Wardrobe from "./Wardrobe";
 import LookGrid from "./LookGrid";
 
 const ARROW = asset("/figma/outfit/note-arrow.svg");
-
-// what each "Day N" actually is on the ground — Day 1 is arrival day, Day
-// 4 is departure day, etc. (matches the Schedule section's own day names
-// for the events these occasions correspond to). Reads as real trip
-// context on mobile instead of an abstract counter.
-const DAY_EVENT: Record<string, string> = {
-  "Day 1": "Arrival",
-  "Day 2": "Prewedding",
-  "Day 3": "Wedding day",
-  "Day 4": "Departure",
-};
 
 function MobileNav({
   days,
@@ -35,14 +25,17 @@ function MobileNav({
   // (Wedding day is Haldi or Wedding & Reception) — the Him/Her toggle
   // used to live here too, but moved up into the header for a cleaner,
   // less crowded sticky bar. Day pills use the real event name (Arrival,
-  // Prewedding, …) instead of "Day 1/Day 2". No background of its own —
-  // same as the desktop sidebar's picker, it just sits on the page.
+  // Prewedding, …) instead of "Day 1/Day 2" — indexed by position, since
+  // occasions.day is itself a translated string ("Dzień 1" in Polish),
+  // not something to match a lookup key against. No background of its
+  // own — same as the desktop sidebar's picker, it just sits on the page.
+  const ui = useUi();
   const activeGroup = days.find((d) => d.day === active.day);
 
   return (
     <div className="sticky top-14 z-20 -mx-6 mt-6 flex flex-col gap-2 px-6 py-3 lg:hidden">
       <div className="flex flex-wrap gap-1.5">
-        {days.map(({ day, items }) => {
+        {days.map(({ day, items }, i) => {
           const on = day === active.day;
           return (
             <button
@@ -58,7 +51,7 @@ function MobileNav({
                 color: on ? "#642526" : "var(--coral)",
               }}
             >
-              {DAY_EVENT[day] ?? day}
+              {ui.whatToWear.dayEvent[i] ?? day}
             </button>
           );
         })}
@@ -98,6 +91,7 @@ function PersonToggle({
   activePerson: "him" | "her";
   onPersonChange: (p: "him" | "her") => void;
 }) {
+  const ui = useUi();
   return (
     <div className="inline-flex gap-1 rounded-full border border-coral/40 p-1">
       {(["her", "him"] as const).map((p) => (
@@ -112,7 +106,7 @@ function PersonToggle({
             color: activePerson === p ? "#642526" : "var(--coral)",
           }}
         >
-          {p === "him" ? "Him" : "Her"}
+          {p === "him" ? ui.whatToWear.him : ui.whatToWear.her}
         </button>
       ))}
     </div>
@@ -155,6 +149,8 @@ function Collage({ fit, alt }: { fit: Fit; alt: string }) {
 }
 
 export default function WhatToWear() {
+  const { occasions } = useSite();
+  const ui = useUi();
   const [activeId, setActiveId] = useState(occasions[0].id);
   const [fitIndex, setFitIndex] = useState(0);
   const [activePerson, setActivePerson] = useState<"him" | "her">("him");
@@ -198,7 +194,7 @@ export default function WhatToWear() {
           <div>
             <div className="flex items-center justify-between gap-4">
               <h2 className="font-serif text-4xl italic text-coral sm:text-5xl">
-                What to wear?
+                {ui.whatToWear.heading}
               </h2>
               {/* Him/Her lives in the header now, not the sticky nav below —
                   a cleaner, less crowded bar once you've scrolled past it.
@@ -308,7 +304,7 @@ export default function WhatToWear() {
                   color: "var(--coral)",
                 }}
               >
-                ✨ Next outfit
+                {ui.whatToWear.nextOutfit}
               </button>
             </div>
             )}
@@ -332,7 +328,7 @@ export default function WhatToWear() {
               <NoteBubble
                 size="sm"
                 background="#881817"
-                text="Not a dress code — just inspiration. Wear what makes you feel like you."
+                text={ui.whatToWear.notDressCode}
               />
             </div>
           </div>

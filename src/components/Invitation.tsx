@@ -1,7 +1,10 @@
+"use client";
+
 import { asset } from "@/lib/asset";
-import { invitation } from "@/lib/site";
+import { useSite } from "@/lib/site-context";
 
 export default function Invitation() {
+  const { invitation } = useSite();
   return (
     <section className="w-full pb-16 pt-20 sm:pb-24 sm:pt-28">
       <div className="relative">

@@ -1,7 +1,10 @@
+"use client";
+
 import { asset } from "@/lib/asset";
-import { story } from "@/lib/site";
+import { useSite } from "@/lib/site-context";
 
 export default function Story() {
+  const { story } = useSite();
   return (
     <section className="mx-auto w-full max-w-5xl px-6 pb-16 sm:pb-24">
       <p className="mx-auto max-w-3xl font-serif text-2xl italic leading-[1.5] text-coral sm:text-[2rem] sm:leading-[1.55]">

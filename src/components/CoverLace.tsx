@@ -8,7 +8,7 @@ import {
   useSpring,
 } from "motion/react";
 import { asset } from "@/lib/asset";
-import { couple } from "@/lib/site";
+import { useSite } from "@/lib/site-context";
 
 /* Cover (Figma node 3485:2177):
    - lace.svg — coral vector lace (doily + corners + gems), always visible
@@ -22,6 +22,7 @@ const LACE = "/figma/cover/lace.svg";
 const DETAIL = "/figma/cover/lace-full.webp";
 
 export default function CoverLace() {
+  const { couple } = useSite();
   const box = useRef<HTMLDivElement>(null);
   const [interactive, setInteractive] = useState(false);
 

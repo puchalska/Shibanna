@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { timelineTicks, type Day, type TimelineBlock } from "@/lib/site";
+import type { Day, TimelineBlock } from "@/lib/site";
+import { useSite, useLocale, useUi } from "@/lib/site-context";
 import { pct, formatHour, segmentStyle, baseBarStyle } from "./Timeline";
 
 /* The first thing you see entering Schedule: all five days on one shared
@@ -22,12 +23,15 @@ import { pct, formatHour, segmentStyle, baseBarStyle } from "./Timeline";
    click away, via WeekStrip. */
 
 export default function WeekOverview({ days }: { days: Day[] }) {
+  const { timelineTicks } = useSite();
+  const locale = useLocale();
+  const ui = useUi();
   const [hover, setHover] = useState<{ dayId: string; block: TimelineBlock } | null>(null);
 
   return (
     <div className="mb-10">
       <p className="mb-4 font-label text-[11px] font-bold uppercase tracking-[0.2em] text-coral-soft">
-        The week, at a glance
+        {ui.schedule.weekAtAGlance}
       </p>
 
       <div className="flex flex-col">
@@ -81,7 +85,7 @@ export default function WeekOverview({ days }: { days: Day[] }) {
                     className="pointer-events-none absolute -top-8 z-10 whitespace-nowrap rounded-[3px] px-2 py-1 font-label text-[10px] font-bold text-coral shadow-lg"
                     style={{ left: `${pct(hover.block.start)}%`, background: "var(--red-deep)" }}
                   >
-                    {formatHour(hover.block.start)}–{formatHour(hover.block.end)} · {hover.block.label}
+                    {formatHour(hover.block.start, locale)}–{formatHour(hover.block.end, locale)} · {hover.block.label}
                   </span>
                 )}
               </span>

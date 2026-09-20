@@ -1,20 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-// "Guest Journey" isn't a link here anymore — it's a Guide now (see
-// site.ts), so the nav has one fewer item and more room to breathe
-const LINKS = [
-  { href: "#prepare", label: "Preparation" },
-  { href: "#guides", label: "Guides" },
-  { href: "#schedule", label: "Timeline" },
-  { href: "#what-to-wear", label: "What to Wear" },
-];
+import { asset } from "@/lib/asset";
+import { useLocale, useUi } from "@/lib/site-context";
 
 export default function Nav() {
+  const ui = useUi();
+  const locale = useLocale();
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+
+  // "Guest Journey" isn't a link here anymore — it's a Guide now (see
+  // site.en.ts/site.pl.ts), so the nav has one fewer item and more room
+  const LINKS = [
+    { href: "#prepare", label: ui.nav.preparation },
+    { href: "#guides", label: ui.nav.guides },
+    { href: "#schedule", label: ui.nav.timeline },
+    { href: "#what-to-wear", label: ui.nav.whatToWear },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -40,9 +44,24 @@ export default function Nav() {
     );
     sections.forEach((el) => io.observe(el));
     return () => io.disconnect();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale]);
 
   const linkColor = (href: string) => (active === href ? "var(--coral)" : "var(--coral-soft)");
+
+  // English is the site root; Polish is /pl/ — same basePath handling as
+  // asset() (GitHub Pages project sites serve from /<repo>/)
+  const otherLocaleHref = asset(locale === "pl" ? "/" : "/pl/");
+  const otherLocaleLabel = locale === "pl" ? "EN" : "PL";
+
+  const LocaleSwitch = ({ className = "" }: { className?: string }) => (
+    <a
+      href={otherLocaleHref}
+      className={`font-label text-xs font-bold uppercase tracking-[0.15em] text-coral-soft transition-colors hover:text-coral ${className}`}
+    >
+      {otherLocaleLabel}
+    </a>
+  );
 
   return (
     <nav
@@ -74,30 +93,36 @@ export default function Nav() {
               </a>
             </li>
           ))}
+          <li>
+            <LocaleSwitch />
+          </li>
         </ul>
 
         {/* below lg: hamburger toggles a dropdown, avoids the links
             wrapping mid-word across multiple cramped lines */}
-        <button
-          type="button"
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-          className="flex size-8 cursor-pointer flex-col items-center justify-center gap-[5px] lg:hidden"
-        >
-          <span
-            className="h-[1.5px] w-5 rounded-full bg-current transition-transform duration-200"
-            style={{ color: "var(--coral)", transform: open ? "translateY(6.5px) rotate(45deg)" : "none" }}
-          />
-          <span
-            className="h-[1.5px] w-5 rounded-full bg-current transition-opacity duration-200"
-            style={{ color: "var(--coral)", opacity: open ? 0 : 1 }}
-          />
-          <span
-            className="h-[1.5px] w-5 rounded-full bg-current transition-transform duration-200"
-            style={{ color: "var(--coral)", transform: open ? "translateY(-6.5px) rotate(-45deg)" : "none" }}
-          />
-        </button>
+        <div className="flex items-center gap-4 lg:hidden">
+          <LocaleSwitch />
+          <button
+            type="button"
+            aria-label={open ? ui.nav.closeMenu : ui.nav.openMenu}
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+            className="flex size-8 cursor-pointer flex-col items-center justify-center gap-[5px]"
+          >
+            <span
+              className="h-[1.5px] w-5 rounded-full bg-current transition-transform duration-200"
+              style={{ color: "var(--coral)", transform: open ? "translateY(6.5px) rotate(45deg)" : "none" }}
+            />
+            <span
+              className="h-[1.5px] w-5 rounded-full bg-current transition-opacity duration-200"
+              style={{ color: "var(--coral)", opacity: open ? 0 : 1 }}
+            />
+            <span
+              className="h-[1.5px] w-5 rounded-full bg-current transition-transform duration-200"
+              style={{ color: "var(--coral)", transform: open ? "translateY(-6.5px) rotate(-45deg)" : "none" }}
+            />
+          </button>
+        </div>
       </div>
 
       {/* mobile dropdown panel */}

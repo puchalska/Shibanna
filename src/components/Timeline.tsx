@@ -1,9 +1,7 @@
-import {
-  TIMELINE_START,
-  TIMELINE_END,
-  timelineTicks,
-  type TimelineBlock,
-} from "@/lib/site";
+"use client";
+
+import type { TimelineBlock } from "@/lib/site";
+import { useSite, useLocale } from "@/lib/site-context";
 
 /* Timeline from Figma node 3209:11494 — a dark woven-look bar (6am →
    midnight), dashed coral tick lines, and a label box above each segment
@@ -33,13 +31,17 @@ export const baseBarStyle: React.CSSProperties = {
   boxShadow: "inset 0 2px 5px rgba(0,0,0,0.45)",
 };
 
+// the schedule always runs 6am -> midnight, in both locales — not
+// translatable data, so no need to route this through useSite()
+const TIMELINE_START = 6;
+const TIMELINE_END = 24;
 const span = TIMELINE_END - TIMELINE_START;
 export const pct = (h: number) =>
   Math.max(0, Math.min(100, ((h - TIMELINE_START) / span) * 100));
 
-export function formatHour(h: number) {
-  if (h === 12) return "noon";
-  if (h === 24 || h === 0) return "midnight";
+export function formatHour(h: number, locale: "en" | "pl" = "en") {
+  if (h === 12) return locale === "pl" ? "południe" : "noon";
+  if (h === 24 || h === 0) return locale === "pl" ? "północ" : "midnight";
   const period = h < 12 ? "am" : "pm";
   let hour = Math.floor(h) % 12;
   if (hour === 0) hour = 12;
@@ -79,6 +81,8 @@ function withRows(blocks: TimelineBlock[]) {
 }
 
 export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
+  const { timelineTicks } = useSite();
+  const locale = useLocale();
   const placed = withRows(blocks);
   const rowCount = placed.reduce((m, p) => Math.max(m, p.row + 1), 1);
   const rowH = 56; // px per label row — clearance for two stacked, overlapping labels
@@ -119,7 +123,7 @@ export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
                   className="whitespace-nowrap font-label text-[10px] font-bold uppercase tracking-[0.06em]"
                   style={{ color: b.optional ? "var(--coral)" : "rgba(73,73,73,0.7)" }}
                 >
-                  {formatHour(b.start)}–{formatHour(b.end)}
+                  {formatHour(b.start, locale)}–{formatHour(b.end, locale)}
                 </span>
                 <span
                   className="truncate font-label text-[12px] font-bold md:text-[13px]"
@@ -209,7 +213,7 @@ export default function Timeline({ blocks }: { blocks: TimelineBlock[] }) {
               className="shrink-0 tracking-[0.04em]"
               style={{ color: b.optional ? "var(--coral)" : "rgba(73,73,73,0.7)" }}
             >
-              {formatHour(b.start)}–{formatHour(b.end)}
+              {formatHour(b.start, locale)}–{formatHour(b.end, locale)}
             </span>
             <span>{b.label}</span>
           </li>

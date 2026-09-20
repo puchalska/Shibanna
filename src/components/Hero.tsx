@@ -1,6 +1,8 @@
+"use client";
+
 import CoverLace from "./CoverLace";
 import { asset } from "@/lib/asset";
-import { couple } from "@/lib/site";
+import { useSite } from "@/lib/site-context";
 
 /* Hero = the Figma "Cover" (node 3485:2177), 1195 x 765, on sm+.
    Everything lives in CoverLace: the lace tablecloth (corner motifs + gems
@@ -18,6 +20,7 @@ import { couple } from "@/lib/site";
    directly on the page's own red ground like everything else here. */
 
 export default function Hero() {
+  const { couple } = useSite();
   return (
     <header className="flex min-h-[100svh] items-center justify-center overflow-hidden px-3 py-12 sm:px-8">
       <div className="relative hidden aspect-[1195/765] w-full max-w-[1080px] sm:block">
