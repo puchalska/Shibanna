@@ -35,16 +35,12 @@ function MobileNav({
   // (Wedding day is Haldi or Wedding & Reception) — the Him/Her toggle
   // used to live here too, but moved up into the header for a cleaner,
   // less crowded sticky bar. Day pills use the real event name (Arrival,
-  // Prewedding, …) instead of "Day 1/Day 2", and it all sits on the
-  // page's own red rather than a dark scrim — still opaque enough to
-  // stay legible once it's stuck to the top and content scrolls under it.
+  // Prewedding, …) instead of "Day 1/Day 2". No background of its own —
+  // same as the desktop sidebar's picker, it just sits on the page.
   const activeGroup = days.find((d) => d.day === active.day);
 
   return (
-    <div
-      className="sticky top-14 z-20 -mx-6 mt-6 flex flex-col gap-2 px-6 py-3 lg:hidden"
-      style={{ background: "rgba(143,10,13,0.92)" }}
-    >
+    <div className="sticky top-14 z-20 -mx-6 mt-6 flex flex-col gap-2 px-6 py-3 lg:hidden">
       <div className="flex flex-wrap gap-1.5">
         {days.map(({ day, items }) => {
           const on = day === active.day;
@@ -104,7 +100,7 @@ function PersonToggle({
 }) {
   return (
     <div className="inline-flex gap-1 rounded-full border border-coral/40 p-1">
-      {(["him", "her"] as const).map((p) => (
+      {(["her", "him"] as const).map((p) => (
         <button
           key={p}
           type="button"
@@ -243,9 +239,6 @@ export default function WhatToWear() {
               ))}
             </div>
 
-            {/* below lg: a compact sticky nav — day pills, plus a sub-pick
-                only for days with more than one look (Wedding day) */}
-            <MobileNav days={days} active={active} activeId={activeId} onSelect={select} />
           </div>
 
           {/* stage: photo with arrow-callout notes, look picker + next outfit.
@@ -254,6 +247,12 @@ export default function WhatToWear() {
               (not the column it's given) wins and the stage overflows the
               viewport on mobile instead of scaling down to fit it. */}
           <div className="flex min-w-0 flex-col items-center text-center lg:items-end lg:text-right">
+            {/* the sticky nav lives here now, not in the (short) sidebar —
+                position:sticky can only stay pinned while its own parent
+                is in view, and the sidebar was barely 230px tall, so the
+                nav unstuck and scrolled away almost immediately instead of
+                staying reachable through the tall outfit card below it */}
+            <MobileNav days={days} active={active} activeId={activeId} onSelect={select} />
             <div className="w-full min-w-0">
               {hasGrid ? (
                 <LookGrid
