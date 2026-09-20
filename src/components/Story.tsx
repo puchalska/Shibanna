@@ -1,5 +1,5 @@
-import { asset } from "@/lib/asset";
 import { story } from "@/lib/site";
+import StoryPhoto from "./StoryPhoto";
 
 export default function Story() {
   return (
@@ -8,17 +8,7 @@ export default function Story() {
         {story}
       </p>
 
-      {/* the actual night — a beach selfie, warmed to the site's own
-          red/coral grading. No frame: it just fades up into the page's
-          own red at the top instead of stopping at a hard edge. */}
-      <div className="relative mx-auto mt-8 aspect-[1400/1085] w-full max-w-md overflow-hidden rounded-[6px]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={asset("/together.jpg")} alt="Anna & Shib" className="size-full object-cover" />
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{ background: "linear-gradient(to bottom, rgba(143,10,13,1) 0%, rgba(143,10,13,0) 45%)" }}
-        />
-      </div>
+      <StoryPhoto />
 
       {/* aurora line + heart, echoing the Figma illustration */}
       <svg viewBox="0 0 600 90" className="mt-8 w-full" fill="none" aria-hidden>
