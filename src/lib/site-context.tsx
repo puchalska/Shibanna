@@ -51,7 +51,15 @@ function dataFor(locale: Locale): SiteData {
    separate from SiteData since it's interface copy, not written content. */
 export type UiStrings = {
   nav: { preparation: string; guides: string; timeline: string; whatToWear: string; openMenu: string; closeMenu: string };
-  guides: { eyebrow: string; heading: string; intro: string; guideLabel: string; close: string; closeGuide: string };
+  guides: {
+    eyebrow: string;
+    heading: string;
+    intro: string;
+    guideLabel: string;
+    close: string;
+    closeGuide: string;
+    comingSoon: string;
+  };
   preparation: {
     eyebrow: string;
     heading: string;
@@ -103,6 +111,7 @@ const uiEn: UiStrings = {
     guideLabel: "Guide",
     close: "Close",
     closeGuide: "Close guide",
+    comingSoon: "Guides section coming soon",
   },
   preparation: {
     eyebrow: "Before you travel",
@@ -153,6 +162,7 @@ const uiPl: UiStrings = {
     guideLabel: "Przewodnik",
     close: "Zamknij",
     closeGuide: "Zamknij przewodnik",
+    comingSoon: "Sekcja przewodników już wkrótce",
   },
   preparation: {
     eyebrow: "Przed podróżą",

@@ -35,7 +35,12 @@ export default function Guides() {
       <p className="mb-2 font-label text-[11px] font-bold uppercase tracking-[0.2em] text-coral-soft">
         {ui.guides.eyebrow}
       </p>
-      <h2 className="font-serif text-4xl italic text-coral sm:text-5xl">{ui.guides.heading}</h2>
+      <div className="flex flex-wrap items-baseline gap-3">
+        <h2 className="font-serif text-4xl italic text-coral sm:text-5xl">{ui.guides.heading}</h2>
+        <span className="rounded-full border border-dashed border-coral/50 px-3 py-1 font-label text-[10px] font-bold uppercase tracking-[0.15em] text-coral-soft">
+          {ui.guides.comingSoon}
+        </span>
+      </div>
       <p className="mt-4 max-w-xl text-sm leading-relaxed text-coral-soft">{ui.guides.intro}</p>
 
       <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
