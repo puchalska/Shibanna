@@ -83,7 +83,8 @@ export default function WhatToWear() {
               What to wear?
             </h2>
 
-            <div className="mt-9 flex flex-col gap-6">
+            {/* lg+: full stacked day-grouped picker in the sidebar */}
+            <div className="mt-9 hidden flex-col gap-6 lg:flex">
               {days.map(({ day, items }) => (
                 <div key={day} className="flex flex-col gap-3">
                   <p className="font-label text-xl font-bold text-coral">{day}</p>
@@ -111,6 +112,40 @@ export default function WhatToWear() {
               ))}
             </div>
 
+            {/* below lg: a compact horizontal-scroll picker instead, sticky
+                under the nav — the stacked version put ~1000px of large
+                italic buttons above the actual outfit, and switching looks
+                meant scrolling all the way back up to reach them again */}
+            <div
+              className="sticky top-14 z-10 -mx-6 mt-6 overflow-x-auto px-6 py-3 lg:hidden"
+              style={{ background: "rgba(60,2,2,0.85)", backdropFilter: "blur(8px)" }}
+            >
+              <div className="flex w-max gap-2">
+                {occasions.map((o) => {
+                  const on = o.id === activeId || o.fits === active.fits;
+                  return (
+                    <button
+                      key={o.id}
+                      type="button"
+                      aria-pressed={on}
+                      onClick={() => select(o.id)}
+                      className="flex shrink-0 cursor-pointer flex-col items-start gap-0.5 rounded-[4px] px-4 py-2 text-left outline-none ring-coral transition-all duration-150 active:scale-95 focus-visible:ring-2"
+                      style={{
+                        background: on ? "var(--orange)" : "var(--red)",
+                        color: on ? "#642526" : "var(--coral)",
+                      }}
+                    >
+                      <span className="font-label text-[9px] font-bold uppercase tracking-[0.1em] opacity-70">
+                        {o.day}
+                      </span>
+                      <span className="whitespace-nowrap font-serif text-sm italic leading-tight">
+                        {o.labels.join(" / ")}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           {/* stage: photo with arrow-callout notes, look picker + next outfit */}
