@@ -7,7 +7,6 @@ import Guides from "@/components/Guides";
 import Schedule from "@/components/Schedule";
 import WhatToWear from "@/components/WhatToWear";
 import Journey from "@/components/Journey";
-import ArtVideo from "@/components/ArtVideo";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -22,7 +21,6 @@ export default function Home() {
       <Schedule />
       <WhatToWear />
       <Journey />
-      <ArtVideo />
       <Footer />
     </main>
   );

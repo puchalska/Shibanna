@@ -1,5 +1,5 @@
+import { asset } from "@/lib/asset";
 import { story } from "@/lib/site";
-import StoryPhoto from "./StoryPhoto";
 
 export default function Story() {
   return (
@@ -8,7 +8,20 @@ export default function Story() {
         {story}
       </p>
 
-      <StoryPhoto />
+      {/* stop-motion of the hand-drawn florals and torn red paper being
+          woven together — the artwork the site's own coral/lace look was
+          drawn from. Rotated 90° clockwise, baked into the file. */}
+      <div className="mx-auto mt-8 aspect-[4/3] w-full overflow-hidden rounded-[6px]">
+        <video
+          src={asset("/art-video.mp4")}
+          poster={asset("/art-video-poster.jpg")}
+          className="size-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+      </div>
 
       {/* aurora line + heart, echoing the Figma illustration */}
       <svg viewBox="0 0 600 90" className="mt-8 w-full" fill="none" aria-hidden>
