@@ -10,6 +10,10 @@ import LookGrid from "./LookGrid";
 
 const ARROW = asset("/figma/outfit/note-arrow.svg");
 
+// off for now, across every occasion — flip back on once the colour
+// swatches + "not a dress code" note are ready to bring back
+const SHOW_COLORS_AND_NOTE = false;
+
 function MobileNav({
   days,
   active,
@@ -315,22 +319,27 @@ export default function WhatToWear() {
               </div>
             )}
 
-            <div className="mt-6 flex w-full flex-wrap items-center justify-end gap-4">
-              <div className="flex flex-wrap gap-2">
-                {active.colors.map((c, i) => (
-                  <span
-                    key={`${c}-${i}`}
-                    className="size-6 rounded-full ring-1 ring-white/25"
-                    style={{ background: c }}
-                  />
-                ))}
+            {/* hidden for now, across every occasion — not deleted, just
+                switched off until colors + the note are ready to bring
+                back */}
+            {SHOW_COLORS_AND_NOTE && (
+              <div className="mt-6 flex w-full flex-wrap items-center justify-end gap-4">
+                <div className="flex flex-wrap gap-2">
+                  {active.colors.map((c, i) => (
+                    <span
+                      key={`${c}-${i}`}
+                      className="size-6 rounded-full ring-1 ring-white/25"
+                      style={{ background: c }}
+                    />
+                  ))}
+                </div>
+                <NoteBubble
+                  size="sm"
+                  background="#881817"
+                  text={ui.whatToWear.notDressCode}
+                />
               </div>
-              <NoteBubble
-                size="sm"
-                background="#881817"
-                text={ui.whatToWear.notDressCode}
-              />
-            </div>
+            )}
           </div>
         </div>
       </div>

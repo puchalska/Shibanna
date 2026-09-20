@@ -5,6 +5,10 @@ import { asset } from "@/lib/asset";
 import type { Fit, Garment } from "@/lib/site";
 import { useUi } from "@/lib/site-context";
 
+// off for now, across every occasion — the per-person styling notes
+// aren't ready yet; flip back on once they are, no other changes needed
+const SHOW_STYLING_NOTES = false;
+
 /* The "no figure" wardrobe grid — replaces the composited photo entirely
    for occasions that have isolated per-garment cutouts (see Fit.garments).
    Matches the Figma "Outfit widget" reference: a fixed-size card for him
@@ -321,14 +325,18 @@ export default function LookGrid({
         </div>
       </div>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        <div className={active === "him" ? "" : "hidden sm:block"}>
-          <Comment text={notes.him} background="#ed8235" />
+      {/* hidden for now, across every occasion — not deleted, just
+          switched off until these are ready to bring back */}
+      {SHOW_STYLING_NOTES && (
+        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+          <div className={active === "him" ? "" : "hidden sm:block"}>
+            <Comment text={notes.him} background="#ed8235" />
+          </div>
+          <div className={active === "her" ? "" : "hidden sm:block"}>
+            <Comment text={notes.her} background="#ff9595" />
+          </div>
         </div>
-        <div className={active === "her" ? "" : "hidden sm:block"}>
-          <Comment text={notes.her} background="#ff9595" />
-        </div>
-      </div>
+      )}
     </div>
   );
 }
