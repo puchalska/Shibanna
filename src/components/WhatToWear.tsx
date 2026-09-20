@@ -9,6 +9,58 @@ import LookGrid from "./LookGrid";
 
 const ARROW = asset("/figma/outfit/note-arrow.svg");
 
+function MobileOccasionPicker({
+  days,
+  active,
+  activeId,
+  onSelect,
+}: {
+  days: { day: string; items: Occasion[] }[];
+  active: Occasion;
+  activeId: string;
+  onSelect: (id: string) => void;
+}) {
+  // shopping-filter pills, wrapping instead of scrolling sideways or
+  // collapsing into a dropdown — same button styling as the desktop
+  // sidebar (rounded-[4px], serif italic, orange/red), just smaller and
+  // flowing onto as many lines as it needs instead of stacking one
+  // group per row
+  return (
+    <div
+      className="sticky top-14 z-20 -mx-6 mt-6 px-6 py-3 lg:hidden"
+      style={{ background: "rgba(60,2,2,0.85)", backdropFilter: "blur(8px)" }}
+    >
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        {days.map(({ day, items }) => (
+          <div key={day} className="flex flex-wrap items-center gap-1.5">
+            <span className="font-label text-[9px] font-bold uppercase tracking-[0.08em] text-coral-soft/60">
+              {day.replace("Day ", "D")}
+            </span>
+            {items.map((o) => {
+              const on = o.id === activeId || o.fits === active.fits;
+              return (
+                <button
+                  key={o.id}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => onSelect(o.id)}
+                  className="cursor-pointer whitespace-nowrap rounded-[4px] px-3 py-1.5 text-left font-serif text-sm italic outline-none ring-coral transition-all duration-150 focus-visible:ring-2 active:scale-95"
+                  style={{
+                    background: on ? "var(--orange)" : "var(--red)",
+                    color: on ? "#642526" : "var(--coral)",
+                  }}
+                >
+                  {o.labels.join(" / ")}
+                </button>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Collage({ fit, alt }: { fit: Fit; alt: string }) {
   return (
     <div
@@ -118,40 +170,17 @@ export default function WhatToWear() {
               ))}
             </div>
 
-            {/* below lg: a compact horizontal-scroll picker instead, sticky
-                under the nav — the stacked version put ~1000px of large
-                italic buttons above the actual outfit, and switching looks
-                meant scrolling all the way back up to reach them again */}
-            <div
-              className="sticky top-14 z-10 -mx-6 mt-6 overflow-x-auto px-6 py-3 lg:hidden"
-              style={{ background: "rgba(60,2,2,0.85)", backdropFilter: "blur(8px)" }}
-            >
-              <div className="flex w-max gap-2">
-                {occasions.map((o) => {
-                  const on = o.id === activeId || o.fits === active.fits;
-                  return (
-                    <button
-                      key={o.id}
-                      type="button"
-                      aria-pressed={on}
-                      onClick={() => select(o.id)}
-                      className="flex shrink-0 cursor-pointer flex-col items-start gap-0.5 rounded-[4px] px-4 py-2 text-left outline-none ring-coral transition-all duration-150 active:scale-95 focus-visible:ring-2"
-                      style={{
-                        background: on ? "var(--orange)" : "var(--red)",
-                        color: on ? "#642526" : "var(--coral)",
-                      }}
-                    >
-                      <span className="font-label text-[9px] font-bold uppercase tracking-[0.1em] opacity-70">
-                        {o.day}
-                      </span>
-                      <span className="whitespace-nowrap font-serif text-sm italic leading-tight">
-                        {o.labels.join(" / ")}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+            {/* below lg: a compact dropdown instead — a horizontal-scroll
+                strip of every occasion still meant hunting sideways for
+                the one you want. This translates the sidebar's own
+                day-grouped list into a single sticky row: it shows just
+                the current pick, and tapping it drops down that same
+                grouped list (Day 1, Day 2, …) to choose from, closing on
+                a pick, outside tap, or Escape — a standard "filter chip"
+                pattern rather than a scroller or a full-screen sheet,
+                since this is a quick pick, not something worth a whole
+                overlay for. */}
+            <MobileOccasionPicker days={days} active={active} activeId={activeId} onSelect={select} />
           </div>
 
           {/* stage: photo with arrow-callout notes, look picker + next outfit.
