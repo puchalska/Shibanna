@@ -8,7 +8,9 @@ import { hotels, preparation } from "@/lib/site";
    echo the dashed-border "Block" language already used for the day
    headers, so this reads as part of the same system rather than a
    bolted-on FAQ. Collapsed to just a title by default — ten cards of body
-   text at once was a wall; tap one open at a time (or several). */
+   text at once was a wall. Only one open at a time: opening a card closes
+   whichever was open, and the open card takes the full grid row (instead
+   of staying cramped in its own cell) so its text has room to breathe. */
 
 const cards = [
   {
@@ -58,26 +60,11 @@ const cards = [
   },
 ];
 
-// row groups for the toggle behaviour below — matches the lg:grid-cols-3
-// layout, so "expand" always means "expand this whole row together"
-const ROW_SIZE = 3;
-const rows = Array.from({ length: Math.ceil(cards.length / ROW_SIZE) }, (_, i) =>
-  cards.slice(i * ROW_SIZE, i * ROW_SIZE + ROW_SIZE),
-);
-
 export default function Preparation() {
-  const [openRows, setOpenRows] = useState<Set<number>>(new Set());
+  const [openTitle, setOpenTitle] = useState<string | null>(null);
 
-  const toggleRow = (rowIndex: number) => {
-    setOpenRows((prev) => {
-      const next = new Set(prev);
-      if (next.has(rowIndex)) {
-        next.delete(rowIndex);
-      } else {
-        next.add(rowIndex);
-      }
-      return next;
-    });
+  const toggle = (title: string) => {
+    setOpenTitle((prev) => (prev === title ? null : title));
   };
 
   return (
@@ -93,16 +80,16 @@ export default function Preparation() {
       </h2>
 
       <div className="mt-10 grid items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {rows.map((row, rowIndex) => {
-          const isOpen = openRows.has(rowIndex);
-          return row.map((c) => (
+        {cards.map((c) => {
+          const isOpen = openTitle === c.title;
+          return (
             <div
               key={c.title}
-              className="flex h-full flex-col rounded-[3px] border-2 border-dashed border-coral/35"
+              className={`flex h-full flex-col rounded-[3px] border-2 border-dashed border-coral/35 ${isOpen ? "sm:col-span-2 lg:col-span-3" : ""}`}
             >
               <button
                 type="button"
-                onClick={() => toggleRow(rowIndex)}
+                onClick={() => toggle(c.title)}
                 aria-expanded={isOpen}
                 className="flex w-full cursor-pointer items-center justify-between gap-3 px-5 py-4 text-left outline-none ring-inset ring-coral focus-visible:ring-2"
               >
@@ -123,7 +110,7 @@ export default function Preparation() {
                 style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
               >
                 <div className="overflow-hidden">
-                  <div className="px-5 pb-4">
+                  <div className="max-w-prose px-5 pb-4">
                     <p className="text-sm leading-[1.5] text-coral-soft">
                       {c.body}
                     </p>
@@ -146,7 +133,7 @@ export default function Preparation() {
                 </div>
               </div>
             </div>
-          ));
+          );
         })}
       </div>
 
