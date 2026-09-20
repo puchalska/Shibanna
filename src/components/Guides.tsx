@@ -132,12 +132,16 @@ function GuideModal({ guide, onClose }: { guide: Guide; onClose: () => void }) {
           <div className="h-1 w-10 rounded-full" style={{ background: "rgba(255,149,149,0.35)" }} />
         </div>
 
+        {/* icon-only on mobile — a bottom sheet doesn't spell out "Close"
+            (the handle above already reads as dismissible); the desktop
+            dialog keeps the labeled pill since there's room for it */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 flex cursor-pointer items-center gap-1.5 rounded-full bg-[rgba(255,149,149,0.12)] py-1.5 pl-3 pr-2.5 text-xs font-bold text-coral outline-none ring-coral transition-colors duration-150 hover:bg-[rgba(255,149,149,0.22)] focus-visible:ring-2 active:scale-95"
+          aria-label="Close guide"
+          className="absolute right-4 top-4 flex size-8 cursor-pointer items-center justify-center rounded-full bg-[rgba(255,149,149,0.12)] text-coral outline-none ring-coral transition-colors duration-150 hover:bg-[rgba(255,149,149,0.22)] focus-visible:ring-2 active:scale-95 sm:h-auto sm:w-auto sm:gap-1.5 sm:py-1.5 sm:pl-3 sm:pr-2.5"
         >
-          Close
+          <span className="hidden text-xs font-bold sm:inline">Close</span>
           <span aria-hidden className="text-base leading-none">
             ×
           </span>
