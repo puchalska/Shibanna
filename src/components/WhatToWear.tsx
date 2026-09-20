@@ -99,7 +99,7 @@ function MobileNav({
       )}
 
       {showPersonToggle && (
-        <div className="flex justify-center pt-1">
+        <div className="flex justify-center pt-1 sm:hidden">
           <div className="inline-flex gap-1 rounded-full border border-coral/40 p-1">
             {(["him", "her"] as const).map((p) => (
               <button
