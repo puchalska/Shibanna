@@ -528,6 +528,21 @@ export const journey: JourneyPhase[] = [
   },
 ];
 
+// folded into Guides as its own card (see `guides` above) instead of
+// staying a separate top-level nav destination — same content, reusing
+// the phase/group structure directly rather than duplicating any of it
+guides.push({
+  title: "Guest Journey",
+  image: "/figma/guides/journey.png",
+  body: journey.flatMap((phase): GuideBlock[] => [
+    { kind: "heading", text: `${phase.name} — ${phase.date}` },
+    ...phase.groups.flatMap((g): GuideBlock[] => [
+      ...(g.label ? [{ kind: "subheading", text: g.label } as GuideBlock] : []),
+      { kind: "list", items: g.steps },
+    ]),
+  ]),
+});
+
 export type TimelineBlock = {
   label: string;
   /** 24h decimal, e.g. 15.5 = 15:30. Timeline runs 6:00 → 24:00. */

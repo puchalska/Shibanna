@@ -6,7 +6,6 @@ import Preparation from "@/components/Preparation";
 import Guides from "@/components/Guides";
 import Schedule from "@/components/Schedule";
 import WhatToWear from "@/components/WhatToWear";
-import Journey from "@/components/Journey";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -20,7 +19,6 @@ export default function Home() {
       <Guides />
       <Schedule />
       <WhatToWear />
-      <Journey />
       <Footer />
     </main>
   );

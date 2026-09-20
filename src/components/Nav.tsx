@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 
+// "Guest Journey" isn't a link here anymore — it's a Guide now (see
+// site.ts), so the nav has one fewer item and more room to breathe
 const LINKS = [
   { href: "#prepare", label: "Preparation" },
   { href: "#guides", label: "Guides" },
   { href: "#schedule", label: "Timeline" },
   { href: "#what-to-wear", label: "What to Wear" },
-  { href: "#journey", label: "Guest Journey" },
 ];
 
 export default function Nav() {
@@ -57,13 +58,16 @@ export default function Nav() {
           Anna &amp; Shib
         </a>
 
-        {/* sm and up: links inline, no hamburger needed */}
-        <ul className="hidden items-center gap-8 sm:flex">
+        {/* lg and up: links inline, no hamburger needed. Even at 4 items,
+            "What to Wear" plus everything else didn't reliably fit in one
+            line below lg (was wrapping to 2 lines at tablet widths with
+            sm:flex) — lg gives it room without cramping. */}
+        <ul className="hidden items-center gap-6 lg:flex">
           {LINKS.map((l) => (
             <li key={l.href}>
               <a
                 href={l.href}
-                className="font-label text-sm font-bold uppercase tracking-[0.15em] transition-colors"
+                className="whitespace-nowrap font-label text-sm font-bold uppercase tracking-[0.15em] transition-colors"
                 style={{ color: linkColor(l.href) }}
               >
                 {l.label}
@@ -72,14 +76,14 @@ export default function Nav() {
           ))}
         </ul>
 
-        {/* below sm: hamburger toggles a dropdown, avoids the links
+        {/* below lg: hamburger toggles a dropdown, avoids the links
             wrapping mid-word across multiple cramped lines */}
         <button
           type="button"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className="flex size-8 cursor-pointer flex-col items-center justify-center gap-[5px] sm:hidden"
+          className="flex size-8 cursor-pointer flex-col items-center justify-center gap-[5px] lg:hidden"
         >
           <span
             className="h-[1.5px] w-5 rounded-full bg-current transition-transform duration-200"
@@ -98,7 +102,7 @@ export default function Nav() {
 
       {/* mobile dropdown panel */}
       <div
-        className={`overflow-hidden transition-[max-height] duration-300 sm:hidden ${open ? "max-h-60" : "max-h-0"}`}
+        className={`overflow-hidden transition-[max-height] duration-300 lg:hidden ${open ? "max-h-60" : "max-h-0"}`}
       >
         <ul className="flex flex-col items-center gap-5 px-6 pb-6 pt-2">
           {LINKS.map((l) => (
