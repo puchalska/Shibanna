@@ -76,7 +76,13 @@ export default function WhatToWear() {
   return (
     <section id="what-to-wear" className="px-6 py-16 sm:py-24">
       <div className="mx-auto w-full max-w-5xl">
-        <div className="grid gap-10 lg:grid-cols-[260px_1fr] lg:gap-14">
+        {/* grid-cols-1 explicitly, not just the bare "grid" implicit track
+            it was — an implicit auto track sizes to its content's
+            max-content and won't clamp to the viewport, which is what was
+            actually pushing the outfit stage (and the whole page) wider
+            than the screen on mobile. grid-cols-1 uses minmax(0,1fr), so
+            it correctly shrinks the column to fit instead. */}
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[260px_1fr] lg:gap-14">
           {/* sidebar: title, day-grouped occasion nav, colour palette */}
           <div>
             <h2 className="font-serif text-4xl italic text-coral sm:text-5xl">
@@ -148,9 +154,13 @@ export default function WhatToWear() {
             </div>
           </div>
 
-          {/* stage: photo with arrow-callout notes, look picker + next outfit */}
-          <div className="flex flex-col items-center text-center lg:items-end lg:text-right">
-            <div className="w-full">
+          {/* stage: photo with arrow-callout notes, look picker + next outfit.
+              min-w-0 on both wrappers — grid/flex items default to
+              min-width:auto, so without it the outfit's own content width
+              (not the column it's given) wins and the stage overflows the
+              viewport on mobile instead of scaling down to fit it. */}
+          <div className="flex min-w-0 flex-col items-center text-center lg:items-end lg:text-right">
+            <div className="w-full min-w-0">
               {hasGrid ? (
                 <LookGrid
                   fits={active.fits}

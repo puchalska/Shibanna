@@ -141,7 +141,7 @@ function SwipeTrack({
   return (
     <div
       ref={trackRef}
-      className={`group relative flex min-h-0 w-full touch-pan-y select-none overflow-hidden ${canCycle ? "cursor-grab active:cursor-grabbing" : ""}`}
+      className={`group relative flex min-h-0 w-full min-w-0 touch-pan-y select-none overflow-hidden ${canCycle ? "cursor-grab active:cursor-grabbing" : ""}`}
       style={{ flexGrow: weight, flexBasis: 0 }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
@@ -217,7 +217,7 @@ function HimCard({ garments, outfitScale }: { garments: Garment[]; outfitScale?:
   const isOutfit = tops[activeTopIndex]?.category === "outfit";
 
   return (
-    <div className="flex aspect-[245/482] flex-col divide-y divide-[#ed8235]/40 overflow-hidden rounded-xl border-[5px] border-[#ed8235]">
+    <div className="flex aspect-[245/482] min-w-0 flex-col divide-y divide-[#ed8235]/40 overflow-hidden rounded-xl border-[5px] border-[#ed8235]">
       {tops.length > 0 && (
         <SwipeTrack
           items={tops}
@@ -246,14 +246,14 @@ function HerCard({ garments, outfitScale }: { garments: Garment[]; outfitScale?:
   const isOutfit = tops[activeTopIndex]?.category === "outfit";
 
   return (
-    <div className="grid aspect-[367/482] grid-cols-[3fr_4fr] grid-rows-[1fr] divide-x divide-[#ff9595]/40 overflow-hidden rounded-xl border-[4px] border-[#ff9595]">
-      <div className="flex min-h-0 flex-col divide-y divide-[#ff9595]/40">
+    <div className="grid aspect-[367/482] min-w-0 grid-cols-[3fr_4fr] grid-rows-[1fr] divide-x divide-[#ff9595]/40 overflow-hidden rounded-xl border-[4px] border-[#ff9595]">
+      <div className="flex min-h-0 min-w-0 flex-col divide-y divide-[#ff9595]/40">
         <Cycle items={jewelry} weight={WEIGHT.herJewelry} />
         <Cycle items={layers} weight={WEIGHT.herLayers} />
         <Cycle items={shoes} weight={WEIGHT.herShoes} imgScale={0.89} />
         <Cycle items={bags} weight={WEIGHT.herBag} />
       </div>
-      <div className="flex min-h-0 flex-col divide-y divide-[#ff9595]/40">
+      <div className="flex min-h-0 min-w-0 flex-col divide-y divide-[#ff9595]/40">
         {tops.length > 0 && (
           <SwipeTrack
             items={tops}
@@ -297,17 +297,54 @@ export default function LookGrid({
   outfitScale?: number;
 }) {
   const garments = fits.flatMap((f) => f.garments ?? []);
+  const [active, setActive] = useState<"him" | "her">("him");
 
   return (
-    <div>
-      <div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-[245fr_367fr]">
-        <HimCard garments={garments} outfitScale={outfitScale} />
-        <HerCard garments={garments} outfitScale={outfitScale} />
+    <div className="min-w-0">
+      {/* below sm, showing both full-height cards stacked meant a lot of
+          scrolling just to compare — a compact Him/Her toggle switches
+          which one's showing instead. sm+ already fits both side by side,
+          so the toggle disappears and both stay visible regardless of it. */}
+      <div className="mb-4 flex justify-center sm:hidden">
+        <div className="inline-flex gap-1 rounded-full border border-coral/40 p-1">
+          {(["him", "her"] as const).map((p) => (
+            <button
+              key={p}
+              type="button"
+              onClick={() => setActive(p)}
+              aria-pressed={active === p}
+              className="cursor-pointer rounded-full px-6 py-1.5 font-label text-xs font-bold uppercase tracking-[0.12em] outline-none ring-coral transition-all duration-150 focus-visible:ring-2 active:scale-95"
+              style={{
+                background: active === p ? "var(--orange)" : "transparent",
+                color: active === p ? "#642526" : "var(--coral)",
+              }}
+            >
+              {p === "him" ? "Him" : "Her"}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* min-w-0 all the way down: grid/flex items default to
+          min-width:auto, so a fixed-aspect card would otherwise refuse to
+          shrink below its own content width instead of scaling with the
+          column it's given (see the same fix on the WhatToWear stage) */}
+      <div className="grid min-w-0 grid-cols-1 items-start gap-4 sm:grid-cols-[245fr_367fr]">
+        <div className={active === "him" ? "min-w-0" : "hidden min-w-0 sm:block"}>
+          <HimCard garments={garments} outfitScale={outfitScale} />
+        </div>
+        <div className={active === "her" ? "min-w-0" : "hidden min-w-0 sm:block"}>
+          <HerCard garments={garments} outfitScale={outfitScale} />
+        </div>
       </div>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        <Comment text={notes.him} background="#ed8235" />
-        <Comment text={notes.her} background="#ff9595" />
+        <div className={active === "him" ? "" : "hidden sm:block"}>
+          <Comment text={notes.him} background="#ed8235" />
+        </div>
+        <div className={active === "her" ? "" : "hidden sm:block"}>
+          <Comment text={notes.her} background="#ff9595" />
+        </div>
       </div>
     </div>
   );
