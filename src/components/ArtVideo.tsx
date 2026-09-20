@@ -11,7 +11,7 @@ import { asset } from "@/lib/asset";
 
 export default function ArtVideo() {
   return (
-    <section className="mx-auto flex w-full max-w-5xl flex-col items-center gap-3 px-6 py-16 sm:py-24">
+    <section className="mx-auto w-full max-w-5xl px-6 py-16 sm:py-24">
       <div className="aspect-[4/3] w-full overflow-hidden rounded-[6px]">
         <video
           src={asset("/art-video.mp4")}
@@ -23,9 +23,6 @@ export default function ArtVideo() {
           playsInline
         />
       </div>
-      <p className="font-label text-[11px] font-bold uppercase tracking-[0.2em] text-coral-soft">
-        The sketches behind it all
-      </p>
     </section>
   );
 }
