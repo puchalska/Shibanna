@@ -38,8 +38,6 @@ export default function Guides() {
           {ui.guides.comingSoon}
         </span>
       </div>
-      <p className="mt-4 max-w-xl text-sm leading-relaxed text-coral-soft">{ui.guides.intro}</p>
-
       <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {guides.map((g) => (
           <button

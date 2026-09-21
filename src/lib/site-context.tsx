@@ -56,7 +56,6 @@ export type UiStrings = {
   story: { showNote: string; hideNote: string };
   guides: {
     heading: string;
-    intro: string;
     guideLabel: string;
     close: string;
     closeGuide: string;
@@ -107,8 +106,6 @@ const uiEn: UiStrings = {
   story: { showNote: "Show note", hideNote: "Hide note" },
   guides: {
     heading: "Guides",
-    intro:
-      "Short reads for once you're here — hotels, flights, what to expect on the street, family customs, and more. Tap a cover to open it.",
     guideLabel: "Guide",
     close: "Close",
     closeGuide: "Close guide",
@@ -157,8 +154,6 @@ const uiPl: UiStrings = {
   story: { showNote: "Pokaż notatkę", hideNote: "Ukryj notatkę" },
   guides: {
     heading: "Przewodniki",
-    intro:
-      "Krótkie lektury, gdy już tu dotrzesz — hotele, loty, czego się spodziewać na ulicy, rodzinne zwyczaje i więcej. Stuknij okładkę, żeby ją otworzyć.",
     guideLabel: "Przewodnik",
     close: "Zamknij",
     closeGuide: "Zamknij przewodnik",

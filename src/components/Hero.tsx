@@ -22,7 +22,7 @@ import { useSite } from "@/lib/site-context";
 export default function Hero() {
   const { couple } = useSite();
   return (
-    <header className="flex min-h-[100svh] items-center justify-center overflow-hidden px-3 py-12 sm:px-8">
+    <header className="flex min-h-[100svh] items-center justify-center overflow-hidden px-3 pb-4 pt-12 sm:px-8 sm:pb-6">
       <div className="relative hidden aspect-[1195/765] w-full max-w-[1080px] sm:block">
         <CoverLace />
       </div>
