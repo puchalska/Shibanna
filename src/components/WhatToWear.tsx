@@ -155,9 +155,11 @@ function Collage({ fit, alt }: { fit: Fit; alt: string }) {
 export default function WhatToWear() {
   const { occasions } = useSite();
   const ui = useUi();
-  const [activeId, setActiveId] = useState(occasions[0].id);
+  const [activeId, setActiveId] = useState(
+    occasions.find((o) => o.id === "mehendi")?.id ?? occasions[0].id,
+  );
   const [fitIndex, setFitIndex] = useState(0);
-  const [activePerson, setActivePerson] = useState<"him" | "her">("him");
+  const [activePerson, setActivePerson] = useState<"him" | "her">("her");
   const active = occasions.find((o) => o.id === activeId) ?? occasions[0];
   const currentFitIndex = fitIndex % active.fits.length;
   const fit = active.fits[currentFitIndex];
