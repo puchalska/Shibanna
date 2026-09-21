@@ -10,7 +10,7 @@ export const couple = {
 };
 
 export const invitation =
-  "Dear Guest, we are getting married in a sacred Hindu ceremony on 20th of December 2026, with prior wedding ceremonies on 18th & 19th. We are cordially inviting you to join us on this adventure.";
+  "Dear Guest, we are getting married in a sacred Hindu ceremony on 20th of December 2026, with a prior wedding ceremony on 18th. We are cordially inviting you to join us on this adventure.";
 
 export const story =
   "It’s been 7 years, 3 countries, 2 cultures, and many mosaic pieces finding their way together.";
