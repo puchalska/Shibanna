@@ -25,7 +25,7 @@ export const invitation =
   "Drogi Gościu, bierzemy ślub w świętej hinduskiej ceremonii 20 grudnia 2026 roku, a poprzedzą ją uroczystości 18 i 19 grudnia. Serdecznie zapraszamy Cię, żebyś dołączył do nas w tej przygodzie.";
 
 export const story =
-  "7 lat, 3 kraje, 2 kultury i niezliczone elementy, które odnalazły wspólną drogę, ale to już wiecie.";
+  "To już 7 lat, 3 kraje, 2 kultury i wiele elementów mozaiki, które odnalazły wspólną drogę.";
 
 export const storyNote = "Trochę też po to, żeby uszczęśliwić wujka Sahoo.";
 
