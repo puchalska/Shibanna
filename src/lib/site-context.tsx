@@ -15,6 +15,7 @@ export type SiteData = {
   couple: { names: string; place: string; dates: string };
   invitation: string;
   story: string;
+  storyNote: string;
   anniversaryNote: string;
   preparation: typeof en.preparation;
   hotels: typeof en.hotels;
@@ -33,6 +34,7 @@ function dataFor(locale: Locale): SiteData {
     couple: m.couple,
     invitation: m.invitation,
     story: m.story,
+    storyNote: m.storyNote,
     anniversaryNote: m.anniversaryNote,
     preparation: m.preparation,
     hotels: m.hotels,
@@ -51,6 +53,7 @@ function dataFor(locale: Locale): SiteData {
    separate from SiteData since it's interface copy, not written content. */
 export type UiStrings = {
   nav: { preparation: string; guides: string; timeline: string; whatToWear: string; openMenu: string; closeMenu: string };
+  story: { showNote: string; hideNote: string };
   guides: {
     heading: string;
     intro: string;
@@ -101,6 +104,7 @@ const uiEn: UiStrings = {
     openMenu: "Open menu",
     closeMenu: "Close menu",
   },
+  story: { showNote: "Show note", hideNote: "Hide note" },
   guides: {
     heading: "Guides",
     intro:
@@ -150,6 +154,7 @@ const uiPl: UiStrings = {
     openMenu: "Otwórz menu",
     closeMenu: "Zamknij menu",
   },
+  story: { showNote: "Pokaż notatkę", hideNote: "Ukryj notatkę" },
   guides: {
     heading: "Przewodniki",
     intro:

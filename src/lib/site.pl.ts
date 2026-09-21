@@ -27,6 +27,8 @@ export const invitation =
 export const story =
   "7 lat, 3 kraje, 2 kultury i niezliczone elementy, które odnalazły wspólną drogę.";
 
+export const storyNote = "Trochę też po to, żeby uszczęśliwić wujka Sahoo.";
+
 export const anniversaryNote =
   "Jeśli nie możesz przyjechać w tym roku, zarezerwuj termin — 30.12.2027 — na naszą pierwszą rocznicę na Sri Lance.";
 
