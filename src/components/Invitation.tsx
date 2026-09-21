@@ -6,7 +6,7 @@ import { useSite } from "@/lib/site-context";
 export default function Invitation() {
   const { invitation } = useSite();
   return (
-    <section className="mx-auto w-full max-w-5xl px-6 pb-16 pt-20 sm:pb-24 sm:pt-28">
+    <section className="mx-auto w-full max-w-5xl px-6 pb-16 pt-6 sm:pb-24 sm:pt-10">
       <div className="relative">
         {/* scalloped coral border straight from Figma (node 3408:12041) */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
