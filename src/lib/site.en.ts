@@ -13,7 +13,7 @@ export const invitation =
   "Dear Guest, we are getting married in a sacred Hindu ceremony on 20th of December 2026, with prior wedding ceremonies on 18th & 19th. We are cordially inviting you to join us on this adventure.";
 
 export const story =
-  "7 years, 3 countries, 2 cultures and countless pieces finding their way together.";
+  "7 years, 3 countries, 2 cultures and countless pieces finding their way together, but you know all that.";
 
 export const storyNote = "We are also getting married to make Sahoo mama happier.";
 
