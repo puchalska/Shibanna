@@ -15,8 +15,6 @@ export const invitation =
 export const story =
   "It’s been 7 years, 3 countries, 2 cultures, and many mosaic pieces finding their way together.";
 
-export const storyNote = "We are also getting married to make Sahoo mama happier.";
-
 export const anniversaryNote =
   "If you can’t make it this year, save the date — 30.12.2027 — for our 1st anniversary in Sri Lanka.";
 
