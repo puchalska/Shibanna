@@ -29,6 +29,7 @@ export const metadata: Metadata = {
   title: "Anna & Shib — 17–20 December 2026, Sambalpur",
   description:
     "Anna & Shib are getting married in Sambalpur, India, 17–20 December 2026. Schedule, travel and what to wear.",
+  robots: "noindex, nofollow",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
